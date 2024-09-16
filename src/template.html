@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    
+    <div id="wrapper">
+        <header>
+          <img src="" id="logo" alt="task force title " />
+          
+        </header>
+        <section id="calendar">
+          
+          <div id="calendar-inner">
+            <div id="scroll-left" class="scroll-button"></div>
+            <div id="calendar-blur">
+              <div id="task-counter-container">
+                <p id="task-counter"></p>
+              </div>
+              <div id="calendar-bckg">
+                
+                <!-- <table class="table" id="calendar-table">
+                  <thead>
+                    <tr>
+                      <th scope="col" id="month-and-year"><td id="month"></td><td id="year"></td></th>
+                    </tr>
+                    <tr>
+                      <th scope="col" id="week-days-row">
+                        <td class="day-of-week"></td>
+                        <td class="day-of-week"></td>
+                        <td class="day-of-week"></td>
+                        <td class="day-of-week"></td>
+                        <td class="day-of-week"></td>
+                      </th>
+                    </tr>
+
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table> -->
+              </div>
+            </div>
+           
+            <div id="scroll-right" class="scroll-button"></div>
+          </div>
+          <form id="calendar-date-form">
+            <input type="date" id="date-input-container">
+            <img src="" alt="date picker" id="custom-date-input">
+            
+            <div class="custom-go-button" id="go-date-button"><p id="go-text">GO</p></div>
+          </form>
+        </section>
+        <section id="tasks"></section>
+    </div>
+        
+        
+    </div>
+  </body>
+</html>

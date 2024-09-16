@@ -1,0 +1,287 @@
+/* ======NORMALIZE========= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+body {
+  margin: 0;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+#root,
+#__next {
+  isolation: isolate;
+}
+html {
+  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+}
+table {
+  text-indent: 0;
+  border-color: inherit;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+button,
+select {
+  text-transform: none;
+}
+legend {
+  padding: 0;
+}
+
+/* =====FONTS===================== */
+@font-face {
+  font-family: "Tomorrow-Thin";
+  src: url("./fonts/tomorrow/Tomorrow-Thin.woff2");
+}
+@font-face {
+  font-family: "Tomorrow-Light";
+  src: url("./fonts/tomorrow/Tomorrow-Light.woff2");
+}
+@font-face {
+  font-family: "Tomorrow-Regular";
+  src: url("./fonts/tomorrow/Tomorrow-Regular.woff2");
+}
+@font-face {
+  font-family: "Tomorrow-Medium";
+  src: url("./fonts/tomorrow/Tomorrow-Medium.woff2");
+}
+@font-face {
+  font-family: "Tomorrow-Bold";
+  src: url("./fonts/tomorrow/Tomorrow-Bold.woff2");
+}
+/* -----------REM---------------- */
+html {
+  font-size: 16px;
+}
+
+/* ============COLORs========== */
+:root {
+  --brightest: #e5feff; /* 20% */
+  --darkest: hsl(195, 58%, 15%);
+  --bluish-1: #7da1a3;
+  --bluish-2: hsla(182, 24%, 59%, 0.31) /*31%*/;
+  --bluish-3: #53797b;
+  --bluish-4: #1e8f94;
+  --bluish-5: #00edfc;
+  --bluish-6: #7bd0d4;
+  --reddish: #ff0100;
+  --blur: blur(2px);
+}
+/* ========STYLING=================STYLING============== */
+
+/* ---------BACKGROUND---------------------- */
+body {
+  background-color: var(--darkest);
+  background-image: url("../assets/images/proper_tile.webp");
+  background-size: 150px 150px;
+  background-repeat: repeat;
+}
+/* ------------MAIN SCAFFOLDING------------------*/
+#wrapper {
+  /* background-color: orange; */
+  width: 1780px;
+  height: 100vh;
+  margin: 0 auto;
+}
+header {
+  width: 100%;
+  display: flex;
+  justify-content: start;
+}
+#logo {
+  position: relative;
+  top: 3.5rem;
+  left: 3.5rem;
+  width: 17.5rem;
+  height: auto;
+}
+/* ----------------CALENDAR---------------- */
+#calendar {
+  /* background-color: rgb(118, 255, 129); */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* left: 4rem; */
+  top: 5rem;
+  width: 55rem;
+  height: 40rem;
+  /* padding: 0REM 0 1rem 0; */
+}
+#calendar-inner {
+  /* background-color: goldenrod; */
+  
+  width: 100%;
+  height: 90%;
+  display: flex;
+}
+#calendar-blur {
+  background-color: var(--bluish-2);
+  backdrop-filter: var(--blur);
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+}
+#calendar-bckg{
+  background-color: var(--brightest);
+  height:100%;
+  
+}
+/* -------SCROLL BUTTONS------------------------- */
+.scroll-button {
+  width: 2.5rem;
+  height: 10.75rem;
+}
+
+#scroll-left {
+  margin: auto 1rem auto 0;
+  background-color: transparent;
+  height: 10.75rem;
+  border-top: 5.375rem solid transparent;
+  border-left: 0rem solid transparent;
+  border-bottom: 5.375rem solid transparent;
+  border-right: 2.5rem solid var(--bluish-2);
+}
+#scroll-left:hover{
+  border-right: 2.5rem solid var(--bluish-6);
+}
+.scroll-button:active{
+  scale: 0.8;
+}
+
+
+#scroll-right {
+  margin: auto 0 auto 1rem;
+  background-color: transparent;
+  height: 10.75rem;
+  border-top: 5.375rem solid transparent;
+  border-right: 0rem solid transparent;
+  border-bottom: 5.375rem solid transparent;
+  border-left: 2.5rem solid var(--bluish-2);
+}
+#scroll-right:hover{
+  border-left: 2.5rem solid var(--bluish-6);
+}
+
+
+/* --------------DATE INPUT---------------------- */
+#calendar-date-form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  top: 1rem;
+}
+
+#go-button {
+  width: 3.6rem;
+}
+.custom-go-button {
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--reddish);
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  box-shadow: 0rem 0rem 0rem 0.3rem var(--darkest);
+}
+#go-date-button:hover {
+  background-color: var(--reddish);
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  #go-text {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    cursor: pointer;
+  }
+}
+#go-date-button:active {
+  scale: 80%;
+}
+#go-date-button {
+  position: relative;
+  top: 0.55rem;
+  left: -1.2rem;
+}
+#go-text{
+  font-family: "Tomorrow-Medium", "Courier New", sans-serif;
+  font-size: 1.3rem;
+  color: var(--brightest);
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#date-input-container {
+  font-family: "Tomorrow-Regular", "Courier New", sans-serif;
+  color: var(--bluish-3);
+  font-size: 1.5rem;
+  position: absolute;
+  top: 0.6rem;
+  right: 23.6rem;
+  background: none;
+  border: none;
+}
+#date-input-container:hover {
+  box-shadow: inset 0 2px 4px var(--bluish-1);
+  cursor: text;
+  position: relative;
+}
+
+#custom-date-input {
+  width: 15rem;
+}
