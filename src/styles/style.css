@@ -102,7 +102,7 @@ html {
 /* ============COLORs========== */
 :root {
   --brightest: #e5feff; /* 20% */
-  --darkest: hsl(195, 58%, 15%);
+  --darkest: #10313c;
   --bluish-1: #7da1a3;
   --bluish-2: hsla(182, 24%, 59%, 0.31) /*31%*/;
   --bluish-3: #53797b;
@@ -244,6 +244,7 @@ header {
 #day-3 {
   border: 2px solid var(--reddish);
 }
+/* -----------------COUNT BUTTON------------------- */
 #count-button {
   width: 8rem;
   height: 8rem;
@@ -422,7 +423,7 @@ header {
 #project-panel-header {
   background-color: var(--bluish-4);
 }
-#project-panel-header h2 {
+h3 {
   font-family: "Tomorrow-Regular", "Courier New", sans-serif;
   font-size: 1.6rem;
   color: var(--brightest);
@@ -480,6 +481,50 @@ header {
   width: 1.8rem;
   height: 1.4rem;
 }
+
+@keyframes shake {
+  from {
+    transform: translateY(0rem);
+  }
+  to {
+    transform: translateY(0.15rem);
+  }
+}
+.drop-arrow:hover {
+  animation: 0.2s linear 0s infinite alternate shake;
+}
+.drop-arrow:active {
+  animation-play-state: paused;
+  rotate: 180deg;
+}
+.drop-down-content {
+  /* display:none; */
+  position: absolute;
+  left: 9rem;
+  top: 7.2rem;
+  width: 5rem;
+  z-index: 1;
+}
+
+.drop-down-item:first-child,
+.drop-down-item:first-child:active {
+  background-color: var(--cell-3);
+}
+.drop-down-item:nth-child(2n),
+.drop-down-item:nth-child(2n):active {
+  background-color: var(--cell-1);
+}
+.drop-down-item:hover {
+  background-color: var(--darkest);
+  color: var(--brightest);
+}
+
+.drop-down-item,
+.drop-down-item:active {
+  padding: 0.2rem;
+  color: var(--bluish-6);
+}
+
 .project-cell-name {
   font-family: "Tomorrow-Regular", "Courier New", sans-serif;
   color: var(--brightest);
@@ -492,6 +537,49 @@ header {
 .project-tab:hover {
   background-color: var(--bluish-2);
 }
-.project-tab:active{
+.project-tab:active {
   background-color: transparent;
+}
+
+/* ------------TASKS PANEL-------------------------- */
+#tasks-main-panel {
+  background-color: lightskyblue;
+  grid-column:2/2;
+  padding: 0 1rem;
+}
+#tasks-header{
+  background-color: yellowgreen;
+  width:100%;
+  height: 3.5rem;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+#header-left{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  gap:2rem;
+}
+#task-list{
+  background-color: navy;
+  width:100%;
+  height: auto;
+}
+/* ---------------TASKS------------- */
+.task-item{
+  background-color: darkkhaki;
+  width:100%;
+  height:3.5rem;
+}
+.task-bar-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width:100%;
+}
+.background-task-bar{
+  background-color: var(--brightest);
+  width: 75%;
 }
