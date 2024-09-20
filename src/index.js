@@ -10,6 +10,9 @@ import dateSrc from './assets/images/type date.webp';
 const dateInputImg = document.querySelector('#custom-date-input');
 dateInputImg.src = dateSrc;
 
+import dropArrowSrc from './assets/images/drop_down_arrow.webp';
+const dropArrows = document.querySelectorAll(".drop-arrow");
+dropArrows.forEach(dropArrow=>dropArrow.src=dropArrowSrc);
 
 
 

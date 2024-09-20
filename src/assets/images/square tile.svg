@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="181" height="181" viewBox="0 0 181 181">
+  <g id="square_tile" data-name="square tile" transform="translate(-126 -124)">
+    <g id="Rectangle_3" data-name="Rectangle 3" transform="translate(136 134)" fill="none" stroke="#1e8f95" stroke-width="0.25">
+      <rect width="161" height="161" stroke="none"/>
+      <rect x="0.125" y="0.125" width="160.75" height="160.75" fill="none"/>
+    </g>
+    <g id="plus" transform="translate(214 132)">
+      <line id="Line_1" data-name="Line 1" y2="5" transform="translate(2.5)" fill="none" stroke="#1e8f95" stroke-width="0.5"/>
+      <line id="Line_2" data-name="Line 2" y2="5" transform="translate(5 2.5) rotate(90)" fill="none" stroke="#1e8f95" stroke-width="0.5"/>
+    </g>
+    <g id="plus-2" data-name="plus" transform="translate(134 212)">
+      <line id="Line_1-2" data-name="Line 1" y2="5" transform="translate(2.5)" fill="none" stroke="#1e8f95" stroke-width="0.5"/>
+      <line id="Line_2-2" data-name="Line 2" y2="5" transform="translate(5 2.5) rotate(90)" fill="none" stroke="#1e8f95" stroke-width="0.5"/>
+    </g>
+    <g id="plus-3" data-name="plus" transform="translate(214 212)">
+      <line id="Line_1-3" data-name="Line 1" y2="5" transform="translate(2.5)" fill="none" stroke="#1e8f95" stroke-width="0.5"/>
+      <line id="Line_2-3" data-name="Line 2" y2="5" transform="translate(5 2.5) rotate(90)" fill="none" stroke="#1e8f95" stroke-width="0.5"/>
+    </g>
+    <g id="plus-4" data-name="plus" transform="translate(214 292)">
+      <line id="Line_1-4" data-name="Line 1" y2="5" transform="translate(2.5)" fill="none" stroke="#1e8f95" stroke-width="0.5"/>
+      <line id="Line_2-4" data-name="Line 2" y2="5" transform="translate(5 2.5) rotate(90)" fill="none" stroke="#1e8f95" stroke-width="0.5"/>
+    </g>
+    <g id="plus-5" data-name="plus" transform="translate(294 212)">
+      <line id="Line_1-5" data-name="Line 1" y2="5" transform="translate(2.5)" fill="none" stroke="#1e8f95" stroke-width="0.5"/>
+      <line id="Line_2-5" data-name="Line 2" y2="5" transform="translate(5 2.5) rotate(90)" fill="none" stroke="#1e8f95" stroke-width="0.5"/>
+    </g>
+    <g id="corner_pluses" data-name="corner pluses">
+      <g id="plus-6" data-name="plus" transform="translate(287 285)">
+        <line id="Line_1-6" data-name="Line 1" y2="20" transform="translate(10)" fill="none" stroke="#1e8f95" stroke-width="2"/>
+        <line id="Line_2-6" data-name="Line 2" y2="20" transform="translate(20 10) rotate(90)" fill="none" stroke="#1e8f95" stroke-width="2"/>
+      </g>
+      <g id="plus-7" data-name="plus" transform="translate(126 285)">
+        <line id="Line_1-7" data-name="Line 1" y2="20" transform="translate(10)" fill="none" stroke="#1e8f95" stroke-width="2"/>
+        <line id="Line_2-7" data-name="Line 2" y2="20" transform="translate(20 10) rotate(90)" fill="none" stroke="#1e8f95" stroke-width="2"/>
+      </g>
+      <g id="plus-8" data-name="plus" transform="translate(126 124)">
+        <line id="Line_1-8" data-name="Line 1" y2="20" transform="translate(10)" fill="none" stroke="#1e8f95" stroke-width="2"/>
+        <line id="Line_2-8" data-name="Line 2" y2="20" transform="translate(20 10) rotate(90)" fill="none" stroke="#1e8f95" stroke-width="2"/>
+      </g>
+      <g id="plus-9" data-name="plus" transform="translate(287 124)">
+        <line id="Line_1-9" data-name="Line 1" y2="20" transform="translate(10)" fill="none" stroke="#1e8f95" stroke-width="2"/>
+        <line id="Line_2-9" data-name="Line 2" y2="20" transform="translate(20 10) rotate(90)" fill="none" stroke="#1e8f95" stroke-width="2"/>
+      </g>
+    </g>
+  </g>
+</svg>
