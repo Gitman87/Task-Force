@@ -94,7 +94,7 @@
                   </ul>
                 </div>
               </div>
-              <div id="count-button" class="button">
+              <div id="count-button" class="button push-button">
                 <span id="count-button-number">4</span>
               </div>
             </div>
@@ -102,8 +102,8 @@
             <div id="scroll-right" class="scroll-button"></div>
           </div>
           <form id="calendar-date-form">
-            <input type="date" id="date-input-container" />
             <img src="" alt="date picker" id="custom-date-input" />
+            <input type="date" class="date-input calendar-date-input" />
 
             <div class="custom-go-button button" id="go-date-button">
               <p id="go-text">GO</p>
@@ -133,8 +133,8 @@
                   <li>
                     <div class="drop-down-content">
                       <ul class="drop-down-list">
-                        <li class="drop-down-item">Rename</li>
-                        <li class="drop-down-item">Delete</li>
+                        <li class="drop-down-item button">Rename</li>
+                        <li class="drop-down-item button">Delete</li>
                       </ul>
                     </div>
                   </li>
@@ -161,7 +161,95 @@
                     </div>
                   </div>
 
-                  <img src="" alt="drop down menu" class="drop-arrow" id="sort-drop" />
+                  <img
+                    src=""
+                    alt="drop down menu"
+                    class="drop-arrow button"
+                    id="sort-drop"
+                  />
+                  <dialog id="new-task-container" open>
+                    <form action="" id="new-task-form">
+                      <ul id="new-task-list">
+                        <li id="new-task-title">
+                          <input
+                            type="text"
+                            name=""
+                            id=""
+                            placeholder="Title"
+                          />
+                        </li>
+                        <li id="new-task-date">
+                          <div class="date-range-container">
+                            <label for="date-range-start">Start:</label>
+                            <input
+                              type="date"
+                              class="date-input new-task-date-input"
+                              id="date-range-start"
+                              name="date-range-start"
+                            />
+                          </div>
+                          <div class="date-range-container">
+                            <label for="date-range-end">End:</label>
+                            <input
+                              type="date"
+                              class="date-input new-task-date-input"
+                              id="date-range-end"
+                              name="date-range-end"
+                            />
+                          </div>
+                        </li>
+                        <li id="new-task-priority">
+                          <p id="new-task-item-title">Priority</p>
+                          
+                            <ul id="priority-list">
+                              <li
+                                class="priority-item  button push-button"
+                                data-priority-level="low"
+                              ></li>
+                              <li
+                                class="priority-item  button push-button"
+                                data-priority-level="medium"
+                              ></li>
+                              <li
+                                class="priority-item  button push-button"
+                                data-priority-level="high"
+                              ></li>
+                            </ul>
+                          
+                        </li>
+                        <li id="new-task-project">
+                          <p class="new-task-item-title">Project</p>
+                          <img
+                          src=""
+                          alt="drop down menu"
+                          class="drop-arrow button"
+                          id="assign-project-drop"
+                        />
+
+                          <div class="drop-down-content assign-project">
+                            <ul class="drop-down-list">
+                              <li class="drop-down-item button">Repair Car</li>
+                              <li class="drop-down-item button">Black Belt</li>
+                              <li class="drop-down-item button">
+                                Certificatedfdffffffffffffffff
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+
+                        <li id="new-task-description">
+                          <textarea
+                            name=""
+                            id=""
+                            placeholder="Description"
+                          ></textarea>
+                        </li>
+                      </ul>
+                      <div  class="button plus-button" id="add-task-button">
+                        <p class="plus-text">+</p>
+                      </div>
+                    </form>
+                  </dialog>
                 </div>
                 <ul id="task-list">
                   <li class="task-item">
@@ -170,16 +258,18 @@
                         <div class="task-bar">
                           <div class="task-bar-content">
                             <div class="task-bar-name">Restore exhaust</div>
-                            <div class="task-bar-time"><p class="time-stamp">DD-MM-YYYY</p></div>
+                            <div class="task-bar-time">
+                              <p class="time-stamp">DD-MM-YYYY</p>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                     <ul class="task-item-control">
-                      <li class="description button"></li>
-                      <li class="edit button"></li>
-                      <li class="delete-button button"></li>
-                      <li class="done button"></li>
+                      <li class="description button push-button"></li>
+                      <li class="edit button push-button"></li>
+                      <li class="delete-button button push-button"></li>
+                      <li class="done button push-button"></li>
                     </ul>
                   </li>
                 </ul>
