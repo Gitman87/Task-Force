@@ -21,6 +21,7 @@
     "webpack-dev-server": "^5.1.0"
   },
   "dependencies": {
-    "air-datepicker": "^3.5.3"
+    "air-datepicker": "^3.5.3",
+    "date-fns": "^4.1.0"
   }
 }
