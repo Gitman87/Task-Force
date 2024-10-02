@@ -156,41 +156,11 @@ class TaskManager {
   }
   calculateProgress() {
     const totalTasks = this.tasks.length;
-    const completedTasks = this.tasks.filter(task => task.isComplete).length;
+    const completedTasks = this.tasks.filter((task) => task.isComplete).length;
     return totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
   }
 }
 
-// class ProjectManager {
-//   constructor() {
-//     this.projects = projects;
-//   }
-//   addProject(project) {
-//     this.projects.push(project);
-//   }
-//   removeTask(project) {
-//     const index = this.projects.indexOf(project);
-//     if (index !== -1) {
-//       this.projects.splice(index, 1);
-//     }
-//   }
-
-// }
-// SORTING STRATEGIES
-// class Sorter {
-//   constructor() {}
-
-//   sortByDueDate(tasks) {
-//     return tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-//   }
-
-//   sortByPriority(tasks) {
-//     const priorityOrder = { high: 1, medium: 2, low: 3 };
-//     return tasks.sort(
-//       (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
-//     );
-//   }
-// }
 class sortByDueDate {
   sort(tasks) {
     return tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));

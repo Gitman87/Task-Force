@@ -464,6 +464,14 @@ h3 {
   justify-content: space-between;
   align-items: center;
 }
+#add-project-query {
+  position: absolute;
+  top: 4rem;
+}
+#add-project-query input {
+  border: none;
+  outline: none;
+}
 .project-list-cell {
   width: 100%;
   height: 4.5rem;
@@ -480,7 +488,7 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: burlywood;
+ 
 }
 
 .project-list {
@@ -556,8 +564,9 @@ h3 {
 .progress-bar-main-container {
   width: 100%;
   height: 0.5rem;
+  border: 0.0625rem dashed var(--brightest);
 
-  background-color: yellowgreen;
+  /* background-color: yellowgreen; */
 }
 .progress-bar {
   width: 10%;
