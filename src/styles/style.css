@@ -59,11 +59,14 @@ button,
 input,
 optgroup,
 select,
+dialog,
 textarea {
   font-family: inherit;
   font-size: 100%;
   line-height: 1.15;
   margin: 0;
+  border: none;
+  outline: none;
 }
 button,
 select {
@@ -374,7 +377,6 @@ header {
   top: 0.6rem;
   right: 23.6rem;
   background: none;
-  border: none;
 }
 .date-input:hover {
   box-shadow: inset 0 2px 4px var(--bluish-1);
@@ -468,10 +470,7 @@ h3 {
   position: absolute;
   top: 4rem;
 }
-#add-project-query input {
-  border: none;
-  outline: none;
-}
+
 .project-list-cell {
   width: 100%;
   height: 4.5rem;
@@ -488,7 +487,6 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
- 
 }
 
 .project-list {
@@ -636,7 +634,7 @@ h3 {
 #new-task-title input {
   text-align: center;
   text-overflow: scroll;
-  border: none;
+
   color: var(--bluish-3);
 }
 

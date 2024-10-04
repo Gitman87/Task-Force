@@ -114,17 +114,27 @@
           <div id="task-manager-blur">
             <div id="task-manager-inner">
               <div id="project-panel">
-                <div id="project-panel-header" class="project-panel-header-cell">
+                <div
+                  id="project-panel-header"
+                  class="project-panel-header-cell"
+                >
                   <h3>Projects</h3>
                   <div class="button plus-button" id="add-project">
                     <p class="plus-text">+</p>
                   </div>
-                  <div class="drop-down-content" id="add-project-query">
-                    <ul class="drop-down-list">
-                      <input type="text" class="drop-down-item button" placeholder="Title">
-                      
-                    </ul>
-                  </div>
+                  <dialog class="drop-down-content" id="add-project-dialog">
+                    <form action="" class="drop-down-form" id="add-project-form">
+                      <ul class="drop-down-list">
+                        <li>
+                          <input
+                            type="text"
+                            class="drop-down-item button" id="project-title-input"
+                            placeholder="Title"
+                          />
+                        </li>
+                      </ul>
+                    </form>
+                  </dialog>
                   <!-- <form action="" id="new-project-name">
                     <input type="text" class="name-input" placeholder="Rename">
                   </form> -->
@@ -144,10 +154,12 @@
                   </li>
                   <li>
                     <div class="drop-down-content" id="edit-project">
-                      <ul class="drop-down-list">
-                        <li class="drop-down-item button">Rename</li>
-                        <li class="drop-down-item button">Delete</li>
-                      </ul>
+                      <form action="" class="drop-down-form">
+                        <ul class="drop-down-list">
+                        <input type="text" class="drop-down-item button rename-project" placeholder="Rename"/></li>
+                          <li class="drop-down-item button delete-project">Delete</li>
+                        </ul>
+                      </form>
                     </div>
                   </li>
                   <li
