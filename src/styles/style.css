@@ -528,13 +528,19 @@ h3 {
 .drop-down-item:active {
   background-color: var(--cell-3);
 }
-.drop-down-item:nth-child(2n),
-.drop-down-item:nth-child(2n):active {
+.drop-down-item:nth-child(2n)
+{
   background-color: var(--cell-1);
+}
+.drop-down-item:nth-child(2n):active {
+  background-color: var(--darkest);
 }
 .drop-down-item:hover {
   background-color: var(--darkest);
   color: var(--brightest);
+}
+input::placeholder:hover{
+  color: var(--reddish);
 }
 
 .drop-down-item,

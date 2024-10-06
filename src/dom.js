@@ -9,7 +9,7 @@ const  addAction = (selector, event = "click", action) => {
     element.addEventListener(eventString, () => action);
   });
 }
-const changeElementAttribute =  (element, attribute)=>{
+const changeElementAttribute =  (element, attribute) =>{
   
   if(!element.hasAttribute(attribute)){
     element.setAttribute(attribute, attribute)
@@ -20,35 +20,62 @@ const changeElementAttribute =  (element, attribute)=>{
 }
 
 
-addAction(addProjectBtn, changeElementAttribute(addProjectDialog, "open"));
 
-const submitEnter = (input)=>{
+
+const submitEnter = (input) =>{
   input.addEventListener('keypress', (event)=>{
     if(event.key === "Enter"){
       event.preventDefault();
       return input.value;
     }
   })
-
-
 }
 
 
+// -----------LOCAL STORAGE---------
+const serializeObject = (object) =>{
+  return JSON.stringify(object);
+}
+const parseObject = (serializedObject) =>{
+  return JSON.parse(serializedObject);
+}
+const recordToLocalStorage = (keyName, item) =>{
+  localStorage.setItem(keyName, item);
+}
+const readFromLocalStorage = (keyName) => {
+  return localStorage.getItem(keyName);
+}
 
-// const showWindow = 
-// adding new project
 
-// const projectPanel = new ProjectPanel;
+// -----SUBMIT NEW PROJECT FORM-------
 
-// const openCloseDialog = (element)=>{
-//   if (!element.hasAttribute('open')) {
-//     element.setAttribute('open', 'open');
-//   }
-//   else{
-//     element.removeAttribute('open');
-//   }
-// }
+// ----- OPEN DIALOG------
+addAction(addProjectBtn, changeElementAttribute(addProjectDialog, "open"));
+
+// SUBMIT
 
 
-//open dialog box with form to add project
+
+
+
+//if there is no project panel yt, create one onLoad
+
+
+window.onload = ()=>{
+  if(!projectPanel){
+    const projectPanel = new ProjectPanel;
+    projectPanel.initialize();
+  }
+  else{
+    console.log("Project panel already exist!");
+  }
+}
+
+// add listener for new project title
+let projectTitle = submitEnter(projectTitleInput);
+projectPanel.projectManager.addProject(projectTitle);
+console.log(`project title is ${projectPanel.projects[0]['title']}`); 
+
+
+
 

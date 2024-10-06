@@ -53,9 +53,13 @@ new AirDatepicker("#el", {
 // );
 class ProjectPanel {
   constructor() {
+   
     this.projects = [];
     this.projectManager = new ProjectManager(this.projects);
   }
+  initialize() {
+    console.log("Project Panel initialized!");
+  } // check if created
 }
 class Project {
   constructor(title) {
