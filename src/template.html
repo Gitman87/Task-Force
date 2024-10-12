@@ -118,12 +118,14 @@
                   id="project-panel-header"
                   class="project-panel-header-cell"
                 >
-                  <h3>Projects</h3>
-                  <div class="button plus-button" id="add-project">
-                    <p class="plus-text">+</p>
-                  </div>
-                  <dialog class="drop-down-content" id="add-project-dialog">
-                    <form action="" class="drop-down-form" id="add-project-form">
+                  <div id="project-panel-inner-title-container">
+                    <h3>Projects</h3>
+                    <div class="button plus-button" id="add-project">
+                      <p class="plus-text">+</p>
+                    </div>
+                 </div>
+                  <div class="hidden" id="add-project-query">
+                    
                       <ul class="drop-down-list">
                         <li>
                           <input
@@ -133,8 +135,8 @@
                           />
                         </li>
                       </ul>
-                    </form>
-                  </dialog>
+                    
+                    </div>
                   <!-- <form action="" id="new-project-name">
                     <input type="text" class="name-input" placeholder="Rename">
                   </form> -->
@@ -153,7 +155,7 @@
                     </div>
                   </li>
                   <li>
-                    <div class="drop-down-content" id="edit-project">
+                    <div class="drop-down-content hidden" id="edit-project">
                       <form action="" class="drop-down-form">
                         <ul class="drop-down-list">
                         <input type="text" class="drop-down-item button rename-project" placeholder="Rename"/></li>
@@ -180,7 +182,7 @@
                   >
                     <div class="project-cell-name-container">
                       <span class="project-cell-name"
-                        >Certificatedfdffffffffffffffff</span
+                        >Certificated</span
                       >
                       <img src="" alt="drop down menu" class="drop-arrow" />
                     </div>
@@ -263,12 +265,12 @@
                             id="assign-project-drop"
                           />
 
-                          <div class="drop-down-content assign-project">
+                          <div class="assign-project hidden">
                             <ul class="drop-down-list">
                               <li class="drop-down-item button">Repair Car</li>
                               <li class="drop-down-item button">Black Belt</li>
                               <li class="drop-down-item button">
-                                Certificatedfdffffffffffffffff
+                                Certificated
                               </li>
                             </ul>
                           </div>

@@ -132,6 +132,9 @@ html {
 .push-button:active {
   scale: 0.9;
 }
+.hidden{
+  display:none;
+}
 /* ---------BACKGROUND---------------------- */
 body {
   background-color: var(--darkest);
@@ -463,12 +466,23 @@ h3 {
   height: 3.5rem;
   padding: 1rem;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#project-panel-inner-title-container {
+  width: 100%;
+  display: flex;
   justify-content: space-between;
   align-items: center;
 }
 #add-project-query {
+  /* display:none; */
   position: absolute;
-  top: 4rem;
+  top: 4.2rem;
+  position: absolute;
+  left: 7.75rem;
+  width: 5rem;
 }
 
 .project-list-cell {
@@ -483,7 +497,6 @@ h3 {
 .project-cell-name-container {
   width: 100%;
   height: 2rem;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -514,22 +527,20 @@ h3 {
   animation-play-state: paused;
   rotate: 180deg;
 }
+
 .drop-down-content {
   /* display:none; */
   position: absolute;
-  left: 9.25rem;
+  left: 7.75rem;
   top: 7.2rem;
   width: 5rem;
-
-  z-index: 1;
 }
 
 .drop-down-item,
 .drop-down-item:active {
   background-color: var(--cell-3);
 }
-.drop-down-item:nth-child(2n)
-{
+.drop-down-item:nth-child(2n) {
   background-color: var(--cell-1);
 }
 .drop-down-item:nth-child(2n):active {
@@ -538,9 +549,6 @@ h3 {
 .drop-down-item:hover {
   background-color: var(--darkest);
   color: var(--brightest);
-}
-input::placeholder:hover{
-  color: var(--reddish);
 }
 
 .drop-down-item,
@@ -670,16 +678,18 @@ input::placeholder:hover{
 }
 .assign-project {
   /* display: none; */
+  position: absolute;
   width: 10rem;
   height: 6rem;
   top: 16rem;
   left: 6.5rem;
-  z-index: 1;
+
   overflow-y: scroll;
 }
 
 .drop-down-item {
   width: 100%;
+  text-align: center;
   overflow-x: scroll;
 }
 

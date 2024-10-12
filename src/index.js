@@ -181,21 +181,26 @@ class sortByPriority {
 }
 // =============================DOM================================
 const addProjectBtn = document.querySelector("#add-project");
-const addProjectDialog = document.querySelector("#add-project-dialog");
+// console.log(`addProjectBtn selector is: ${addProjectBtn.id}`);
+const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
 
 const addAction = (selector, event = "click", action) => {
+  
   const elements = document.querySelectorAll(selector);
-  const eventString = event.toString();
+
+  
   elements.forEach((element) => {
-    element.addEventListener(eventString, () => action);
+    element.addEventListener(event, () => action);
   });
 };
 const changeElementAttribute = (element, attribute) => {
   if (!element.hasAttribute(attribute)) {
     element.setAttribute(attribute, attribute);
+    element.offsetHeight;
   } else {
     element.removeAttribute(attribute);
+    element.offsetHeight;
   }
 };
 
@@ -208,7 +213,12 @@ const submitEnter = (input) => {
     }
   });
 };
-
+// const switchDisplay = (element) =>{
+//   element.style.display = element.style.display === 'none' ? '' : 'none';
+// };
+const switchDisplay = (element) => {
+  element.classList.toggle('hidden');
+};
 // -----------LOCAL STORAGE---------
 const serializeObject = (object) => {
   return JSON.stringify(object);
@@ -231,6 +241,7 @@ const projectPanelStarter = (()=>{
       if(!projectPanel){
         projectPanel = new ProjectPanel();
         projectPanel.initialized();
+        return projectPanel;
        
       }
       else {
@@ -239,12 +250,19 @@ const projectPanelStarter = (()=>{
     }
   }
 })();
-window.onload = () => {
-  projectPanelStarter.initialize();
-};
+// window.onload = () => {
+//   projectPanelStarter.initialize();
+// };
+const projectPanel = projectPanelStarter.initialize();
 
+addProjectBtn.addEventListener('click',()=>{
+  switchDisplay(addProjectQuery);
+})
 // ----- OPEN DIALOG------
-addAction(addProjectBtn, changeElementAttribute(addProjectDialog, "open"));
+addAction('#add-project',"click", switchDisplay(addProjectBtn));
+// addProjectBtn.addEventListener('click', ()=>{
+//   addProjectDialog.showModal();
+// })
 
 // SUBMIT
 
