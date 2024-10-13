@@ -77,6 +77,7 @@ class ProjectManager {
   addProject(title) {
     const project = new Project(title);
     this.projects.push(project);
+   
   }
   removeProject(title) {
     const index = this.projects.findIndex((project) => project.title === title);
@@ -184,6 +185,7 @@ const addProjectBtn = document.querySelector("#add-project");
 // console.log(`addProjectBtn selector is: ${addProjectBtn.id}`);
 const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
+const projectList = document.querySelector("#project-list");
 
 const addAction = (elements,  ...args) => {
   let event, action;
@@ -221,7 +223,8 @@ const submitEnter = (input) => {
   input.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
       // event.preventDefault();
-        
+      console.log(input.value);
+      
       return  input.value;
     }
   });
@@ -275,6 +278,24 @@ const projectPanel = projectPanelStarter.initialize();
 addAction(addProjectBtn,()=>switchDisplay(addProjectQuery));
 
 
-projectPanel.projectManager.addProject(submitEnter(projectTitleInput));
+addAction(addProjectQuery, ()=>projectPanel.projectManager.addProject(submitEnter(projectTitleInput)));
+projectPanel.projectManager.addProject('Diuna');
 console.log(`project title is ${projectPanel.projects[0]["title"]}`);
+//add nex item in projects list
+const newProjectTab = document.createElement('li');
+newProjectTab.classList.add('project-list-cell', 'project-tab', 'button');
+newProjectTab.dataset.dataProjectTab = "4";
+newProjectTab.innerHTML = `<div class="project-cell-name-container">
+                      <span class="project-cell-name">${projectPanel.projects[0]["title"]}</span>
+                      <img src="" alt="drop down menu" class="drop-arrow" />
+                    </div>
+                    <div class="progress-bar-main-container">
+                      <div class="progress-bar"></div>
+                    </div>`;
+projectList.appendChild(newProjectTab)
+
+
+
+
+
 
