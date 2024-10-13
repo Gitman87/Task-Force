@@ -185,14 +185,27 @@ const addProjectBtn = document.querySelector("#add-project");
 const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
 
-const addAction = (selector, event = "click", action) => {
+const addAction = (elements,  ...args) => {
+  let event, action;
+  if (args.length === 1) {
+    event = "click";  
+    action = args[0]; 
+} else {
+    event = args[0];  
+    action = args[1]; 
+}
   
-  const elements = document.querySelectorAll(selector);
+  if (NodeList.prototype.isPrototypeOf(elements) || HTMLCollection.prototype.isPrototypeOf(elements) || Array.isArray(elements)){
+    elements.forEach((element) => {
+      element.addEventListener(event, action);
+    });
+  }
+  else{
+    elements.addEventListener(event, action);
+  }
 
   
-  elements.forEach((element) => {
-    element.addEventListener(event, () => action);
-  });
+ 
 };
 const changeElementAttribute = (element, attribute) => {
   if (!element.hasAttribute(attribute)) {
@@ -255,20 +268,11 @@ const projectPanelStarter = (()=>{
 // };
 const projectPanel = projectPanelStarter.initialize();
 
-addProjectBtn.addEventListener('click',()=>{
-  switchDisplay(addProjectQuery);
-})
-// ----- OPEN DIALOG------
-addAction('#add-project',"click", switchDisplay(addProjectBtn));
-// addProjectBtn.addEventListener('click', ()=>{
-//   addProjectDialog.showModal();
+// addProjectBtn.addEventListener('click',()=>{
+//   switchDisplay(addProjectQuery);
 // })
-
-// SUBMIT
-
-//if there is no project panel yt, create one onLoad
-
-// add listener for new project title
+// ----- OPEN DIALOG------
+addAction(addProjectBtn,()=>switchDisplay(addProjectQuery));
 
 
 projectPanel.projectManager.addProject(submitEnter(projectTitleInput));
