@@ -10,9 +10,9 @@ import dateSrc from "./assets/images/type date.webp";
 const dateInputImg = document.querySelector("#custom-date-input");
 dateInputImg.src = dateSrc;
 
-import dropArrowSrc from "./assets/images/drop_down_arrow.webp";
-const dropArrows = document.querySelectorAll(".drop-arrow");
-dropArrows.forEach((dropArrow) => (dropArrow.src = dropArrowSrc));
+// import dropArrowSrc from "./assets/images/drop_down_arrow.webp";
+// const dropArrows = document.querySelectorAll(".drop-arrow");
+// dropArrows.forEach((dropArrow) => (dropArrow.src = dropArrowSrc));
 
 // ----------DATE PICKER---------------
 new AirDatepicker("#el", {
@@ -287,11 +287,12 @@ newProjectTab.classList.add('project-list-cell', 'project-tab', 'button');
 newProjectTab.dataset.dataProjectTab = "4";
 newProjectTab.innerHTML = `<div class="project-cell-name-container">
                       <span class="project-cell-name">${projectPanel.projects[0]["title"]}</span>
-                      <img src="" alt="drop down menu" class="drop-arrow" />
+                      <img src="" alt=" "  class="drop-arrow button" />
                     </div>
                     <div class="progress-bar-main-container">
                       <div class="progress-bar"></div>
                     </div>`;
+// dropArrows.forEach((dropArrow)=>(dropArrow.src = dropArrowSrc));
 projectList.appendChild(newProjectTab)
 
 

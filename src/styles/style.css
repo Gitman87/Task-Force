@@ -67,6 +67,7 @@ textarea {
   margin: 0;
   border: none;
   outline: none;
+  border: none;
 }
 button,
 select {
@@ -132,8 +133,8 @@ html {
 .push-button:active {
   scale: 0.9;
 }
-.hidden{
-  display:none;
+.hidden {
+  display: none;
 }
 /* ---------BACKGROUND---------------------- */
 body {
@@ -508,8 +509,11 @@ h3 {
 }
 
 .drop-arrow {
-  width: 1.8rem;
+  min-width: 2rem;
   height: 1.4rem;
+  background-image: url("../assets/images/drop_down_arrow.webp");
+  background-size: cover;
+  
 }
 
 @keyframes shake {
