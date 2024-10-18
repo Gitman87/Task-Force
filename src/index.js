@@ -53,12 +53,10 @@ new AirDatepicker("#el", {
 // );
 class ProjectPanel {
   constructor() {
-   
     this.projects = [];
     this.projectManager = new ProjectManager(this.projects);
   }
   initialized() {
-    
     console.log("Project Panel initialized!");
   } // check if created
 }
@@ -74,10 +72,15 @@ class ProjectManager {
   constructor(projects) {
     this.projects = projects;
   }
-  addProject(title) {
-    const project = new Project(title);
-    this.projects.push(project);
-   
+
+  addProject(input) {
+    input.addEventListener("keypress", (event) => {
+      if (event.key === "Enter") {
+        const project = new Project(input.value);
+        this.projects.push(project);
+        // create tab
+      }
+    });
   }
   removeProject(title) {
     const index = this.projects.findIndex((project) => project.title === title);
@@ -187,27 +190,27 @@ const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
 const projectList = document.querySelector("#project-list");
 
-const addAction = (elements,  ...args) => {
+const addAction = (elements, ...args) => {
   let event, action;
   if (args.length === 1) {
-    event = "click";  
-    action = args[0]; 
-} else {
-    event = args[0];  
-    action = args[1]; 
-}
-  
-  if (NodeList.prototype.isPrototypeOf(elements) || HTMLCollection.prototype.isPrototypeOf(elements) || Array.isArray(elements)){
+    event = "click";
+    action = args[0];
+  } else {
+    event = args[0];
+    action = args[1];
+  }
+
+  if (
+    NodeList.prototype.isPrototypeOf(elements) ||
+    HTMLCollection.prototype.isPrototypeOf(elements) ||
+    Array.isArray(elements)
+  ) {
     elements.forEach((element) => {
       element.addEventListener(event, action);
     });
-  }
-  else{
+  } else {
     elements.addEventListener(event, action);
   }
-
-  
- 
 };
 const changeElementAttribute = (element, attribute) => {
   if (!element.hasAttribute(attribute)) {
@@ -219,13 +222,11 @@ const changeElementAttribute = (element, attribute) => {
   }
 };
 
-const submitEnter = (input) => {
+const submitEnter = (input, ...actions) => {
   input.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
-      // event.preventDefault();
-      console.log(input.value);
-      
-      return  input.value;
+      event.preventDefault();
+      actions.forEach((action) => action);
     }
   });
 };
@@ -233,7 +234,7 @@ const submitEnter = (input) => {
 //   element.style.display = element.style.display === 'none' ? '' : 'none';
 // };
 const switchDisplay = (element) => {
-  element.classList.toggle('hidden');
+  element.classList.toggle("hidden");
 };
 // -----------LOCAL STORAGE---------
 const serializeObject = (object) => {
@@ -250,53 +251,72 @@ const readFromLocalStorage = (keyName) => {
 };
 
 // -----SUBMIT NEW PROJECT FORM-------
-const projectPanelStarter = (()=>{
+const projectPanelStarter = (() => {
   let projectPanel;
   return {
-    initialize: ()=>{
-      if(!projectPanel){
+    initialize: () => {
+      if (!projectPanel) {
         projectPanel = new ProjectPanel();
         projectPanel.initialized();
         return projectPanel;
-       
-      }
-      else {
+      } else {
         console.log("projectPanel already exists!");
       }
-    }
-  }
+    },
+  };
 })();
 // window.onload = () => {
 //   projectPanelStarter.initialize();
 // };
+// ===========START=========================
 const projectPanel = projectPanelStarter.initialize();
 
 // addProjectBtn.addEventListener('click',()=>{
 //   switchDisplay(addProjectQuery);
 // })
 // ----- OPEN DIALOG------
-addAction(addProjectBtn,()=>switchDisplay(addProjectQuery));
+addAction(addProjectBtn, () => switchDisplay(addProjectQuery));
 
+addAction(addProjectQuery, () =>
+  submitEnter(
+    projectTitleInput,
+    () => projectPanel.projectManager.addProject(),
+    () => makeTab(projectTitleInput.value, projectList)
+  )
+);
 
-addAction(addProjectQuery, ()=>projectPanel.projectManager.addProject(submitEnter(projectTitleInput)));
-projectPanel.projectManager.addProject('Diuna');
+// projectPanel.projectManager.addProject("Diuna");
 console.log(`project title is ${projectPanel.projects[0]["title"]}`);
 //add nex item in projects list
-const newProjectTab = document.createElement('li');
-newProjectTab.classList.add('project-list-cell', 'project-tab', 'button');
-newProjectTab.dataset.dataProjectTab = "4";
-newProjectTab.innerHTML = `<div class="project-cell-name-container">
-                      <span class="project-cell-name">${projectPanel.projects[0]["title"]}</span>
+
+// project add ultra function
+// -------------------CREATE NEW TAB FACTORY---------------
+const makeTab = (title, container) => {
+  
+  class ProjectTab {  
+    typeOfElement = "li";
+    classes = "project-list-cell project-tab button";
+    htmlContent = `<div class="project-cell-name-container">
+                      <span class="project-cell-name">${title}</span>
                       <img src="" alt=" "  class="drop-arrow button" />
                     </div>
                     <div class="progress-bar-main-container">
                       <div class="progress-bar"></div>
                     </div>`;
-// dropArrows.forEach((dropArrow)=>(dropArrow.src = dropArrowSrc));
-projectList.appendChild(newProjectTab)
+    constructor(title) {
+      this.title = title;
+      
+      this.newElement = document.createElement(this.typeOfElement);
+      this.classList = this.classes;
+      this.contentHTML = this.htmlContent;
+    }
+    add(title, container) {
+      this.newElement.classList.add(this.classList);
+      this.innerHTML = this.contentHTML;
+      container.appendChild(newElement);
+    }
+  }
 
-
-
-
-
-
+  const newTab= new ProjectTab((title));
+  newTab.add(title,container);
+};
