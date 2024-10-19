@@ -26,31 +26,7 @@ new AirDatepicker("#el", {
 });
 
 // =================DRAFT===================
-// task-object factory
-// function createTask({
-//   title,
-//   dueDate,
-//   priority,
-//   projectAssigned,
-//   is_finished = false,
-// }) {
-//   return {
-//     title,
-//     dueDate,
-//     priority,
-//     projectAssigned,
-//     is_finished,
-//   };
-// }
-//example
-// tasks.push(
-//   createTask({
-//     title: "Fix electricity",
-//     dueDate: 17 - 10 - 1987,
-//     priority: "medium",
-//     projectAssigned: projects[0].name,
-//   })
-// );
+
 class ProjectPanel {
   constructor() {
     this.projects = [];
@@ -74,13 +50,10 @@ class ProjectManager {
   }
 
   addProject(input) {
-    input.addEventListener("keypress", (event) => {
-      if (event.key === "Enter") {
-        const project = new Project(input.value);
-        this.projects.push(project);
-        // create tab
-      }
-    });
+    const project = new Project(input.value);
+    console.log(`addProject project title is: ${project.title}`);
+    this.projects.push(project);
+    console.log(`Project added: ${this.projects[0].title}`);
   }
   removeProject(title) {
     const index = this.projects.findIndex((project) => project.title === title);
@@ -225,11 +198,17 @@ const changeElementAttribute = (element, attribute) => {
 const submitEnter = (input, ...actions) => {
   input.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
-      event.preventDefault();
-      actions.forEach((action) => action);
+      // event.preventDefault();
+      console.log("submit enter initialized");
+      console.log(actions);
+      actions.forEach((action) => {
+        action();
+        console.log("action done");
+      });
     }
   });
 };
+// const clearInput = (input) => input.value = " "
 // const switchDisplay = (element) =>{
 //   element.style.display = element.style.display === 'none' ? '' : 'none';
 // };
@@ -280,22 +259,24 @@ addAction(addProjectBtn, () => switchDisplay(addProjectQuery));
 addAction(addProjectQuery, () =>
   submitEnter(
     projectTitleInput,
-    () => projectPanel.projectManager.addProject(),
-    () => makeTab(projectTitleInput.value, projectList)
+    () => projectPanel.projectManager.addProject(projectTitleInput),
+    () => console.log(`${projectTitleInput.value}`),
+    () => makeTab(projectTitleInput.value, projectList),
+    () => console.log(`${projectTitleInput.value}`)
   )
 );
 
 // projectPanel.projectManager.addProject("Diuna");
-console.log(`project title is ${projectPanel.projects[0]["title"]}`);
+
 //add nex item in projects list
 
 // project add ultra function
 // -------------------CREATE NEW TAB FACTORY---------------
 const makeTab = (title, container) => {
-  
-  class ProjectTab {  
+  class ProjectTab {
     typeOfElement = "li";
-    classes = "project-list-cell project-tab button";
+    newElement = document.createElement(this.typeOfElement);
+    classes = ["project-list-cell", "project-tab", "button"];
     htmlContent = `<div class="project-cell-name-container">
                       <span class="project-cell-name">${title}</span>
                       <img src="" alt=" "  class="drop-arrow button" />
@@ -305,18 +286,19 @@ const makeTab = (title, container) => {
                     </div>`;
     constructor(title) {
       this.title = title;
-      
-      this.newElement = document.createElement(this.typeOfElement);
+      // this.newElement = document.createElement('li');
       this.classList = this.classes;
       this.contentHTML = this.htmlContent;
     }
-    add(title, container) {
-      this.newElement.classList.add(this.classList);
-      this.innerHTML = this.contentHTML;
-      container.appendChild(newElement);
+    addTab(title, container) {
+      // const newElement = document.createElement("li");
+      this.classes.forEach((className)=>this.newElement.classList.add(className)); // won't accept whitespace so I give once at a time class name
+      
+      this.newElement.innerHTML = this.contentHTML;
+      container.appendChild(this.newElement);
     }
-  }
+  };
 
-  const newTab= new ProjectTab((title));
-  newTab.add(title,container);
+  const newTab = new ProjectTab(title);
+  newTab.addTab(title, container);
 };
