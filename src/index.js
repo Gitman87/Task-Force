@@ -10,10 +10,6 @@ import dateSrc from "./assets/images/type date.webp";
 const dateInputImg = document.querySelector("#custom-date-input");
 dateInputImg.src = dateSrc;
 
-// import dropArrowSrc from "./assets/images/drop_down_arrow.webp";
-// const dropArrows = document.querySelectorAll(".drop-arrow");
-// dropArrows.forEach((dropArrow) => (dropArrow.src = dropArrowSrc));
-
 // ----------DATE PICKER---------------
 new AirDatepicker("#el", {
   dateFormat(date) {
@@ -158,7 +154,7 @@ class sortByPriority {
 }
 // =============================DOM================================
 const addProjectBtn = document.querySelector("#add-project");
-// console.log(`addProjectBtn selector is: ${addProjectBtn.id}`);
+
 const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
 const projectList = document.querySelector("#project-list");
@@ -208,10 +204,8 @@ const submitEnter = (input, ...actions) => {
     }
   });
 };
-// const clearInput = (input) => input.value = " "
-// const switchDisplay = (element) =>{
-//   element.style.display = element.style.display === 'none' ? '' : 'none';
-// };
+const clearTextInput = (input) => (input.value = " ");
+
 const switchDisplay = (element) => {
   element.classList.toggle("hidden");
 };
@@ -244,15 +238,10 @@ const projectPanelStarter = (() => {
     },
   };
 })();
-// window.onload = () => {
-//   projectPanelStarter.initialize();
-// };
-// ===========START=========================
+
+// =====================START=========================
 const projectPanel = projectPanelStarter.initialize();
 
-// addProjectBtn.addEventListener('click',()=>{
-//   switchDisplay(addProjectQuery);
-// })
 // ----- OPEN DIALOG------
 addAction(addProjectBtn, () => switchDisplay(addProjectQuery));
 
@@ -262,15 +251,11 @@ addAction(addProjectQuery, () =>
     () => projectPanel.projectManager.addProject(projectTitleInput),
     () => console.log(`${projectTitleInput.value}`),
     () => makeTab(projectTitleInput.value, projectList),
+    () => clearTextInput(projectTitleInput),
     () => console.log(`${projectTitleInput.value}`)
   )
 );
 
-// projectPanel.projectManager.addProject("Diuna");
-
-//add nex item in projects list
-
-// project add ultra function
 // -------------------CREATE NEW TAB FACTORY---------------
 const makeTab = (title, container) => {
   class ProjectTab {
@@ -286,18 +271,17 @@ const makeTab = (title, container) => {
                     </div>`;
     constructor(title) {
       this.title = title;
-      // this.newElement = document.createElement('li');
       this.classList = this.classes;
       this.contentHTML = this.htmlContent;
     }
     addTab(title, container) {
-      // const newElement = document.createElement("li");
-      this.classes.forEach((className)=>this.newElement.classList.add(className)); // won't accept whitespace so I give once at a time class name
-      
+      this.classes.forEach((className) =>
+        this.newElement.classList.add(className)
+      ); // won't accept whitespace so I give once at a time class name
       this.newElement.innerHTML = this.contentHTML;
       container.appendChild(this.newElement);
     }
-  };
+  }
 
   const newTab = new ProjectTab(title);
   newTab.addTab(title, container);
