@@ -46,10 +46,15 @@ class ProjectManager {
   }
 
   addProject(input) {
-    const project = new Project(input.value);
-    console.log(`addProject project title is: ${project.title}`);
-    this.projects.push(project);
-    console.log(`Project added: ${this.projects[0].title}`);
+    if (input) {
+      const project = new Project(input.value);
+      console.log(`addProject project title is: ${project.title}`);
+      this.projects.push(project);
+      console.log(`Project added: ${this.projects[0].title}`);
+    } else {
+      alert("Project title cannot be empty!");
+      console.warn("Project title is empty");
+    }
   }
   removeProject(title) {
     const index = this.projects.findIndex((project) => project.title === title);
@@ -204,11 +209,38 @@ const submitEnter = (input, ...actions) => {
     }
   });
 };
-const clearTextInput = (input) => (input.value = " ");
+const clearTextInput = (input) => (input.value = "");
 
 const switchDisplay = (element) => {
+  
   element.classList.toggle("hidden");
+  console.log( "element class list is:", element.classList);
+    if(element.classList.contains("hidden")){
+      clearTextInput(projectTitleInput) // too tightly coupled??? 
+    }
+  // clearTextInput(projectTitleInput);
 };
+class DisplaySwitcher{
+  toggle(element){
+    element.classList.toggle("hidden");
+  }
+}
+class TextInputCleaner{
+  clean(input){
+    input.value = "";
+  }
+}
+const cleanerAndSwitcher = (element, input) => {
+
+const switcher= new DisplaySwitcher();
+const cleaner = new TextInputCleaner();
+
+switcher.toggle(element);
+if(element.classList.contains("hidden")){
+  cleaner.clean(input);
+}
+return{switcher, cleaner}
+}
 // -----------LOCAL STORAGE---------
 const serializeObject = (object) => {
   return JSON.stringify(object);
@@ -243,17 +275,18 @@ const projectPanelStarter = (() => {
 const projectPanel = projectPanelStarter.initialize();
 
 // ----- OPEN DIALOG------
-addAction(addProjectBtn, () => switchDisplay(addProjectQuery));
+addAction(addProjectBtn, () => cleanerAndSwitcher(addProjectQuery, projectTitleInput));
 
-addAction(addProjectQuery, () =>
-  submitEnter(
-    projectTitleInput,
-    () => projectPanel.projectManager.addProject(projectTitleInput),
-    () => console.log(`${projectTitleInput.value}`),
-    () => makeTab(projectTitleInput.value, projectList),
-    () => clearTextInput(projectTitleInput),
-    () => console.log(`${projectTitleInput.value}`)
-  )
+submitEnter(
+  projectTitleInput,
+  () => projectPanel.projectManager.addProject(projectTitleInput),
+  () => console.log(`${projectTitleInput.value}`),
+  () => makeTab(projectTitleInput.value, projectList),
+  () => {
+    const cleaner = new TextInputCleaner;
+    cleaner.clean(projectTitleInput);
+  },
+  () => console.log(`${projectTitleInput.value}`)
 );
 
 // -------------------CREATE NEW TAB FACTORY---------------
@@ -268,11 +301,11 @@ const makeTab = (title, container) => {
                       <div class="progress-bar-main-container">
                         <div class="progress-bar"></div>
                       </div>`;
-  
+
     constructor(title) {
       this.title = title;
     }
-  
+
     addTab(container) {
       this.newElement = document.createElement(ProjectTab.typeOfElement);
       ProjectTab.classes.forEach((className) => {
@@ -282,7 +315,10 @@ const makeTab = (title, container) => {
       container.appendChild(this.newElement);
     }
   }
-
-  const newTab = new ProjectTab(title);
-  newTab.addTab(container);
+  if (title) {
+    const newTab = new ProjectTab(title);
+    newTab.addTab(container);
+  } else {
+    console.warn("Cannot create new tab- title input is empty");
+  }
 };

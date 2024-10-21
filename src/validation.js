@@ -14,4 +14,19 @@ class InputValidator {
       return null;
     }
   }
+  static textInput
+  constructor(input){
+    this.type = InputValidator.checkTypeOfInput(input)
+  }
+  validate(input){  
+    if(InputValidator(input)!=null){
+      
+    }
+
+  }
+
+
+
+  
+
 }
