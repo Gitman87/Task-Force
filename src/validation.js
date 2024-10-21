@@ -1,7 +1,7 @@
-class inputValidator {
+class InputValidator {
   static typesOfInput = ["text", "number", "date"]; // short - for this project purpose
 
-  checkTypeOfInput(input) {
+   static checkTypeOfInput(input) {
     const typeIndex = this.typesOfInput.indexOf(input.type);
     if (typeIndex >= 0) {
       console.log(`Type of this input is: ${this.typesOfInput[typeIndex]}`);

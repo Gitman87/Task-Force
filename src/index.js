@@ -259,30 +259,30 @@ addAction(addProjectQuery, () =>
 // -------------------CREATE NEW TAB FACTORY---------------
 const makeTab = (title, container) => {
   class ProjectTab {
-    typeOfElement = "li";
-    newElement = document.createElement(this.typeOfElement);
-    classes = ["project-list-cell", "project-tab", "button"];
-    htmlContent = `<div class="project-cell-name-container">
-                      <span class="project-cell-name">${title}</span>
-                      <img src="" alt=" "  class="drop-arrow button" />
-                    </div>
-                    <div class="progress-bar-main-container">
-                      <div class="progress-bar"></div>
-                    </div>`;
+    static typeOfElement = "li";
+    static classes = ["project-list-cell", "project-tab", "button"];
+    static htmlContent = `<div class="project-cell-name-container">
+                        <span class="project-cell-name">${title}</span>
+                        <img src="" alt=" "  class="drop-arrow button" />
+                      </div>
+                      <div class="progress-bar-main-container">
+                        <div class="progress-bar"></div>
+                      </div>`;
+  
     constructor(title) {
       this.title = title;
-      this.classList = this.classes;
-      this.contentHTML = this.htmlContent;
     }
-    addTab(title, container) {
-      this.classes.forEach((className) =>
-        this.newElement.classList.add(className)
-      ); // won't accept whitespace so I give once at a time class name
-      this.newElement.innerHTML = this.contentHTML;
+  
+    addTab(container) {
+      this.newElement = document.createElement(ProjectTab.typeOfElement);
+      ProjectTab.classes.forEach((className) => {
+        this.newElement.classList.add(className);
+      });
+      this.newElement.innerHTML = ProjectTab.htmlContent;
       container.appendChild(this.newElement);
     }
   }
 
   const newTab = new ProjectTab(title);
-  newTab.addTab(title, container);
+  newTab.addTab(container);
 };
