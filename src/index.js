@@ -45,8 +45,17 @@ class ProjectManager {
     this.projects = projects;
   }
 
-  addProject(input) {
-    if (input) {
+  addProject(input, checker) {
+    do {
+      const project = new Project(input.value);
+      console.log(`addProject project title is: ${project.title}`);
+      this.projects.push(project);
+      console.log(`Project added: ${this.projects[0].title}`);
+    } while (checker(input) != null);
+    alert("Project title cannot be empty!");
+    console.warn("Project title is empty");
+
+    if (input.value) {
       const project = new Project(input.value);
       console.log(`addProject project title is: ${project.title}`);
       this.projects.push(project);
@@ -99,7 +108,6 @@ class TaskManager {
   constructor(tasks) {
     this.tasks = tasks;
   }
-
   addTask({
     title,
     dueDate = "17-10-2024",
@@ -118,7 +126,6 @@ class TaskManager {
     });
     this.tasks.push(task);
   }
-
   removeTask(title) {
     const index = this.tasks.findIndex((task) => task.title === title);
     if (index !== -1) {
@@ -159,7 +166,6 @@ class sortByPriority {
 }
 // =============================DOM================================
 const addProjectBtn = document.querySelector("#add-project");
-
 const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
 const projectList = document.querySelector("#project-list");
@@ -212,35 +218,33 @@ const submitEnter = (input, ...actions) => {
 const clearTextInput = (input) => (input.value = "");
 
 const switchDisplay = (element) => {
-  
   element.classList.toggle("hidden");
-  console.log( "element class list is:", element.classList);
-    if(element.classList.contains("hidden")){
-      clearTextInput(projectTitleInput) // too tightly coupled??? 
-    }
+  console.log("element class list is:", element.classList);
+  if (element.classList.contains("hidden")) {
+    clearTextInput(projectTitleInput); // too tightly coupled???
+  }
   // clearTextInput(projectTitleInput);
 };
-class DisplaySwitcher{
-  toggle(element){
+class DisplaySwitcher {
+  toggle(element) {
     element.classList.toggle("hidden");
   }
 }
-class TextInputCleaner{
-  clean(input){
+class TextInputCleaner {
+  clean(input) {
     input.value = "";
   }
 }
 const cleanerAndSwitcher = (element, input) => {
+  const switcher = new DisplaySwitcher();
+  const cleaner = new TextInputCleaner();
 
-const switcher= new DisplaySwitcher();
-const cleaner = new TextInputCleaner();
-
-switcher.toggle(element);
-if(element.classList.contains("hidden")){
-  cleaner.clean(input);
-}
-return{switcher, cleaner}
-}
+  switcher.toggle(element);
+  if (element.classList.contains("hidden")) {
+    cleaner.clean(input);
+  }
+  return { switcher, cleaner };
+};
 // -----------LOCAL STORAGE---------
 const serializeObject = (object) => {
   return JSON.stringify(object);
@@ -275,18 +279,18 @@ const projectPanelStarter = (() => {
 const projectPanel = projectPanelStarter.initialize();
 
 // ----- OPEN DIALOG------
-addAction(addProjectBtn, () => cleanerAndSwitcher(addProjectQuery, projectTitleInput));
+addAction(addProjectBtn, () =>
+  cleanerAndSwitcher(addProjectQuery, projectTitleInput)
+);
 
 submitEnter(
   projectTitleInput,
   () => projectPanel.projectManager.addProject(projectTitleInput),
-  () => console.log(`${projectTitleInput.value}`),
   () => makeTab(projectTitleInput.value, projectList),
   () => {
-    const cleaner = new TextInputCleaner;
+    const cleaner = new TextInputCleaner();
     cleaner.clean(projectTitleInput);
-  },
-  () => console.log(`${projectTitleInput.value}`)
+  }
 );
 
 // -------------------CREATE NEW TAB FACTORY---------------
