@@ -2,9 +2,10 @@ import "./styles/style.css";
 import AirDatepicker from "air-datepicker";
 import "air-datepicker/air-datepicker.css";
 // --------------Validation-----------------
-import {validateInput} from "./validation";
-const validator = validateInput();
-console.log(validator);
+import { validateInput } from "./validation";
+const { inputValidator, inputUniqueValidator } = validateInput();
+
+console.log(inputUniqueValidator);
 
 // =======IMAGES===========
 import logoSrc from "./assets/images/logo.webp";
@@ -14,7 +15,6 @@ logo.src = logoSrc;
 import dateSrc from "./assets/images/type date.webp";
 const dateInputImg = document.querySelector("#custom-date-input");
 dateInputImg.src = dateSrc;
-
 
 // ----------DATE PICKER---------------
 new AirDatepicker("#el", {
@@ -32,7 +32,7 @@ new AirDatepicker("#el", {
 class ProjectPanel {
   constructor() {
     this.projects = [];
-    this.projectManager = new ProjectManager(this.projects, validator);
+    this.projectManager = new ProjectManager(this.projects);
   }
   initialized() {
     console.log("Project Panel initialized!");
@@ -47,24 +47,24 @@ class Project {
   }
 }
 class ProjectManager {
-  constructor(projects, validator) {
+  constructor(projects) {
     this.projects = projects;
-    this.validator = validator;
   }
 
-  addProject(input) {
-    
-    
-   
-
-    if (input.value) {
+  addProject(input, checkIfEmpty, checkIfUnique) {
+    const isEmptyValid = checkIfEmpty();
+    const isUniqueValid = checkIfUnique();
+    if (
+      checkIfEmpty() && checkIfUnique()
+    ) {
       const project = new Project(input.value);
       console.log(`addProject project title is: ${project.title}`);
       this.projects.push(project);
       console.log(`Project added: ${this.projects[0].title}`);
     } else {
-      alert("Project title cannot be empty!");
-      console.warn("Project title is empty");
+      if (!isEmptyValid) alert("Project title cannot be empty!");
+      if (!isUniqueValid) alert("Project title already exists!");
+    console.warn("Project validation failed.");
     }
   }
   removeProject(title) {
@@ -287,7 +287,11 @@ addAction(addProjectBtn, () =>
 
 submitEnter(
   projectTitleInput,
-  () => projectPanel.projectManager.addProject(projectTitleInput),
+  () => projectPanel.projectManager.addProject(
+    projectTitleInput,
+    () => inputValidator.isEmpty(projectTitleInput),
+    () => inputUniqueValidator.isUnique(projectPanel.projectManager.projects, projectTitleInput)
+  ),
   () => makeTab(projectTitleInput.value, projectList),
   () => {
     const cleaner = new TextInputCleaner();

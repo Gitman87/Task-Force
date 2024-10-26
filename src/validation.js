@@ -52,7 +52,7 @@
 // };
 
 // =====================REISSUE===============================
-validateInput = () => {
+export const validateInput = () => {
   function addMethod(object, method) {
     object[method.name] = method;
 
@@ -62,16 +62,21 @@ validateInput = () => {
     isEmpty(input) {
       if (!input.value) {
         alert("Input cannot be empty!");
-        return null;
+        return false;
+      }
+      else{
+        return true;
       }
     }
   }
   function isUnique(array, input) {
     if (array.some((item) => item === input.value)) {
       alert("Value already exists");
-      return null;
+      return false;
     } else {
+
       console.log("Value is unique");
+      return true;
     }
   }
   const inputValidator = new InputValidator();
@@ -79,7 +84,7 @@ validateInput = () => {
 
   return {
     inputValidator,
-    inputUniqueValidator,
+    inputUniqueValidator
   };
 };
 const { inputValidator, inputUniqueValidator } = validateInput();
