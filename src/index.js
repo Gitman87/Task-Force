@@ -55,7 +55,7 @@ class ProjectManager {
     const isEmptyValid = checkIfEmpty();
     const isUniqueValid = checkIfUnique();
     if (
-      checkIfEmpty() && checkIfUnique()
+      isEmptyValid && isUniqueValid
     ) {
       const project = new Project(input.value);
       console.log(`addProject project title is: ${project.title}`);

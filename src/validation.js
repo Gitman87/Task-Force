@@ -70,7 +70,7 @@ export const validateInput = () => {
     }
   }
   function isUnique(array, input) {
-    if (array.some((item) => item === input.value)) {
+    if (array.some((item) => item.title === input.value)) {
       alert("Value already exists");
       return false;
     } else {
