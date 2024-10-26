@@ -1,6 +1,11 @@
 import "./styles/style.css";
 import AirDatepicker from "air-datepicker";
 import "air-datepicker/air-datepicker.css";
+// --------------Validation-----------------
+import {validateInput} from "./validation";
+const validator = validateInput();
+console.log(validator);
+
 // =======IMAGES===========
 import logoSrc from "./assets/images/logo.webp";
 const logo = document.querySelector("#logo");
@@ -9,6 +14,7 @@ logo.src = logoSrc;
 import dateSrc from "./assets/images/type date.webp";
 const dateInputImg = document.querySelector("#custom-date-input");
 dateInputImg.src = dateSrc;
+
 
 // ----------DATE PICKER---------------
 new AirDatepicker("#el", {
@@ -26,7 +32,7 @@ new AirDatepicker("#el", {
 class ProjectPanel {
   constructor() {
     this.projects = [];
-    this.projectManager = new ProjectManager(this.projects);
+    this.projectManager = new ProjectManager(this.projects, validator);
   }
   initialized() {
     console.log("Project Panel initialized!");
@@ -41,19 +47,15 @@ class Project {
   }
 }
 class ProjectManager {
-  constructor(projects) {
+  constructor(projects, validator) {
     this.projects = projects;
+    this.validator = validator;
   }
 
-  addProject(input, checker) {
-    do {
-      const project = new Project(input.value);
-      console.log(`addProject project title is: ${project.title}`);
-      this.projects.push(project);
-      console.log(`Project added: ${this.projects[0].title}`);
-    } while (checker(input) != null);
-    alert("Project title cannot be empty!");
-    console.warn("Project title is empty");
+  addProject(input) {
+    
+    
+   
 
     if (input.value) {
       const project = new Project(input.value);
