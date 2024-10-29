@@ -536,11 +536,18 @@ h3 {
 }
 
 .drop-down-content {
-  /* display:none; */
+  visibility: hidden;
   position: absolute;
   left: 7.75rem;
-  top: 7.2rem;
   width: 5rem;
+  transform: translateY(0);
+}
+.drop-down-content.visible {
+  visibility: visible;
+  position: absolute;
+  left: 7.75rem;
+  width: 5rem;
+  transform: translateY(3rem);
 }
 
 .drop-down-item,
@@ -579,9 +586,8 @@ h3 {
 .project-tab:active {
   background-color: transparent;
 }
-.active-tab{
-  background-color:transparent;
-
+.active-tab {
+  background-color: transparent;
 }
 /* --------------------PROGRESS BAR----------------- */
 .progress-bar-main-container {

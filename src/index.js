@@ -169,6 +169,7 @@ const addProjectBtn = document.querySelector("#add-project");
 const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
 const projectList = document.querySelector("#project-list");
+console.log("tabs array is", projectList.children);
 
 const addAction = (elements, ...args) => {
   let event, action;
@@ -277,6 +278,12 @@ const projectPanelStarter = (() => {
 
 // =====================START=========================
 const projectPanel = projectPanelStarter.initialize();
+const dropDown = document.getElementById("edit-project");
+const arrow = document.querySelector(".drop-arrow");
+
+arrow.addEventListener("click", () => {
+  dropDown.classList.toggle("visible");
+});
 
 // ----- OPEN DIALOG------
 addAction(addProjectBtn, () =>
@@ -299,17 +306,40 @@ submitEnter(
   () => {
     const cleaner = new TextInputCleaner();
     cleaner.clean(projectTitleInput);
-  }
+  },
+  ()=> addProjectQuery.classList.toggle("hidden")
+
 );
 
 // -------------------CREATE NEW TAB FACTORY---------------
-const makeTab = (title, container) => {
+const makeTab = (title, container, activeTabClass = "active-tab") => {
   class ProjectTab {
     static typeOfElement = "li";
-    static classes = ["project-list-cell", "project-tab", "button"];
+    static classes = [
+      "project-list-cell",
+      "project-tab",
+      "button",
+      "active-tab",
+    ];
     static htmlContent = `<div class="project-cell-name-container">
                         <span class="project-cell-name">${title}</span>
                         <img src="" alt=" "  class="drop-arrow button" />
+                        <div class="drop-down-content " id="edit-project">
+                        <form action="" class="drop-down-form">
+                          <ul class="drop-down-list">
+                            <li>
+                              <input
+                                type="text"
+                                class="drop-down-item button rename-project"
+                                placeholder="Rename"
+                              />
+                            </li>
+                            <li class="drop-down-item button delete-project">
+                              Delete
+                            </li>
+                          </ul>
+                        </form>
+                      </div>
                       </div>
                       <div class="progress-bar-main-container">
                         <div class="progress-bar"></div>
@@ -319,7 +349,7 @@ const makeTab = (title, container) => {
       this.title = title;
     }
 
-    addTab(container, activeTabClass) {
+    addTab(container) {
       this.newElement = document.createElement(ProjectTab.typeOfElement);
       ProjectTab.classes.forEach((className) => {
         this.newElement.classList.add(className);
@@ -329,15 +359,24 @@ const makeTab = (title, container) => {
       // visual active tab  toggle listener
       this.newElement.addEventListener("click", () => {
         Array.from(container.children).forEach((tab) => {
-          tab.classList.remove("activeTabClass");
+          tab.classList.remove(activeTabClass );
         });
 
-        this.newElement.classList.toggle("activeTabClass");
+        this.newElement.classList.toggle(activeTabClass );
+      });
+    }
+    toggleActiveTab(container, activeTabClass) {
+      Array.from(container.children).forEach((tab) => {
+        tab.addEventListener("clicked", () => {
+          tab.classList.toggle(activeTabClass);
+        });
       });
     }
   }
+
   if (title) {
     const newTab = new ProjectTab(title);
+    newTab.toggleActiveTab(container, activeTabClass);
     newTab.addTab(container);
   } else {
     console.warn("Cannot create new tab- title input is empty");
