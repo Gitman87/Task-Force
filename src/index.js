@@ -54,9 +54,7 @@ class ProjectManager {
   addProject(input, checkIfEmpty, checkIfUnique) {
     const isEmptyValid = checkIfEmpty();
     const isUniqueValid = checkIfUnique();
-    if (
-      isEmptyValid && isUniqueValid
-    ) {
+    if (isEmptyValid && isUniqueValid) {
       const project = new Project(input.value);
       console.log(`addProject project title is: ${project.title}`);
       this.projects.push(project);
@@ -64,7 +62,7 @@ class ProjectManager {
     } else {
       if (!isEmptyValid) alert("Project title cannot be empty!");
       if (!isUniqueValid) alert("Project title already exists!");
-    console.warn("Project validation failed.");
+      console.warn("Project validation failed.");
     }
   }
   removeProject(title) {
@@ -287,11 +285,16 @@ addAction(addProjectBtn, () =>
 
 submitEnter(
   projectTitleInput,
-  () => projectPanel.projectManager.addProject(
-    projectTitleInput,
-    () => inputValidator.isEmpty(projectTitleInput),
-    () => inputUniqueValidator.isUnique(projectPanel.projectManager.projects, projectTitleInput)
-  ),
+  () =>
+    projectPanel.projectManager.addProject(
+      projectTitleInput,
+      () => inputValidator.isEmpty(projectTitleInput),
+      () =>
+        inputUniqueValidator.isUnique(
+          projectPanel.projectManager.projects,
+          projectTitleInput
+        )
+    ),
   () => makeTab(projectTitleInput.value, projectList),
   () => {
     const cleaner = new TextInputCleaner();
@@ -316,13 +319,21 @@ const makeTab = (title, container) => {
       this.title = title;
     }
 
-    addTab(container) {
+    addTab(container, activeTabClass) {
       this.newElement = document.createElement(ProjectTab.typeOfElement);
       ProjectTab.classes.forEach((className) => {
         this.newElement.classList.add(className);
       });
       this.newElement.innerHTML = ProjectTab.htmlContent;
       container.appendChild(this.newElement);
+      // visual active tab  toggle listener
+      this.newElement.addEventListener("click", () => {
+        Array.from(container.children).forEach((tab) => {
+          tab.classList.remove("activeTabClass");
+        });
+
+        this.newElement.classList.toggle("activeTabClass");
+      });
     }
   }
   if (title) {
