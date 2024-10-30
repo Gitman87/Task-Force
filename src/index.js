@@ -42,8 +42,9 @@ class Project {
   constructor(title) {
     this.title = title;
     this.tasks = [];
-    this.completion = 0;
+    this.progress = 0;
     this.taskManager = new TaskManager(this.tasks);
+    this.idTab = title.split(" ").join("-").toLowerCase();
   }
 }
 class ProjectManager {
@@ -364,13 +365,7 @@ const makeTab = (title, container, activeTabClass = "active-tab") => {
         this.newElement.classList.toggle(activeTabClass);
       });
     }
-    // toggleActiveTab(container, activeTabClass) {
-    //   Array.from(container.children).forEach((tab) => {
-    //     tab.addEventListener("clicked", () => {
-    //       tab.classList.toggle(activeTabClass);
-    //     });
-    //   });
-    // }
+    
   }
 
   if (title) {
