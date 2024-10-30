@@ -307,8 +307,7 @@ submitEnter(
     const cleaner = new TextInputCleaner();
     cleaner.clean(projectTitleInput);
   },
-  ()=> addProjectQuery.classList.toggle("hidden")
-
+  () => addProjectQuery.classList.toggle("hidden")
 );
 
 // -------------------CREATE NEW TAB FACTORY---------------
@@ -318,8 +317,8 @@ const makeTab = (title, container, activeTabClass = "active-tab") => {
     static classes = [
       "project-list-cell",
       "project-tab",
-      "button",
-      "active-tab",
+      "button"
+      
     ];
     static htmlContent = `<div class="project-cell-name-container">
                         <span class="project-cell-name">${title}</span>
@@ -359,25 +358,26 @@ const makeTab = (title, container, activeTabClass = "active-tab") => {
       // visual active tab  toggle listener
       this.newElement.addEventListener("click", () => {
         Array.from(container.children).forEach((tab) => {
-          tab.classList.remove(activeTabClass );
+          tab.classList.remove(activeTabClass);
         });
 
-        this.newElement.classList.toggle(activeTabClass );
+        this.newElement.classList.toggle(activeTabClass);
       });
     }
-    toggleActiveTab(container, activeTabClass) {
-      Array.from(container.children).forEach((tab) => {
-        tab.addEventListener("clicked", () => {
-          tab.classList.toggle(activeTabClass);
-        });
-      });
-    }
+    // toggleActiveTab(container, activeTabClass) {
+    //   Array.from(container.children).forEach((tab) => {
+    //     tab.addEventListener("clicked", () => {
+    //       tab.classList.toggle(activeTabClass);
+    //     });
+    //   });
+    // }
   }
 
   if (title) {
     const newTab = new ProjectTab(title);
-    newTab.toggleActiveTab(container, activeTabClass);
+    // newTab.toggleActiveTab(container, activeTabClass);
     newTab.addTab(container);
+    
   } else {
     console.warn("Cannot create new tab- title input is empty");
   }
