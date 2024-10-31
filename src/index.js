@@ -68,9 +68,14 @@ class ProjectManager {
   }
   removeProject(title) {
     const index = this.projects.findIndex((project) => project.title === title);
-    if (index !== -1) {
-      this.projects.splice(index, 1);
-    }
+  if (index !== -1) {
+    this.projects.splice(index, 1);
+    console.log("removed project name:",title)
+    return true; 
+  }
+  else{
+    console.warn("ProjectPanel couldn't remove project", title);
+    return false;}
   }
   getProjects() {
     return this.projects;
@@ -172,27 +177,69 @@ const projectTitleInput = document.querySelector("#project-title-input");
 const projectList = document.querySelector("#project-list");
 console.log("tabs array is", projectList.children);
 
-const addAction = (elements, ...args) => {
-  let event, action;
-  if (args.length === 1) {
-    event = "click";
-    action = args[0];
-  } else {
-    event = args[0];
-    action = args[1];
-  }
+// const addAction = (elements, ...args) => {
+//   let event, action;
+//   if (args.length === 1) {
+//     event = "click";
+//     action = args[0];
+//   } else {
+//     event = args[0];
+//     action = args[1];
+//   }
 
-  if (
-    NodeList.prototype.isPrototypeOf(elements) ||
-    HTMLCollection.prototype.isPrototypeOf(elements) ||
-    Array.isArray(elements)
-  ) {
-    elements.forEach((element) => {
-      element.addEventListener(event, action);
+//   if (
+//     NodeList.prototype.isPrototypeOf(elements) ||
+//     HTMLCollection.prototype.isPrototypeOf(elements) ||
+//     Array.isArray(elements)
+//   ) {
+//     elements.forEach((element) => {
+//       element.addEventListener(event, action);
+//     });
+//   } else {
+//     elements.addEventListener(event, action);
+//   }
+// };
+
+// ------adding listeners to objects with particular classes-------
+
+
+
+
+
+
+
+const addListener = (elements, action) => {
+  // Define the mapping of classes to events
+  const eventMap = {
+    enter: "keypress",
+    button: "click",
+    hover: "mouseover" // if ether will be need
+  };
+
+  // check if iterable elements (selectorAll)
+  const elementList = NodeList.prototype.isPrototypeOf(elements) ||
+                      HTMLCollection.prototype.isPrototypeOf(elements) ||
+                      Array.isArray(elements)
+    ? elements
+    : [elements];
+
+  
+  elementList.forEach((element) => {
+    // Find the first class in eventMap that matches an element's class
+    const eventType = Object.keys(eventMap).find((className) =>
+      element.classList.contains(className)
+    );
+
+    // If an event type is found based on the class, use it; otherwise, default to 'click'
+    const event = eventType ? eventMap[eventType] : "click";
+
+    // Add the event listener with the determined event type
+    element.addEventListener(event, (e) => {
+      // Optionally check for specific keys if 'enter' class and 'keypress' event
+      if (event === "keypress" && e.key !== "Enter") return;
+      action(e);
     });
-  } else {
-    elements.addEventListener(event, action);
-  }
+  });
 };
 const changeElementAttribute = (element, attribute) => {
   if (!element.hasAttribute(attribute)) {
@@ -287,7 +334,7 @@ arrow.addEventListener("click", () => {
 });
 
 // ----- OPEN DIALOG------
-addAction(addProjectBtn, () =>
+addListener(addProjectBtn, () =>
   cleanerAndSwitcher(addProjectQuery, projectTitleInput)
 );
 

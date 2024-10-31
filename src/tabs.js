@@ -1,8 +1,9 @@
 class TabPanel {
-  constructor(container) {
+  constructor(container, projectPanel) {
     this.container = container;
     this.tabList = [];
     this.tabManager = new TabManager(this.tabList);
+    this.projectPanel = projectPanel;
   }
   initialized() {
     console.log("TabPanel  initialized!");
@@ -44,9 +45,14 @@ class TabManager {
   constructor(tabList) {
     this.tabList = tabList;
   }
+  static newestProjects = projectPanel;
 
-  addTab(title, id, container) {
-    //create unique id - kebab case title(lower case)
+  addTab(container) {
+    //select last added project
+    const project =
+      this.projectPanel.projects[this.projectPanel.projects.length - 1];
+    const title = project.title;
+    const id = project.id;
 
     console.log(`idTitle of tab ${title} is ${id}`);
     const newTab = new Tab(title, id);
@@ -59,6 +65,7 @@ class TabManager {
     this.newElement.setAttribute("id", id);
     container.appendChild(this.newElement);
     this.tabList.push(newTab);
+    //add listeners to tab's sub-elements
 
     // visual active tab  toggle listener
     this.newElement.addEventListener("click", () => {
@@ -69,12 +76,38 @@ class TabManager {
       this.newElement.classList.toggle(activeTabClass);
     });
   }
+
   removeTab(id) {
-    const index = this.tabList.findIndex((tab) => tab.idTab === id);
-    if (index !== -1) {
-      this.tabList.splice(index, 1);
+    // const projects = this.projectPanel.getProjects();
+    const tabIndex = this.tabList.findIndex((tab) => tab.idTab === id);
+
+    if (tabIndex === -1) {
+      console.warn("Cannot remove tab- not found");
+      return;
     }
+    const tabToRemove = this.tabList[tabIndex];
+    const projectTitle = tabToRemove.title;
+    //remove project
+    const projectRemoved =
+      this.projectPanel.projectManager.removeProject(projectTitle);
+    if (!projectRemoved) {
+      console.log("Cannot remove tab; associated project not found");
+      return;
+    }
+    //remove tab
+    this.tabList.splice(tabIndex, 1);
+    console.log(
+      `Tab with id: ${tabToRemove.idTab} removed for project title: ${projectTitle}`
+    );
+    // if (index !== -1) {
+    //   this.tabList.splice(index, 1);
+    //   this.projectPanel.projectManger.removeProject(this.tabList[index].title)
+    // }
+    // else{console.log("Cannot remove tab")};
   }
+  // rename(id){
+
+  // }
   getTabs() {
     return this.tabList;
   }
@@ -85,3 +118,51 @@ class TabManager {
     }
   }
 }
+const projectList = document.querySelector("#project-list");
+const tabPanel = new TabPanel(projectList, projectPanel);
+// const actions = {
+//   "delete-project": (e)=>
+//     tabPanel.tabManager.
+// }
+
+// -----------------to analize----------
+// Assume `tabManager` is an instance of TabManager, already initialized
+const projectList = document.getElementById("project-list");
+
+// Define action handlers for each target class with closures that capture needed arguments
+const actions = {
+  "delete-project": (event, tabManager, project) => {
+    const projectId = project.id;
+    tabManager.deleteProject(projectId);
+  },
+  "rename-project": (event, tabManager, project) => {
+    const projectId = project.id;
+    const newTitle = prompt("Enter new project name:");
+    tabManager.renameProject(projectId, newTitle);
+  },
+  "open-project": (event, tabManager, project) => {
+    tabManager.openProject(project);
+  },
+  // Add other actions as needed
+};
+
+// Event listener on the container
+projectList.addEventListener("click", (event) => {
+  const clickedElement = event.target;
+  const projectElement = clickedElement.closest(".project-tab"); // Assumes each tab has a project reference
+  const projectId = projectElement?.dataset.projectId;
+
+  // Retrieve the project object by ID (assuming `TabManager` has this capability)
+  const project = tabManager.getProjectById(projectId);
+  if (!project) return; // Exit if no project is found
+
+  // Find the first class that has a corresponding action
+  const actionClass = Object.keys(actions).find((action) =>
+    clickedElement.classList.contains(action)
+  );
+
+  // Call the action handler, passing in the event, tabManager, and project
+  if (actionClass) {
+    actions[actionClass](event, tabManager, project);
+  }
+});
