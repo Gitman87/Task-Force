@@ -707,7 +707,7 @@ h3 {
 .drop-down-item {
   width: 100%;
   text-align: center;
-  overflow-x: scroll;
+  overflow-x: scroll ;
 }
 
 #new-task-priority {

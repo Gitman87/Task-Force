@@ -10,7 +10,7 @@ export const validateInput = () => {
     isEmpty(input) {
       if (!input.value) {
         alert("Input cannot be empty!");
-        return false;
+        return;
       } else {
         return true;
       }
@@ -19,7 +19,7 @@ export const validateInput = () => {
   function isUnique(array, input) {
     if (array.some((item) => item.title === input.value)) {
       alert("Value already exists");
-      return false;
+      return;
     } else {
       console.log("Value is unique");
       return true;

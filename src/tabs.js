@@ -126,43 +126,19 @@ const tabPanel = new TabPanel(projectList, projectPanel);
 // }
 
 // -----------------to analize----------
-// Assume `tabManager` is an instance of TabManager, already initialized
-const projectList = document.getElementById("project-list");
 
-// Define action handlers for each target class with closures that capture needed arguments
-const actions = {
-  "delete-project": (event, tabManager, project) => {
-    const projectId = project.id;
-    tabManager.deleteProject(projectId);
-  },
-  "rename-project": (event, tabManager, project) => {
-    const projectId = project.id;
-    const newTitle = prompt("Enter new project name:");
-    tabManager.renameProject(projectId, newTitle);
-  },
-  "open-project": (event, tabManager, project) => {
-    tabManager.openProject(project);
-  },
-  // Add other actions as needed
-};
+const addGlobalListener = (type, selector, callback)=>{
+  document.addEventListener(type, e =>{
+    if(e.target.matches(selector)){
+      callback()
+    }
+  })
+}// thanks, WDS
+addGlobalListener("click",".project-tab", (e)=>{
+  e.target.classList.toggle("active-tab")
+})   
 
-// Event listener on the container
-projectList.addEventListener("click", (event) => {
-  const clickedElement = event.target;
-  const projectElement = clickedElement.closest(".project-tab"); // Assumes each tab has a project reference
-  const projectId = projectElement?.dataset.projectId;
 
-  // Retrieve the project object by ID (assuming `TabManager` has this capability)
-  const project = tabManager.getProjectById(projectId);
-  if (!project) return; // Exit if no project is found
 
-  // Find the first class that has a corresponding action
-  const actionClass = Object.keys(actions).find((action) =>
-    clickedElement.classList.contains(action)
-  );
 
-  // Call the action handler, passing in the event, tabManager, and project
-  if (actionClass) {
-    actions[actionClass](event, tabManager, project);
-  }
-});
+

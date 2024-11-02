@@ -51,31 +51,50 @@ class ProjectManager {
   constructor(projects) {
     this.projects = projects;
   }
-
-  addProject(input, checkIfEmpty, checkIfUnique) {
-    const isEmptyValid = checkIfEmpty();
-    const isUniqueValid = checkIfUnique();
-    if (isEmptyValid && isUniqueValid) {
+  static checkInput(validator, projects, input) {
+    const isEmpty = validator.isEmpty(input);
+    const isUnique = validator.isUnique(projects, input);
+    
+    return {isEmpty, isUnique}
+  }
+  addProject(input) {
+    const {isEmpty, isUnique} = ProjectManager.checkInput(inputUniqueValidator, this.projects, input);
+    if (isEmpty && isUnique) {
       const project = new Project(input.value);
       console.log(`addProject project title is: ${project.title}`);
       this.projects.push(project);
       console.log(`Project added: ${this.projects[0].title}`);
+      return project;
     } else {
-      if (!isEmptyValid) alert("Project title cannot be empty!");
-      if (!isUniqueValid) alert("Project title already exists!");
+      if (!isEmpty) {
+        alert("Project title cannot be empty!");
+        return null;
+      }
+      else if (!isUnique) {
+        alert("Project title already exists!");
+        return null;
+        
+      }
       console.warn("Project validation failed.");
+      return null;
+      
+      
     }
+    
+  }
+  getLastProject() {
+    return this.projects[this.projects.length - 1];
   }
   removeProject(title) {
     const index = this.projects.findIndex((project) => project.title === title);
-  if (index !== -1) {
-    this.projects.splice(index, 1);
-    console.log("removed project name:",title)
-    return true; 
-  }
-  else{
-    console.warn("ProjectPanel couldn't remove project", title);
-    return false;}
+    if (index !== -1) {
+      this.projects.splice(index, 1);
+      console.log("removed project name:", title);
+      return true;
+    } else {
+      console.warn("ProjectPanel couldn't remove project", title);
+      return false;
+    }
   }
   getProjects() {
     return this.projects;
@@ -170,97 +189,33 @@ class sortByPriority {
     );
   }
 }
-// =============================DOM================================
-const addProjectBtn = document.querySelector("#add-project");
-const addProjectQuery = document.querySelector("#add-project-query");
-const projectTitleInput = document.querySelector("#project-title-input");
-const projectList = document.querySelector("#project-list");
-console.log("tabs array is", projectList.children);
 
-// const addAction = (elements, ...args) => {
-//   let event, action;
-//   if (args.length === 1) {
-//     event = "click";
-//     action = args[0];
-//   } else {
-//     event = args[0];
-//     action = args[1];
-//   }
-
-//   if (
-//     NodeList.prototype.isPrototypeOf(elements) ||
-//     HTMLCollection.prototype.isPrototypeOf(elements) ||
-//     Array.isArray(elements)
-//   ) {
-//     elements.forEach((element) => {
-//       element.addEventListener(event, action);
-//     });
-//   } else {
-//     elements.addEventListener(event, action);
-//   }
-// };
-
-// ------adding listeners to objects with particular classes-------
-
-
-
-
-
-
-
-const addListener = (elements, action) => {
-  // Define the mapping of classes to events
-  const eventMap = {
-    enter: "keypress",
-    button: "click",
-    hover: "mouseover" // if ether will be need
-  };
-
-  // check if iterable elements (selectorAll)
-  const elementList = NodeList.prototype.isPrototypeOf(elements) ||
-                      HTMLCollection.prototype.isPrototypeOf(elements) ||
-                      Array.isArray(elements)
-    ? elements
-    : [elements];
-
-  
+const removeClass = (elements, selector) => {
+  //check if iterable
+  const elementList =
+    NodeList.prototype.isPrototypeOf(elements) ||
+    HTMLCollection.prototype.isPrototypeOf(elements) ||
+    Array.isArray(elements)
+      ? elements
+      : [elements];
   elementList.forEach((element) => {
-    // Find the first class in eventMap that matches an element's class
-    const eventType = Object.keys(eventMap).find((className) =>
-      element.classList.contains(className)
-    );
-
-    // If an event type is found based on the class, use it; otherwise, default to 'click'
-    const event = eventType ? eventMap[eventType] : "click";
-
-    // Add the event listener with the determined event type
-    element.addEventListener(event, (e) => {
-      // Optionally check for specific keys if 'enter' class and 'keypress' event
-      if (event === "keypress" && e.key !== "Enter") return;
-      action(e);
-    });
+    element.classList.remove(selector);
   });
 };
-const changeElementAttribute = (element, attribute) => {
-  if (!element.hasAttribute(attribute)) {
-    element.setAttribute(attribute, attribute);
-    element.offsetHeight;
-  } else {
-    element.removeAttribute(attribute);
-    element.offsetHeight;
-  }
-};
-
 const submitEnter = (input, ...actions) => {
   input.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
-      // event.preventDefault();
       console.log("submit enter initialized");
-      console.log(actions);
-      actions.forEach((action) => {
-        action();
-        console.log("action done");
-      });
+
+      for (const action of actions) {
+        const result = action();
+        if (result === null) {
+          console.log("Action stopped");
+          break;  // Stop executing further actions if `null` is returned
+        } else {
+          console.log("Action executed");
+        }
+      }
     }
   });
 };
@@ -294,21 +249,7 @@ const cleanerAndSwitcher = (element, input) => {
   }
   return { switcher, cleaner };
 };
-// -----------LOCAL STORAGE---------
-const serializeObject = (object) => {
-  return JSON.stringify(object);
-};
-const parseObject = (serializedObject) => {
-  return JSON.parse(serializedObject);
-};
-const recordToLocalStorage = (keyName, item) => {
-  localStorage.setItem(keyName, item);
-};
-const readFromLocalStorage = (keyName) => {
-  return localStorage.getItem(keyName);
-};
 
-// -----SUBMIT NEW PROJECT FORM-------
 const projectPanelStarter = (() => {
   let projectPanel;
   return {
@@ -323,34 +264,71 @@ const projectPanelStarter = (() => {
     },
   };
 })();
+// ----------------------GLOBAL LISTENERS---------------------
+const addListener = (elements, type, action) => {
+  //check if many
+  if (
+    NodeList.prototype.isPrototypeOf(elements) ||
+    HTMLCollection.prototype.isPrototypeOf(elements)
+  ) {
+    elements.forEach((element) => {
+      element.addEventListener(type, action);
+    });
+  } else {
+    elements.addEventListener(type, action);
+  }
+};
+const addParentListenerNearest = (
+  type,
+  selector,
+  parent = document,
+  callback
+) => {
+  parent.addEventListener(type, (e) => {
+    console.log(`Clicked, ${e.target.classList}`);
+
+    /*const nearestTarget = e.target.matches(selector)
+      ? e.target
+      : e.target.closest(selector);*/
+    let nearestTarget = e.target;
+    if (nearestTarget.matches(selector)) {
+      nearestTarget = nearestTarget;
+    } else {
+      nearestTarget = e.target.closest(selector);
+    }
+    if (nearestTarget) {
+      callback(e, nearestTarget);
+    }
+  });
+}; // thanks, WDS
 
 // =====================START=========================
 const projectPanel = projectPanelStarter.initialize();
-const dropDown = document.getElementById("edit-project");
-const arrow = document.querySelector(".drop-arrow");
+const dropDown = document.getElementById("edit-project-2");
+const arrows = document.querySelectorAll(".drop-arrow");
+const tabs = document.querySelectorAll(".project-tab");
 
-arrow.addEventListener("click", () => {
-  dropDown.classList.toggle("visible");
-});
+const addProjectBtn = document.querySelector("#add-project");
+const addProjectQuery = document.querySelector("#add-project-query");
+const projectTitleInput = document.querySelector("#project-title-input");
+const projectList = document.querySelector("#project-list");
+console.log("tabs array is", projectList.children);
+
+// arrow.addEventListener("click", () => {
+//   dropDown.classList.toggle("visible");
+// });
 
 // ----- OPEN DIALOG------
-addListener(addProjectBtn, () =>
+addListener(addProjectBtn, "click", () =>
   cleanerAndSwitcher(addProjectQuery, projectTitleInput)
 );
 
 submitEnter(
   projectTitleInput,
+  () => projectPanel.projectManager.addProject(projectTitleInput),
+
   () =>
-    projectPanel.projectManager.addProject(
-      projectTitleInput,
-      () => inputValidator.isEmpty(projectTitleInput),
-      () =>
-        inputUniqueValidator.isUnique(
-          projectPanel.projectManager.projects,
-          projectTitleInput
-        )
-    ),
-  () => makeTab(projectTitleInput.value, projectList),
+    makeTab(projectPanel.projectManager.getLastProject(), projectList),
   () => {
     const cleaner = new TextInputCleaner();
     cleaner.clean(projectTitleInput);
@@ -358,16 +336,33 @@ submitEnter(
   () => addProjectQuery.classList.toggle("hidden")
 );
 
+//remove active-tab class from other tabs than clicked one
+
+addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
+  //remove active-tab from other tabs
+
+  removeClass(tabs, "active-tab");
+  target.classList.add("active-tab");
+});
+// add listeners to all tab list drop arrows
+// addParentListener("click", ".drop-down-content", arrow,(e,target)=>{
+//   target.classList.toggle("visible");
+// })
+arrows.forEach((arrow) => {
+  arrow.addEventListener("click", () => {
+    console.log("arrow toggled");
+    dropDown.classList.toggle("visible");
+  });
+});
+
 // -------------------CREATE NEW TAB FACTORY---------------
-const makeTab = (title, container, activeTabClass = "active-tab") => {
+const makeTab = (project, container) => {
+  if(project){
+
+  const title = project.title;
   class ProjectTab {
     static typeOfElement = "li";
-    static classes = [
-      "project-list-cell",
-      "project-tab",
-      "button"
-      
-    ];
+    static classes = ["project-list-cell", "project-tab", "button"];
     static htmlContent = `<div class="project-cell-name-container">
                         <span class="project-cell-name">${title}</span>
                         <img src="" alt=" "  class="drop-arrow button" />
@@ -403,24 +398,18 @@ const makeTab = (title, container, activeTabClass = "active-tab") => {
       });
       this.newElement.innerHTML = ProjectTab.htmlContent;
       container.appendChild(this.newElement);
-      // visual active tab  toggle listener
-      this.newElement.addEventListener("click", () => {
-        Array.from(container.children).forEach((tab) => {
-          tab.classList.remove(activeTabClass);
-        });
-
-        this.newElement.classList.toggle(activeTabClass);
-      });
     }
-    
   }
 
   if (title) {
     const newTab = new ProjectTab(title);
     // newTab.toggleActiveTab(container, activeTabClass);
     newTab.addTab(container);
-    
   } else {
     console.warn("Cannot create new tab- title input is empty");
   }
+}
+else{
+  "cannot make tab- input error"
+}
 };
