@@ -56,6 +56,7 @@ class TabManager {
 
     console.log(`idTitle of tab ${title} is ${id}`);
     const newTab = new Tab(title, id);
+    this.tabList.push(newTab);
 
     this.newElement = document.createElement(TabManager.typeOfElement);
     TabManager.classes.forEach((className) => {
@@ -125,7 +126,7 @@ const tabPanel = new TabPanel(projectList, projectPanel);
 //     tabPanel.tabManager.
 // }
 
-// -----------------to analize----------
+// -----------------for analizing ----------
 
 const addGlobalListener = (type, selector, callback)=>{
   document.addEventListener(type, e =>{

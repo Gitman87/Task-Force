@@ -318,7 +318,7 @@ console.log("tabs array is", projectList.children);
 //   dropDown.classList.toggle("visible");
 // });
 
-// ----- OPEN DIALOG------
+// ------add starter listeners------------------
 addListener(addProjectBtn, "click", () =>
   cleanerAndSwitcher(addProjectQuery, projectTitleInput)
 );
@@ -340,12 +340,12 @@ submitEnter(
 
 addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   //remove active-tab from other tabs
-
+  const tabs = projectList.querySelectorAll(".project-tab");
   removeClass(tabs, "active-tab");
   target.classList.add("active-tab");
 });
 // add listeners to all tab list drop arrows
-// addParentListener("click", ".drop-down-content", arrow,(e,target)=>{
+// addParentListener("click", ".drop-down-cokk  ntent", arrow,(e,target)=>{
 //   target.classList.toggle("visible");
 // })
 arrows.forEach((arrow) => {
