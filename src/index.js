@@ -1,8 +1,11 @@
 import "./styles/style.css";
 import AirDatepicker from "air-datepicker";
 import "air-datepicker/air-datepicker.css";
-// ---------------import tab classes---------
-import TabPanel from "./tabs.js";
+//--------------Tabs------------------------
+import { TabPanel, Tab, TabManager } from './tabs.js';
+// import tabs from "./tabs.js";
+// const { TabPanel, Tab, TabManager} = tabs();
+
 // --------------Validation-----------------
 import { validateInput } from "./validation";
 const { inputValidator, inputUniqueValidator } = validateInput();
@@ -19,15 +22,15 @@ const dateInputImg = document.querySelector("#custom-date-input");
 dateInputImg.src = dateSrc;
 
 // ----------DATE PICKER---------------
-new AirDatepicker("#el", {
-  dateFormat(date) {
-    return date.toLocaleString("ja", {
-      year: "numeric",
-      day: "2-digit",
-      month: "long",
-    });
-  },
-});
+// new AirDatepicker("#el", {
+//   dateFormat(date) {
+//     return date.toLocaleString("ja", {
+//       year: "numeric",
+//       day: "2-digit",
+//       month: "long",
+//     });
+//   },
+// });
 
 // =================DRAFT===================
 
@@ -304,7 +307,9 @@ const addParentListenerNearest = (
 }; // thanks, WDS
 
 // =====================START=========================
+const projectList = document.querySelector("#project-list");
 const projectPanel = projectPanelStarter.initialize();
+const tabPanel = new TabPanel(projectList, projectPanel);
 const dropDown = document.getElementById("edit-project-2");
 const arrows = document.querySelectorAll(".drop-arrow");
 const tabs = document.querySelectorAll(".project-tab");
@@ -312,8 +317,9 @@ const tabs = document.querySelectorAll(".project-tab");
 const addProjectBtn = document.querySelector("#add-project");
 const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
-const projectList = document.querySelector("#project-list");
+
 console.log("tabs array is", projectList.children);
+;
 
 // arrow.addEventListener("click", () => {
 //   dropDown.classList.toggle("visible");
@@ -328,7 +334,8 @@ submitEnter(
   projectTitleInput,
   () => projectPanel.projectManager.addProject(projectTitleInput),
 
-  () => makeTab(projectPanel.projectManager.getLastProject(), projectList),
+  // () => makeTab(projectPanel.projectManager.getLastProject(), projectList),
+  ()=> tabPanel.tabManager.addTab(projectList),
   () => {
     const cleaner = new TextInputCleaner();
     cleaner.clean(projectTitleInput);
@@ -355,58 +362,58 @@ addParentListenerNearest("click", ".drop-arrow", projectList, (e, target) => {
 });
 
 // -------------------CREATE NEW TAB FACTORY---------------
-const makeTab = (project, container) => {
-  if (project) {
-    const title = project.title;
-    class ProjectTab {
-      static typeOfElement = "li";
-      static classes = ["project-list-cell", "project-tab", "button"];
-      static htmlContent = `<div class="project-cell-name-container">
-                        <span class="project-cell-name">${title}</span>
-                        <img src="" alt=" "  class="drop-arrow button" />
-                        <div class="drop-down-content " id="edit-project">
-                        <form action="" class="drop-down-form">
-                          <ul class="drop-down-list">
-                            <li>
-                              <input
-                                type="text"
-                                class="drop-down-item button rename-project"
-                                placeholder="Rename"
-                              />
-                            </li>
-                            <li class="drop-down-item button delete-project">
-                              Delete
-                            </li>
-                          </ul>
-                        </form>
-                      </div>
-                      </div>
-                      <div class="progress-bar-main-container">
-                        <div class="progress-bar"></div>
-                      </div>`;
+// const makeTab = (project, container) => {
+//   if (project) {
+//     const title = project.title;
+//     class ProjectTab {
+//       static typeOfElement = "li";
+//       static classes = ["project-list-cell", "project-tab", "button"];
+//       static htmlContent = `<div class="project-cell-name-container">
+//                         <span class="project-cell-name">${title}</span>
+//                         <img src="" alt=" "  class="drop-arrow button" />
+//                         <div class="drop-down-content " id="edit-project">
+//                         <form action="" class="drop-down-form">
+//                           <ul class="drop-down-list">
+//                             <li>
+//                               <input
+//                                 type="text"
+//                                 class="drop-down-item button rename-project"
+//                                 placeholder="Rename"
+//                               />
+//                             </li>
+//                             <li class="drop-down-item button delete-project">
+//                               Delete
+//                             </li>
+//                           </ul>
+//                         </form>
+//                       </div>
+//                       </div>
+//                       <div class="progress-bar-main-container">
+//                         <div class="progress-bar"></div>
+//                       </div>`;
 
-      constructor(title) {
-        this.title = title;
-      }
+//       constructor(title) {
+//         this.title = title;
+//       }
 
-      addTab(container) {
-        this.newElement = document.createElement(ProjectTab.typeOfElement);
-        ProjectTab.classes.forEach((className) => {
-          this.newElement.classList.add(className);
-        });
-        this.newElement.innerHTML = ProjectTab.htmlContent;
-        container.appendChild(this.newElement);
-      }
-    }
+//       addTab(container) {
+//         this.newElement = document.createElement(ProjectTab.typeOfElement);
+//         ProjectTab.classes.forEach((className) => {
+//           this.newElement.classList.add(className);
+//         });
+//         this.newElement.innerHTML = ProjectTab.htmlContent;
+//         container.appendChild(this.newElement);
+//       }
+//     }
 
-    if (title) {
-      const newTab = new ProjectTab(title);
-      // newTab.toggleActiveTab(container, activeTabClass);
-      newTab.addTab(container);
-    } else {
-      console.warn("Cannot create new tab- title input is empty");
-    }
-  } else {
-    ("cannot make tab- input error");
-  }
-};
+//     if (title) {
+//       const newTab = new ProjectTab(title);
+//       // newTab.toggleActiveTab(container, activeTabClass);
+//       newTab.addTab(container);
+//     } else {
+//       console.warn("Cannot create new tab- title input is empty");
+//     }
+//   } else {
+//     ("cannot make tab- input error");
+//   }
+// };

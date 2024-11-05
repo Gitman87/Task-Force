@@ -1,25 +1,26 @@
-export default class TabPanel {
+
+    export class TabPanel {
   constructor(container, projectPanel) {
     this.container = container;
     this.tabList = [];
-    this.tabManager = new TabManager(this.tabList);
+    this.tabManager = new TabManager(this.tabList, projectPanel);
     this.projectPanel = projectPanel;
   }
   initialized() {
     console.log("TabPanel  initialized!");
   }
 }
-class Tab {
+export class Tab {
   constructor(title, id) {
     this.title = title;
     this.idTab = id;
   }
 }
-class TabManager {
+export class TabManager {
   static typeOfElement = "li";
   static classes = ["project-list-cell", "project-tab", "button"];
   static activeTabClass = "active-tab";
-  static htmlContent = `<div class="project-cell-name-container">
+  static getHtmlContent(title){return `<div class="project-cell-name-container">
                       <span class="project-cell-name">${title}</span>
                       <img src="" alt=" "  class="drop-arrow button" />
                       <div class="drop-down-content " id="edit-project">
@@ -41,30 +42,35 @@ class TabManager {
                     </div>
                     <div class="progress-bar-main-container">
                       <div class="progress-bar"></div>
-                    </div>`;
-  constructor(tabList) {
+                    </div>`;}
+  constructor(tabList, projectPanel) {
     this.tabList = tabList;
+    this.projectPanel = projectPanel;
   }
-  static newestProjects = projectPanel;
+  _getNewestProjects(){
+    const newestProjects=this.projectPanel.projectManager.getProjects();
+    return newestProjects;
+  }
 
   addTab(container) {
     //select last added project
-    const project =
-      this.projectPanel.projects[this.projectPanel.projects.length - 1];
+    const newestProjects= this.projectPanel.projectManager.getProjects();
+    const project = newestProjects[newestProjects.length - 1];
     const title = project.title;
     const id = project.id;
 
     console.log(`idTitle of tab ${title} is ${id}`);
     const newTab = new Tab(title, id);
     this.tabList.push(newTab);
-
-    this.newElement = document.createElement(TabManager.typeOfElement);
+    const newElement = document.createElement('li');
+    newElement.innerHTML = TabManager.getHtmlContent(title);
+   
     TabManager.classes.forEach((className) => {
-      this.newElement.classList.add(className);
+      newElement.classList.add(className);
     });
-    this.newElement.innerHTML = TabManager.htmlContent;
-    this.newElement.setAttribute("id", id);
-    container.appendChild(this.newElement);
+   
+    newElement.setAttribute("id", id);
+    container.appendChild(newElement);
   }
 
   removeTab(id) {
@@ -114,6 +120,9 @@ class TabManager {
     return {activeTabElement, activeTabObject};
   }
 }
+
+
+
 // const projectList = document.querySelector("#project-list");
 // const tabPanel = new TabPanel(projectList, projectPanel);
 // const actions = {
