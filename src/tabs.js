@@ -1,4 +1,4 @@
-class TabPanel {
+export default class TabPanel {
   constructor(container, projectPanel) {
     this.container = container;
     this.tabList = [];
@@ -65,17 +65,6 @@ class TabManager {
     this.newElement.innerHTML = TabManager.htmlContent;
     this.newElement.setAttribute("id", id);
     container.appendChild(this.newElement);
-    this.tabList.push(newTab);
-    //add listeners to tab's sub-elements
-
-    // visual active tab  toggle listener
-    this.newElement.addEventListener("click", () => {
-      Array.from(container.children).forEach((tab) => {
-        tab.classList.remove(activeTabClass);
-      });
-
-      this.newElement.classList.toggle(activeTabClass);
-    });
   }
 
   removeTab(id) {
@@ -118,9 +107,15 @@ class TabManager {
       return this.tabList[index];
     }
   }
+  getActiveTab(container, selector){
+    const activeTabElement = container.querySelector(selector);
+    const activeTabObjectIndex = this.tabList.indexOf((tab)=>tab.id === activeTabElement.id);
+    const activeTabObject =this.tabList[activeTabObjectIndex]; 
+    return {activeTabElement, activeTabObject};
+  }
 }
-const projectList = document.querySelector("#project-list");
-const tabPanel = new TabPanel(projectList, projectPanel);
+// const projectList = document.querySelector("#project-list");
+// const tabPanel = new TabPanel(projectList, projectPanel);
 // const actions = {
 //   "delete-project": (e)=>
 //     tabPanel.tabManager.
@@ -128,18 +123,13 @@ const tabPanel = new TabPanel(projectList, projectPanel);
 
 // -----------------for analizing ----------
 
-const addGlobalListener = (type, selector, callback)=>{
-  document.addEventListener(type, e =>{
-    if(e.target.matches(selector)){
-      callback()
-    }
-  })
-}// thanks, WDS
-addGlobalListener("click",".project-tab", (e)=>{
-  e.target.classList.toggle("active-tab")
-})   
-
-
-
-
-
+// const addGlobalListener = (type, selector, callback) => {
+//   document.addEventListener(type, (e) => {
+//     if (e.target.matches(selector)) {
+//       callback();
+//     }
+//   });
+// }; // thanks, WDS
+// addGlobalListener("click", ".project-tab", (e) => {
+//   e.target.classList.toggle("active-tab");
+// });

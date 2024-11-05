@@ -1,6 +1,8 @@
 import "./styles/style.css";
 import AirDatepicker from "air-datepicker";
 import "air-datepicker/air-datepicker.css";
+// ---------------import tab classes---------
+import TabPanel from "./tabs.js";
 // --------------Validation-----------------
 import { validateInput } from "./validation";
 const { inputValidator, inputUniqueValidator } = validateInput();
@@ -54,11 +56,15 @@ class ProjectManager {
   static checkInput(validator, projects, input) {
     const isEmpty = validator.isEmpty(input);
     const isUnique = validator.isUnique(projects, input);
-    
-    return {isEmpty, isUnique}
+
+    return { isEmpty, isUnique };
   }
   addProject(input) {
-    const {isEmpty, isUnique} = ProjectManager.checkInput(inputUniqueValidator, this.projects, input);
+    const { isEmpty, isUnique } = ProjectManager.checkInput(
+      inputUniqueValidator,
+      this.projects,
+      input
+    );
     if (isEmpty && isUnique) {
       const project = new Project(input.value);
       console.log(`addProject project title is: ${project.title}`);
@@ -69,18 +75,13 @@ class ProjectManager {
       if (!isEmpty) {
         alert("Project title cannot be empty!");
         return null;
-      }
-      else if (!isUnique) {
+      } else if (!isUnique) {
         alert("Project title already exists!");
         return null;
-        
       }
       console.warn("Project validation failed.");
       return null;
-      
-      
     }
-    
   }
   getLastProject() {
     return this.projects[this.projects.length - 1];
@@ -211,7 +212,7 @@ const submitEnter = (input, ...actions) => {
         const result = action();
         if (result === null) {
           console.log("Action stopped");
-          break;  // Stop executing further actions if `null` is returned
+          break; // Stop executing further actions if `null` is returned
         } else {
           console.log("Action executed");
         }
@@ -327,43 +328,40 @@ submitEnter(
   projectTitleInput,
   () => projectPanel.projectManager.addProject(projectTitleInput),
 
-  () =>
-    makeTab(projectPanel.projectManager.getLastProject(), projectList),
+  () => makeTab(projectPanel.projectManager.getLastProject(), projectList),
   () => {
     const cleaner = new TextInputCleaner();
     cleaner.clean(projectTitleInput);
   },
   () => addProjectQuery.classList.toggle("hidden")
 );
+//select current active tab
+let activeTab = undefined;
 
-//remove active-tab class from other tabs than clicked one
-
+//toggling active tab, style
 addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   //remove active-tab from other tabs
   const tabs = projectList.querySelectorAll(".project-tab");
   removeClass(tabs, "active-tab");
   target.classList.add("active-tab");
+  activeTab = target;
+  console.log("Active tab id is", target);
 });
-// add listeners to all tab list drop arrows
-// addParentListener("click", ".drop-down-cokk  ntent", arrow,(e,target)=>{
-//   target.classList.toggle("visible");
-// })
-arrows.forEach((arrow) => {
-  arrow.addEventListener("click", () => {
-    console.log("arrow toggled");
-    dropDown.classList.toggle("visible");
-  });
+//showing drop down list with project editing
+addParentListenerNearest("click", ".drop-arrow", projectList, (e, target) => {
+  const thisTab = target.closest(".project-tab");
+  const dropList = thisTab.querySelector(".drop-down-content");
+  dropList.classList.toggle("visible");
 });
 
 // -------------------CREATE NEW TAB FACTORY---------------
 const makeTab = (project, container) => {
-  if(project){
-
-  const title = project.title;
-  class ProjectTab {
-    static typeOfElement = "li";
-    static classes = ["project-list-cell", "project-tab", "button"];
-    static htmlContent = `<div class="project-cell-name-container">
+  if (project) {
+    const title = project.title;
+    class ProjectTab {
+      static typeOfElement = "li";
+      static classes = ["project-list-cell", "project-tab", "button"];
+      static htmlContent = `<div class="project-cell-name-container">
                         <span class="project-cell-name">${title}</span>
                         <img src="" alt=" "  class="drop-arrow button" />
                         <div class="drop-down-content " id="edit-project">
@@ -387,29 +385,28 @@ const makeTab = (project, container) => {
                         <div class="progress-bar"></div>
                       </div>`;
 
-    constructor(title) {
-      this.title = title;
+      constructor(title) {
+        this.title = title;
+      }
+
+      addTab(container) {
+        this.newElement = document.createElement(ProjectTab.typeOfElement);
+        ProjectTab.classes.forEach((className) => {
+          this.newElement.classList.add(className);
+        });
+        this.newElement.innerHTML = ProjectTab.htmlContent;
+        container.appendChild(this.newElement);
+      }
     }
 
-    addTab(container) {
-      this.newElement = document.createElement(ProjectTab.typeOfElement);
-      ProjectTab.classes.forEach((className) => {
-        this.newElement.classList.add(className);
-      });
-      this.newElement.innerHTML = ProjectTab.htmlContent;
-      container.appendChild(this.newElement);
+    if (title) {
+      const newTab = new ProjectTab(title);
+      // newTab.toggleActiveTab(container, activeTabClass);
+      newTab.addTab(container);
+    } else {
+      console.warn("Cannot create new tab- title input is empty");
     }
-  }
-
-  if (title) {
-    const newTab = new ProjectTab(title);
-    // newTab.toggleActiveTab(container, activeTabClass);
-    newTab.addTab(container);
   } else {
-    console.warn("Cannot create new tab- title input is empty");
+    ("cannot make tab- input error");
   }
-}
-else{
-  "cannot make tab- input error"
-}
 };
