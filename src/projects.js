@@ -14,7 +14,7 @@ export class Project {
     this.tasks = [];
     this.progress = 0;
     this.taskManager = new TaskManager(this.tasks);
-    this.idTab = title.split(" ").join("-").toLowerCase();
+    this.id = title.split(" ").join("-").toLowerCase();
   }
 }
 export class ProjectManager {
