@@ -1,5 +1,5 @@
 
-    export class TabPanel {
+export class TabPanel {
   constructor(container, projectPanel) {
     this.container = container;
     this.tabList = [];
@@ -20,7 +20,8 @@ export class TabManager {
   static typeOfElement = "li";
   static classes = ["project-list-cell", "project-tab", "button"];
   static activeTabClass = "active-tab";
-  static getHtmlContent(title){return `<div class="project-cell-name-container">
+  static getHtmlContent(title){
+               return `<div class="project-cell-name-container">
                       <span class="project-cell-name">${title}</span>
                       <img src="" alt=" "  class="drop-arrow button" />
                       <div class="drop-down-content " id="edit-project">

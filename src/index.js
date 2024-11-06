@@ -1,10 +1,14 @@
+
+// --------------styles------------------------
 import "./styles/style.css";
 import AirDatepicker from "air-datepicker";
 import "air-datepicker/air-datepicker.css";
+// -----------------projects----------------------
+import {ProjectPanel, Project, ProjectManager, Task, TaskManager} from "./projects.js"
+
 //--------------Tabs------------------------
 import { TabPanel, Tab, TabManager } from './tabs.js';
-// import tabs from "./tabs.js";
-// const { TabPanel, Tab, TabManager} = tabs();
+
 
 // --------------Validation-----------------
 import { validateInput } from "./validation";
@@ -34,151 +38,7 @@ dateInputImg.src = dateSrc;
 
 // =================DRAFT===================
 
-class ProjectPanel {
-  constructor() {
-    this.projects = [];
-    this.projectManager = new ProjectManager(this.projects);
-  }
-  initialized() {
-    console.log("Project Panel initialized!");
-  } // check if created
-}
-class Project {
-  constructor(title) {
-    this.title = title;
-    this.tasks = [];
-    this.progress = 0;
-    this.taskManager = new TaskManager(this.tasks);
-    this.idTab = title.split(" ").join("-").toLowerCase();
-  }
-}
-class ProjectManager {
-  constructor(projects) {
-    this.projects = projects;
-  }
-  static checkInput(validator, projects, input) {
-    const isEmpty = validator.isEmpty(input);
-    const isUnique = validator.isUnique(projects, input);
 
-    return { isEmpty, isUnique };
-  }
-  addProject(input) {
-    const { isEmpty, isUnique } = ProjectManager.checkInput(
-      inputUniqueValidator,
-      this.projects,
-      input
-    );
-    if (isEmpty && isUnique) {
-      const project = new Project(input.value);
-      console.log(`addProject project title is: ${project.title}`);
-      this.projects.push(project);
-      console.log(`Project added: ${this.projects[0].title}`);
-      return project;
-    } else {
-      if (!isEmpty) {
-        alert("Project title cannot be empty!");
-        return null;
-      } else if (!isUnique) {
-        alert("Project title already exists!");
-        return null;
-      }
-      console.warn("Project validation failed.");
-      return null;
-    }
-  }
-  getLastProject() {
-    return this.projects[this.projects.length - 1];
-  }
-  removeProject(title) {
-    const index = this.projects.findIndex((project) => project.title === title);
-    if (index !== -1) {
-      this.projects.splice(index, 1);
-      console.log("removed project name:", title);
-      return true;
-    } else {
-      console.warn("ProjectPanel couldn't remove project", title);
-      return false;
-    }
-  }
-  getProjects() {
-    return this.projects;
-  }
-  getProject(title) {
-    const index = this.projects.findIndex((project) => project.title === title);
-    if (index !== -1) {
-      return this.projects[index];
-    }
-  }
-
-  sortProjects(strategy) {
-    strategy.sort(this.projects);
-  }
-}
-
-class Task {
-  constructor({
-    title,
-    dueDate = "17-10-2024",
-    priority = "low",
-    projectAssigned = "defaultProject",
-    isComplete = false,
-    description = "",
-  } = {}) {
-    this.title = title;
-    this.dueDate = dueDate;
-    this.priority = priority;
-    this.projectAssigned = projectAssigned;
-    this.isComplete = isComplete;
-    this.description = description;
-  }
-}
-
-class TaskManager {
-  constructor(tasks) {
-    this.tasks = tasks;
-  }
-  addTask({
-    title,
-    dueDate = "17-10-2024",
-    priority = "low",
-    projectAssigned = "defaultProject",
-    isComplete = false,
-    description = "",
-  }) {
-    const task = new Task({
-      title,
-      dueDate,
-      priority,
-      projectAssigned,
-      isComplete,
-      description,
-    });
-    this.tasks.push(task);
-  }
-  removeTask(title) {
-    const index = this.tasks.findIndex((task) => task.title === title);
-    if (index !== -1) {
-      this.tasks.splice(index, 1);
-    }
-  }
-  getTask(title) {
-    const index = this.tasks.findIndex((task) => task.title === title);
-    if (index !== -1) {
-      return this.tasks[index];
-    }
-  }
-  getTasks() {
-    return this.tasks;
-  }
-  sortTasks(strategy) {
-    strategy.sort(this.tasks);
-  }
-  calculateProgress() {
-    const totalTasks = this.tasks.length;
-    const completedTasks = this.tasks.filter((task) => task.isComplete).length;
-    return totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-  }
-}
 
 class sortByDueDate {
   sort(tasks) {
@@ -267,7 +127,8 @@ const projectPanelStarter = (() => {
       }
     },
   };
-})();
+})();// I have to build local memory checker
+
 // ----------------------GLOBAL LISTENERS---------------------
 const addListener = (elements, type, action) => {
   //check if many
@@ -308,7 +169,8 @@ const addParentListenerNearest = (
 
 // =====================START=========================
 const projectList = document.querySelector("#project-list");
-const projectPanel = projectPanelStarter.initialize();
+// const projectPanel = projectPanelStarter.initialize();
+const projectPanel = new ProjectPanel(inputUniqueValidator);
 const tabPanel = new TabPanel(projectList, projectPanel);
 const dropDown = document.getElementById("edit-project-2");
 const arrows = document.querySelectorAll(".drop-arrow");
@@ -319,11 +181,9 @@ const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
 
 console.log("tabs array is", projectList.children);
-;
 
-// arrow.addEventListener("click", () => {
-//   dropDown.classList.toggle("visible");
-// });
+
+
 
 // ------add starter listeners------------------
 addListener(addProjectBtn, "click", () =>
@@ -361,59 +221,4 @@ addParentListenerNearest("click", ".drop-arrow", projectList, (e, target) => {
   dropList.classList.toggle("visible");
 });
 
-// -------------------CREATE NEW TAB FACTORY---------------
-// const makeTab = (project, container) => {
-//   if (project) {
-//     const title = project.title;
-//     class ProjectTab {
-//       static typeOfElement = "li";
-//       static classes = ["project-list-cell", "project-tab", "button"];
-//       static htmlContent = `<div class="project-cell-name-container">
-//                         <span class="project-cell-name">${title}</span>
-//                         <img src="" alt=" "  class="drop-arrow button" />
-//                         <div class="drop-down-content " id="edit-project">
-//                         <form action="" class="drop-down-form">
-//                           <ul class="drop-down-list">
-//                             <li>
-//                               <input
-//                                 type="text"
-//                                 class="drop-down-item button rename-project"
-//                                 placeholder="Rename"
-//                               />
-//                             </li>
-//                             <li class="drop-down-item button delete-project">
-//                               Delete
-//                             </li>
-//                           </ul>
-//                         </form>
-//                       </div>
-//                       </div>
-//                       <div class="progress-bar-main-container">
-//                         <div class="progress-bar"></div>
-//                       </div>`;
 
-//       constructor(title) {
-//         this.title = title;
-//       }
-
-//       addTab(container) {
-//         this.newElement = document.createElement(ProjectTab.typeOfElement);
-//         ProjectTab.classes.forEach((className) => {
-//           this.newElement.classList.add(className);
-//         });
-//         this.newElement.innerHTML = ProjectTab.htmlContent;
-//         container.appendChild(this.newElement);
-//       }
-//     }
-
-//     if (title) {
-//       const newTab = new ProjectTab(title);
-//       // newTab.toggleActiveTab(container, activeTabClass);
-//       newTab.addTab(container);
-//     } else {
-//       console.warn("Cannot create new tab- title input is empty");
-//     }
-//   } else {
-//     ("cannot make tab- input error");
-//   }
-// };
