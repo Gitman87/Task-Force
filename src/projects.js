@@ -55,14 +55,36 @@ export class ProjectManager {
   getLastProject() {
     return this.projects[this.projects.length - 1];
   }
-  removeProject(title) {
-    const index = this.projects.findIndex((project) => project.title === title);
+  renameProject(id, input){
+    const index = this.projects.findIndex((project) => project.id === id);
+    
+    const {isEmpty, isUnique} =ProjectManager.checkInput(this.validator, this.projects, input);
+    if(isEmpty && isUnique){
+      this.projects[index].title = input.value;
+      this.projects[index].id = input.value.split(" ").join("-").toLowerCase();
+    }
+
+    else{
+      if (!isEmpty) {
+        alert("Project title cannot be empty!");
+        return null;
+      } else if (!isUnique) {
+        alert("Project title already exists!");
+        return null;
+      }
+      console.warn("Project validation failed.");
+      return null;
+
+    }
+  }
+  removeProject(id) {
+    const index = this.projects.findIndex((project) => project.id === id);
     if (index !== -1) {
       this.projects.splice(index, 1);
-      console.log("removed project name:", title);
+      console.log("removed project id:", id);
       return true;
     } else {
-      console.warn("ProjectPanel couldn't remove project", title);
+      console.warn("ProjectPanel couldn't remove project", id);
       return false;
     }
   }

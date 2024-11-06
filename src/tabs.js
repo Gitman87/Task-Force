@@ -74,7 +74,7 @@ export class TabManager {
     container.appendChild(newElement);
   }
 
-  removeTab(id) {
+  removeTab(id, tab) {
     // const projects = this.projectPanel.getProjects();
     const tabIndex = this.tabList.findIndex((tab) => tab.idTab === id);
 
@@ -85,17 +85,18 @@ export class TabManager {
     const tabToRemove = this.tabList[tabIndex];
     const projectTitle = tabToRemove.title;
     //remove project
-    const projectRemoved =
-      this.projectPanel.projectManager.removeProject(projectTitle);
-    if (!projectRemoved) {
-      console.log("Cannot remove tab; associated project not found");
-      return;
-    }
+    // const projectRemoved =
+    //   this.projectPanel.projectManager.removeProject(projectTitle);
+    // if (!projectRemoved) {
+    //   console.log("Cannot remove tab; associated project not found");
+    //   return;
+    // }
     //remove tab
     this.tabList.splice(tabIndex, 1);
     console.log(
       `Tab with id: ${tabToRemove.idTab} removed for project title: ${projectTitle}`
     );
+    tab.remove();
     // if (index !== -1) {
     //   this.tabList.splice(index, 1);
     //   this.projectPanel.projectManger.removeProject(this.tabList[index].title)

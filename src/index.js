@@ -212,7 +212,7 @@ addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   removeClass(tabs, "active-tab");
   target.classList.add("active-tab");
   activeTab = target;
-  console.log("Active tab id is", target);
+  console.log("Active tab id is", activeTab.classList);
 });
 //showing drop down list with project editing
 addParentListenerNearest("click", ".drop-arrow", projectList, (e, target) => {
@@ -220,5 +220,31 @@ addParentListenerNearest("click", ".drop-arrow", projectList, (e, target) => {
   const dropList = thisTab.querySelector(".drop-down-content");
   dropList.classList.toggle("visible");
 });
+//removing tab and project
+addParentListenerNearest("click", ".delete-project", projectList, (e, target) => {
+  const confirmation = confirm("Are you sure?");
+  if(confirmation){
+  const parentTab = target.closest(".project-tab");
+  const tabId = parentTab.id;
+  projectPanel.projectManager.removeProject(tabId);
+  console.log(`Projects array after removing  ${tabId} is ${projectPanel.projects.length}`);
+  tabPanel.tabManager.removeTab(tabId, parentTab);
+  }
+  else{
+    console.log("User chose not to remove the project");
+  }
+  
+});
+//rename tab/project
+addParentListenerNearest("enter", ".rename-project", projectList, (e,target)=>{
+  const parentTab = target.closest(".project-tab");
+  const inputRename = target.closest(".rename-project") 
+  const tabId = parentTab.id;
+  projectPanel.projectManager.renameProject(tabId, inputRename);
+  console.log("Input rename is", inputRename);
+  
+})
+
+
 
 
