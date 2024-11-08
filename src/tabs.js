@@ -1,4 +1,3 @@
-
 export class TabPanel {
   constructor(container, projectPanel) {
     this.container = container;
@@ -20,8 +19,8 @@ export class TabManager {
   static typeOfElement = "li";
   static classes = ["project-list-cell", "project-tab", "button"];
   static activeTabClass = "active-tab";
-  static getHtmlContent(title){
-               return `<div class="project-cell-name-container">
+  static getHtmlContent(title) {
+    return `<div class="project-cell-name-container">
                       <span class="project-cell-name">${title}</span>
                       <img src="" alt=" "  class="drop-arrow button" />
                       <div class="drop-down-content " id="edit-project">
@@ -43,19 +42,20 @@ export class TabManager {
                     </div>
                     <div class="progress-bar-main-container">
                       <div class="progress-bar"></div>
-                    </div>`;}
+                    </div>`;
+  }
   constructor(tabList, projectPanel) {
     this.tabList = tabList;
     this.projectPanel = projectPanel;
   }
-  _getNewestProjects(){
-    const newestProjects=this.projectPanel.projectManager.getProjects();
+  _getNewestProjects() {
+    const newestProjects = this.projectPanel.projectManager.getProjects();
     return newestProjects;
   }
 
   addTab(container) {
     //select last added project
-    const newestProjects= this.projectPanel.projectManager.getProjects();
+    const newestProjects = this.projectPanel.projectManager.getProjects();
     const project = newestProjects[newestProjects.length - 1];
     const title = project.title;
     const id = project.id;
@@ -63,13 +63,13 @@ export class TabManager {
     console.log(`idTitle of tab ${title} is ${id}`);
     const newTab = new Tab(title, id);
     this.tabList.push(newTab);
-    const newElement = document.createElement('li');
+    const newElement = document.createElement("li");
     newElement.innerHTML = TabManager.getHtmlContent(title);
-   
+
     TabManager.classes.forEach((className) => {
       newElement.classList.add(className);
     });
-   
+
     newElement.setAttribute("id", id);
     container.appendChild(newElement);
   }
@@ -84,46 +84,46 @@ export class TabManager {
     }
     const tabToRemove = this.tabList[tabIndex];
     const projectTitle = tabToRemove.title;
-    //remove project
-    // const projectRemoved =
-    //   this.projectPanel.projectManager.removeProject(projectTitle);
-    // if (!projectRemoved) {
-    //   console.log("Cannot remove tab; associated project not found");
-    //   return;
-    // }
+
     //remove tab
     this.tabList.splice(tabIndex, 1);
     console.log(
       `Tab with id: ${tabToRemove.idTab} removed for project title: ${projectTitle}`
     );
     tab.remove();
-    // if (index !== -1) {
-    //   this.tabList.splice(index, 1);
-    //   this.projectPanel.projectManger.removeProject(this.tabList[index].title)
-    // }
-    // else{console.log("Cannot remove tab")};
   }
-  // rename(id){
-
-  // }
+  renameTab(renamedProject, parentTab) {
+    if (renamedProject) {
+      const oldTab = this.getTab(parentTab.id)[0];
+      this.tabList[this.getTab(parentTab.id)[1]].title = renamedProject.title;
+      this.tabList[this.getTab(parentTab.id)[1]].idTab = renamedProject.id;
+      parentTab.id = renamedProject.id;
+      //rename title html element
+      const titleElement = parentTab.querySelector(".project-cell-name");
+      titleElement.innerHTML = "";
+      titleElement.innerHTML = renamedProject.title;
+    } else {
+      console.log("nic z tego mlody paadawanie");
+    }
+  }
   getTabs() {
     return this.tabList;
   }
   getTab(id) {
     const index = this.tabList.findIndex((tab) => tab.idTab === id);
     if (index !== -1) {
-      return this.tabList[index];
+      return [this.tabList[index], index];
     }
   }
-  getActiveTab(container, selector){
+  getActiveTab(container, selector) {
     const activeTabElement = container.querySelector(selector);
-    const activeTabObjectIndex = this.tabList.indexOf((tab)=>tab.id === activeTabElement.id);
-    const activeTabObject =this.tabList[activeTabObjectIndex]; 
-    return {activeTabElement, activeTabObject};
+    const activeTabObjectIndex = this.tabList.indexOf(
+      (tab) => tab.id === activeTabElement.id
+    );
+    const activeTabObject = this.tabList[activeTabObjectIndex];
+    return { activeTabElement, activeTabObject };
   }
 }
-
-
 
 // const projectList = document.querySelector("#project-list");
 // const tabPanel = new TabPanel(projectList, projectPanel);
