@@ -574,7 +574,7 @@ h3 {
 .project-cell-name {
   font-family: "Tomorrow-Regular", "Courier New", sans-serif;
   color: var(--brightest);
-  max-width: 80%;
+  max-width: 7.35rem;
   overflow-x: scroll;
 }
 .project-tab {

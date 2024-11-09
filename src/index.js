@@ -1,14 +1,20 @@
-
 // --------------styles------------------------
 import "./styles/style.css";
 import AirDatepicker from "air-datepicker";
 import "air-datepicker/air-datepicker.css";
+// -------------------storage-----------------------
+import localStorageManager from "./storage.js";
 // -----------------projects----------------------
-import {ProjectPanel, Project, ProjectManager, Task, TaskManager} from "./projects.js"
+import {
+  ProjectPanel,
+  Project,
+  ProjectManager,
+  Task,
+  TaskManager,
+} from "./projects.js";
 
 //--------------Tabs------------------------
-import { TabPanel, Tab, TabManager } from './tabs.js';
-
+import { TabPanel, Tab, TabManager } from "./tabs.js";
 
 // --------------Validation-----------------
 import { validateInput } from "./validation";
@@ -37,8 +43,6 @@ dateInputImg.src = dateSrc;
 // });
 
 // =================DRAFT===================
-
-
 
 class sortByDueDate {
   sort(tasks) {
@@ -75,7 +79,7 @@ const submitEnter = (input, ...actions) => {
         const result = action();
         if (result === null) {
           console.log("Action stopped");
-          break; // Stop executing further actions if `null` is returned
+          break;
         } else {
           console.log("Action executed");
         }
@@ -91,7 +95,6 @@ const switchDisplay = (element) => {
   if (element.classList.contains("hidden")) {
     clearTextInput(projectTitleInput); // too tightly coupled???
   }
-  // clearTextInput(projectTitleInput);
 };
 class DisplaySwitcher {
   toggle(element) {
@@ -127,7 +130,7 @@ const projectPanelStarter = (() => {
       }
     },
   };
-})();// I have to build local memory checker
+})(); // I have to build local memory checker
 
 // ----------------------GLOBAL LISTENERS---------------------
 const addListener = (elements, type, action) => {
@@ -166,7 +169,17 @@ const addParentListenerNearest = (
     }
   });
 }; // thanks, WDS
-
+//debug  function
+const checkProjectAndTabLists = () => {
+  console.log("Projects list length: ", projectPanel.projects.length);
+  projectPanel.projects.forEach((object) => {
+    console.log("Project is ", object.title, object.id);
+  });
+  console.log("Tabs list length is ", tabPanel.tabList.length);
+  tabPanel.tabList.forEach((tab) => {
+    console.log("Tab is ", tab.title, tab.idTab);
+  });
+};
 // =====================START=========================
 const projectList = document.querySelector("#project-list");
 // const projectPanel = projectPanelStarter.initialize();
@@ -182,9 +195,6 @@ const projectTitleInput = document.querySelector("#project-title-input");
 
 console.log("tabs array is", projectList.children);
 
-
-
-
 // ------add starter listeners------------------
 addListener(addProjectBtn, "click", () =>
   cleanerAndSwitcher(addProjectQuery, projectTitleInput)
@@ -195,7 +205,7 @@ submitEnter(
   () => projectPanel.projectManager.addProject(projectTitleInput),
 
   // () => makeTab(projectPanel.projectManager.getLastProject(), projectList),
-  ()=> tabPanel.tabManager.addTab(projectList),
+  () => tabPanel.tabManager.addTab(projectList),
   () => {
     const cleaner = new TextInputCleaner();
     cleaner.clean(projectTitleInput);
@@ -221,30 +231,46 @@ addParentListenerNearest("click", ".drop-arrow", projectList, (e, target) => {
   dropList.classList.toggle("visible");
 });
 //removing tab and project
-addParentListenerNearest("click", ".delete-project", projectList, (e, target) => {
-  const confirmation = confirm("Are you sure?");
-  if(confirmation){
-  const parentTab = target.closest(".project-tab");
-  const tabId = parentTab.id;
-  projectPanel.projectManager.removeProject(tabId);
-  console.log(`Projects array after removing  ${tabId} is ${projectPanel.projects.length}`);
-  tabPanel.tabManager.removeTab(tabId, parentTab);
+addParentListenerNearest(
+  "click",
+  ".delete-project",
+  projectList,
+  (e, target) => {
+    const confirmation = confirm("Are you sure?");
+    if (confirmation) {
+      const parentTab = target.closest(".project-tab");
+      const tabId = parentTab.id;
+      projectPanel.projectManager.removeProject(tabId);
+      console.log(
+        `Projects array after removing  ${tabId} is ${projectPanel.projects.length}`
+      );
+      tabPanel.tabManager.removeTab(tabId, parentTab);
+    } else {
+      console.log("User chose not to remove the project");
+    }
   }
-  else{
-    console.log("User chose not to remove the project");
-  }
-  
-});
+);
 //rename tab/project
-addParentListenerNearest("enter", ".rename-project", projectList, (e,target)=>{
-  const parentTab = target.closest(".project-tab");
-  const inputRename = target.closest(".rename-project") 
-  const tabId = parentTab.id;
-  projectPanel.projectManager.renameProject(tabId, inputRename);
-  console.log("Input rename is", inputRename);
-  
-})
+addParentListenerNearest(
+  "keypress",
+  ".rename-project",
+  projectList,
+  (e, target) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
 
+      const parentTab = target.closest(".project-tab");
+      const inputRename = target.closest(".rename-project");
+      console.log("ParenTab id is: ", parentTab.id);
+      const tabId = parentTab.id;
+      projectPanel.projectManager.renameProject(tabId, inputRename);
+      const renamedProject =
+        projectPanel.projectManager.getLastModifiedProject();
+      tabPanel.tabManager.renameTab(renamedProject, parentTab);
 
-
-
+      console.log("Input rename is:  ", inputRename);
+      clearTextInput(inputRename);
+      checkProjectAndTabLists();
+    }
+  }
+);

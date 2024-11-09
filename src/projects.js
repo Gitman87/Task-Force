@@ -2,7 +2,6 @@ export class ProjectPanel {
   constructor(validator) {
     this.projects = [];
     this.projectManager = new ProjectManager(this.projects, validator);
-    
   }
   initialized() {
     console.log("Project Panel initialized!");
@@ -21,12 +20,17 @@ export class ProjectManager {
   constructor(projects, validator) {
     this.projects = projects;
     this.validator = validator;
+    this.indexOfLastModified = null; //helps with returning last modified project
   }
   static checkInput(validator, projects, input) {
     const isEmpty = validator.isEmpty(input);
     const isUnique = validator.isUnique(projects, input);
 
     return { isEmpty, isUnique };
+  }
+
+  getLastModifiedProject() {
+    return this.projects[this.indexOfLastModified];
   }
   addProject(input) {
     const { isEmpty, isUnique } = ProjectManager.checkInput(
@@ -55,16 +59,25 @@ export class ProjectManager {
   getLastProject() {
     return this.projects[this.projects.length - 1];
   }
-  renameProject(id, input){
+  renameProject(id, input) {
+    this.indexOfLastModified = null;
     const index = this.projects.findIndex((project) => project.id === id);
-    
-    const {isEmpty, isUnique} =ProjectManager.checkInput(this.validator, this.projects, input);
-    if(isEmpty && isUnique){
+
+    const { isEmpty, isUnique } = ProjectManager.checkInput(
+      this.validator,
+      this.projects,
+      input
+    );
+    if (isEmpty && isUnique) {
+      
       this.projects[index].title = input.value;
       this.projects[index].id = input.value.split(" ").join("-").toLowerCase();
-    }
-
-    else{
+      this.indexOfLastModified = index;
+      console.log(
+        "Index of lat modified project is: ",
+        this.indexOfLastModified
+      );
+    } else {
       if (!isEmpty) {
         alert("Project title cannot be empty!");
         return null;
@@ -74,7 +87,6 @@ export class ProjectManager {
       }
       console.warn("Project validation failed.");
       return null;
-
     }
   }
   removeProject(id) {
