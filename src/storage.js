@@ -13,7 +13,7 @@ const readFromLocalStorage = (keyName) => {
 };
 // ----------------draft-------------------
 
-class LocalStorageManager{
+export default class LocalStorageManager{
 
   read(key){
     const dugUpObject = localStorage.getItem(key);
@@ -26,10 +26,10 @@ class LocalStorageManager{
       return null;
     }
   }
-  write(object, key){
+  write(key, item){
     //check if already exist
-    if(!localStorage.includes(key)){
-    const stringifiedObject = localStorage.setItem(JSON.stringify(object));
+    if(localStorage.getItem(key)===null){
+     localStorage.setItem(key, JSON.stringify(item));
     
     }
     else {
@@ -40,16 +40,30 @@ class LocalStorageManager{
   }
   remove(key){
     const dugUpObject = localStorage.getItem(key);
-    if(dugUpObject){
+    if(localStorage.getItem(key)){
       localStorage.removeItem(key);
       }
     else{
       console.warn("Couldn't remove in local storage any object with key: ", key);
       return null;
     }
+ 
+  }
+  update(key, item){
+    if(localStorage.getItem(key)){
+      localStorage.setItem(key, JSON.stringify(item))
+      // localStorage.getItem(key) = JSON.stringify(item);
+      console.log(`Object with the key ${key} has been updated`);
+    
+    }
+    else{
+      localStorage.setItem(key, JSON.stringify(item));
+      console.log(`Object with the key ${key} has been written down. `)
+
+    }
 
 
   }
 }
-const localStorageManager = new LocalStorageManager();
-export default localStorageManager;
+// const localStorageManager = new LocalStorageManager();
+// export default localStorageManager;

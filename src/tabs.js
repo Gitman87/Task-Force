@@ -1,14 +1,15 @@
-export class TabPanel {
-  constructor(container, projectPanel) {
-    this.container = container;
-    this.tabList = [];
-    this.tabManager = new TabManager(this.tabList, projectPanel);
-    this.projectPanel = projectPanel;
-  }
-  initialized() {
-    console.log("TabPanel  initialized!");
-  }
-}
+// export class TabPanel {
+//   constructor(container, projectManager) {
+//     this.container = container;
+//     this.tabList = [];
+//     this.tabManager = new TabManager(this.tabList, projectManager);
+//     this.projectPanel = projectPanel;
+//   }
+//   initialized() {
+//     console.log("TabPanel  initialized!");
+//   }
+// }
+import LocalStorageManager from "./storage";
 export class Tab {
   constructor(title, id) {
     this.title = title;
@@ -44,18 +45,28 @@ export class TabManager {
                       <div class="progress-bar"></div>
                     </div>`;
   }
-  constructor(tabList, projectPanel) {
-    this.tabList = tabList;
-    this.projectPanel = projectPanel;
+  constructor(tabsKey, projectManager, container) {
+    this.tabsKey = tabsKey;
+    this.localStorageManager = new LocalStorageManager();
+    this.tabList = this.loadTabsFromStorage() || [];
+    this.projectManager = projectManager;
+    this.container = container;
+   
   }
   _getNewestProjects() {
-    const newestProjects = this.projectPanel.projectManager.getProjects();
+    const newestProjects = this.projectManager.getProjects();
     return newestProjects;
+  }
+  loadTabsFromStorage(){
+    return this.localStorageManager.read(this.tabsKey);
+  }
+  saveTabsToStorage(){
+    return this.localStorageManager.write(this.tabsKey, this.tabList)
   }
 
   addTab(container) {
     //select last added project
-    const newestProjects = this.projectPanel.projectManager.getProjects();
+    const newestProjects = this.projectManager.getProjects();
     const project = newestProjects[newestProjects.length - 1];
     const title = project.title;
     const id = project.id;
@@ -63,6 +74,7 @@ export class TabManager {
     console.log(`idTitle of tab ${title} is ${id}`);
     const newTab = new Tab(title, id);
     this.tabList.push(newTab);
+    this.saveTabsToStorage();
     const newElement = document.createElement("li");
     newElement.innerHTML = TabManager.getHtmlContent(title);
 
@@ -75,7 +87,7 @@ export class TabManager {
   }
 
   removeTab(id, tab) {
-    // const projects = this.projectPanel.getProjects();
+    
     const tabIndex = this.tabList.findIndex((tab) => tab.idTab === id);
 
     if (tabIndex === -1) {
@@ -87,6 +99,7 @@ export class TabManager {
 
     //remove tab
     this.tabList.splice(tabIndex, 1);
+    this.saveTabsToStorage();
     console.log(
       `Tab with id: ${tabToRemove.idTab} removed for project title: ${projectTitle}`
     );
@@ -98,7 +111,8 @@ export class TabManager {
       this.tabList[this.getTab(parentTab.id)[1]].title = renamedProject.title;
       this.tabList[this.getTab(parentTab.id)[1]].idTab = renamedProject.id;
       parentTab.id = renamedProject.id;
-      //rename title html element
+      this.saveTabsToStorage();
+      //rename title html element 
       const titleElement = parentTab.querySelector(".project-cell-name");
       titleElement.innerHTML = "";
       titleElement.innerHTML = renamedProject.title;

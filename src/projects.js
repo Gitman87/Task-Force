@@ -1,24 +1,37 @@
-export class ProjectPanel {
-  constructor(validator) {
-    this.projects = [];
-    this.projectManager = new ProjectManager(this.projects, validator);
-  }
-  initialized() {
-    console.log("Project Panel initialized!");
-  } // check if created
-}
+import LocalStorageManager from "./storage";
+
+
+// export class ProjectPanel {
+//   constructor(projectsKey, validator) {
+//     this.projectsKey = projectsKey;
+//     this.projects =this._getProjects();
+//     this.projectManager = new ProjectManager(this.projects, validator);
+//   }
+//   initialized() {
+//     console.log("Project Panel initialized!");
+//   } // check if created
+//   _getProjects(){
+//     return JSON.parse(localStorage.getItem(this.projectsKey)) || [];
+//   }
+//   refreshProjects(){
+//     this.projects = this._getProjects();
+//   }
+
+// }
 export class Project {
-  constructor(title) {
+  constructor(title, tasks) {
     this.title = title;
-    this.tasks = [];
+    this.tasks = tasks;
     this.progress = 0;
     this.taskManager = new TaskManager(this.tasks);
     this.id = title.split(" ").join("-").toLowerCase();
   }
 }
 export class ProjectManager {
-  constructor(projects, validator) {
-    this.projects = projects;
+  constructor(projectsKey, validator) {
+    this.localStorageManager =  new LocalStorageManager();
+    this.projectsKey = projectsKey;
+    this.projects = this.loadProjectsFromStorage() || [];
     this.validator = validator;
     this.indexOfLastModified = null; //helps with returning last modified project
   }
@@ -27,6 +40,14 @@ export class ProjectManager {
     const isUnique = validator.isUnique(projects, input);
 
     return { isEmpty, isUnique };
+  }
+
+  loadProjectsFromStorage() {
+    return this.localStorageManager.read(this.projectsKey);
+  }
+
+  saveProjectsToStorage() {
+    this.localStorageManager.write(this.projectsKey, this.projects);
   }
 
   getLastModifiedProject() {
@@ -42,6 +63,7 @@ export class ProjectManager {
       const project = new Project(input.value);
       console.log(`addProject project title is: ${project.title}`);
       this.projects.push(project);
+      this.saveProjectsToStorage(); 
       console.log(`Project added: ${this.projects[0].title}`);
       return project;
     } else {
@@ -68,11 +90,12 @@ export class ProjectManager {
       this.projects,
       input
     );
-    if (isEmpty && isUnique) {
+    if (isEmpty && isUnique) { 
       
       this.projects[index].title = input.value;
       this.projects[index].id = input.value.split(" ").join("-").toLowerCase();
       this.indexOfLastModified = index;
+      this.saveProjectsToStorage(); 
       console.log(
         "Index of lat modified project is: ",
         this.indexOfLastModified
@@ -93,10 +116,11 @@ export class ProjectManager {
     const index = this.projects.findIndex((project) => project.id === id);
     if (index !== -1) {
       this.projects.splice(index, 1);
+      this.saveProjectsToStorage(); 
       console.log("removed project id:", id);
       return true;
     } else {
-      console.warn("ProjectPanel couldn't remove project", id);
+      console.warn(" couldn't remove project", id);
       return false;
     }
   }
