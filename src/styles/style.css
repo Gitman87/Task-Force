@@ -632,7 +632,7 @@ h3 {
 }
 /* --------------NEW TASK FORM----------- */
 #new-task-container {
-  height: 22rem;
+  height: 18rem;
   width: 17.5rem;
   position: absolute;
   top: 4.5rem;
@@ -651,7 +651,7 @@ h3 {
   height: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
 }
 #new-task-list > li {
   background-color: var(--cell-1);
@@ -693,19 +693,7 @@ h3 {
   right: 0;
   font-size: 1rem;
 }
-#new-task-project {
-  gap: 0.5rem;
-}
-.assign-project {
-  /* display: none; */
-  position: absolute;
-  width: 10rem;
-  height: 6rem;
-  top: 16rem;
-  left: 6.5rem;
 
-  overflow-y: scroll;
-}
 
 .drop-down-item {
   width: 100%;
