@@ -13,57 +13,49 @@ const readFromLocalStorage = (keyName) => {
 };
 // ----------------draft-------------------
 
-export default class LocalStorageManager{
-
-  read(key){
+export default class LocalStorageManager {
+  read(key) {
     const dugUpObject = localStorage.getItem(key);
-    if(dugUpObject){
+    if (dugUpObject) {
       const confirmedObject = JSON.parse(dugUpObject);
       return confirmedObject;
-    }
-    else{
+    } else {
       console.warn("Couldn't find in local storage any object with key: ", key);
       return null;
     }
   }
-  write(key, item){
+  write(key, item) {
     //check if already exist
-    if(localStorage.getItem(key)===null){
-     localStorage.setItem(key, JSON.stringify(item));
+    if (localStorage.getItem(key) === null) {
+      localStorage.setItem(key, JSON.stringify(item));
+    } else {
+      const foundObject = localStorage.getItem(key);
+      console.warn(
+        `There is already an item in localStorage with the key ${key} which is  ${foundObject}`
+      );
+      return null;
+    }
+  }
+  remove(key) {
     
-    }
-    else {
-      const foundObject= localStorage.getItem(key);
-      console.warn(`There is already an item in localStorage with the key ${key} which is  ${foundObject}`);
-      return null;
-    }
-  }
-  remove(key){
-    const dugUpObject = localStorage.getItem(key);
-    if(localStorage.getItem(key)){
+    if (localStorage.getItem(key)) {
       localStorage.removeItem(key);
-      }
-    else{
-      console.warn("Couldn't remove in local storage any object with key: ", key);
+    } else {
+      console.warn(
+        "Couldn't remove in local storage any object with key: ",
+        key
+      );
       return null;
     }
- 
   }
-  update(key, item){
-    if(localStorage.getItem(key)){
-      localStorage.setItem(key, JSON.stringify(item))
+  update(key, item) {
+    if (localStorage.getItem(key)) {
+      localStorage.setItem(key, JSON.stringify(item));
       // localStorage.getItem(key) = JSON.stringify(item);
       console.log(`Object with the key ${key} has been updated`);
-    
-    }
-    else{
+    } else {
       localStorage.setItem(key, JSON.stringify(item));
-      console.log(`Object with the key ${key} has been written down. `)
-
+      console.log(`Object with the key ${key} has been written down. `);
     }
-
-
   }
 }
-// const localStorageManager = new LocalStorageManager();
-// export default localStorageManager;

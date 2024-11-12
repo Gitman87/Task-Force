@@ -6,21 +6,13 @@ import "air-datepicker/air-datepicker.css";
 import LocalStorageManager from "./storage.js";
 const localStorageManager = new LocalStorageManager();
 // -----------------projects----------------------
-import {
-  
-  Project,
-  ProjectManager,
-  Task,
-  TaskManager,
-} from "./projects.js";
-
+import { Project, ProjectManager, Task, TaskManager } from "./projects.js";
 
 //--------------Tabs------------------------
-import {  Tab, TabManager } from "./tabs.js";
-
+import { Tab, TabManager } from "./tabs.js";
 
 // --------------Validation-----------------
-import {validateInput} from "./validation";
+import { validateInput } from "./validation";
 const { inputValidator, inputUniqueValidator } = validateInput();
 
 console.log(inputUniqueValidator);
@@ -190,13 +182,12 @@ const checkProjectAndTabLists = () => {
 const projectsKey = "projects";
 const projects = [];
 const tabsList = [];
-const tabsKey = "tabList"
+const tabsKey = "tabList";
 const tasksKey = "tasks";
-const tasks= [];
+const tasks = [];
 localStorageManager.write(projectsKey, projects);
-localStorageManager.write(tabsKey,tabsList);
-localStorageManager.write(tasksKey , tasks);
-
+localStorageManager.write(tabsKey, tabsList);
+localStorageManager.write(tasksKey, tasks);
 
 // ---------------objects-----------------------------------
 const projectList = document.querySelector("#project-list");
@@ -211,14 +202,15 @@ const addProjectBtn = document.querySelector("#add-project");
 const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
 
-
-
-
-
-
 console.log("tabs array is", projectList.children);
 
 // ------add starter listeners------------------
+
+//load rebuild tabs with projects  from tabManger.tabList localStorage
+window.addEventListener("load", tabManager.loadElementsFromStorage(projectList))
+
+
+
 addListener(addProjectBtn, "click", () =>
   cleanerAndSwitcher(addProjectQuery, projectTitleInput)
 );
@@ -227,7 +219,6 @@ submitEnter(
   projectTitleInput,
   () => projectManager.addProject(projectTitleInput),
 
- 
   () => tabManager.addTab(projectList),
   () => {
     const cleaner = new TextInputCleaner();
@@ -287,8 +278,7 @@ addParentListenerNearest(
       console.log("ParenTab id is: ", parentTab.id);
       const tabId = parentTab.id;
       projectManager.renameProject(tabId, inputRename);
-      const renamedProject =
-        projectManager.getLastModifiedProject();
+      const renamedProject = projectManager.getLastModifiedProject();
       tabManager.renameTab(renamedProject, parentTab);
 
       console.log("Input rename is:  ", inputRename);

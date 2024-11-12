@@ -36,7 +36,7 @@ export class TabManager {
                           </li>
                           <li class="drop-down-item button delete-project">
                             Delete
-                          </li>
+                          </li> 
                         </ul>
                       </form>
                     </div>
@@ -61,21 +61,32 @@ export class TabManager {
     return this.localStorageManager.read(this.tabsKey);
   }
   saveTabsToStorage(){
-    return this.localStorageManager.write(this.tabsKey, this.tabList)
+    return this.localStorageManager.update(this.tabsKey, this.tabList)
   }
+  loadElementsFromStorage(container){
+   
+    this.tabList.forEach(tab=>{
+      const newElement = document.createElement(TabManager.typeOfElement);
+      newElement.innerHTML = TabManager.getHtmlContent(tab.title);
+      TabManager.classes.forEach((className) => {
+        newElement.classList.add(className);
+      });
+      newElement.setAttribute("id", tab.idTab);
+      container.appendChild(newElement);
+    })
 
+  }
   addTab(container) {
     //select last added project
     const newestProjects = this.projectManager.getProjects();
     const project = newestProjects[newestProjects.length - 1];
     const title = project.title;
     const id = project.id;
-
     console.log(`idTitle of tab ${title} is ${id}`);
     const newTab = new Tab(title, id);
     this.tabList.push(newTab);
     this.saveTabsToStorage();
-    const newElement = document.createElement("li");
+    const newElement = document.createElement(TabManager.typeOfElement);
     newElement.innerHTML = TabManager.getHtmlContent(title);
 
     TabManager.classes.forEach((className) => {

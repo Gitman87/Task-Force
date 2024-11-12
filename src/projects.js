@@ -1,23 +1,6 @@
 import LocalStorageManager from "./storage";
 
 
-// export class ProjectPanel {
-//   constructor(projectsKey, validator) {
-//     this.projectsKey = projectsKey;
-//     this.projects =this._getProjects();
-//     this.projectManager = new ProjectManager(this.projects, validator);
-//   }
-//   initialized() {
-//     console.log("Project Panel initialized!");
-//   } // check if created
-//   _getProjects(){
-//     return JSON.parse(localStorage.getItem(this.projectsKey)) || [];
-//   }
-//   refreshProjects(){
-//     this.projects = this._getProjects();
-//   }
-
-// }
 export class Project {
   constructor(title, tasks) {
     this.title = title;
@@ -29,7 +12,7 @@ export class Project {
 }
 export class ProjectManager {
   constructor(projectsKey, validator) {
-    this.localStorageManager =  new LocalStorageManager();
+    this.localStorageManager = new LocalStorageManager();
     this.projectsKey = projectsKey;
     this.projects = this.loadProjectsFromStorage() || [];
     this.validator = validator;
@@ -47,7 +30,7 @@ export class ProjectManager {
   }
 
   saveProjectsToStorage() {
-    this.localStorageManager.write(this.projectsKey, this.projects);
+    this.localStorageManager.update(this.projectsKey, this.projects);
   }
 
   getLastModifiedProject() {
@@ -63,7 +46,7 @@ export class ProjectManager {
       const project = new Project(input.value);
       console.log(`addProject project title is: ${project.title}`);
       this.projects.push(project);
-      this.saveProjectsToStorage(); 
+      this.saveProjectsToStorage();
       console.log(`Project added: ${this.projects[0].title}`);
       return project;
     } else {
@@ -90,12 +73,11 @@ export class ProjectManager {
       this.projects,
       input
     );
-    if (isEmpty && isUnique) { 
-      
+    if (isEmpty && isUnique) {
       this.projects[index].title = input.value;
       this.projects[index].id = input.value.split(" ").join("-").toLowerCase();
       this.indexOfLastModified = index;
-      this.saveProjectsToStorage(); 
+      this.saveProjectsToStorage();
       console.log(
         "Index of lat modified project is: ",
         this.indexOfLastModified
@@ -116,7 +98,7 @@ export class ProjectManager {
     const index = this.projects.findIndex((project) => project.id === id);
     if (index !== -1) {
       this.projects.splice(index, 1);
-      this.saveProjectsToStorage(); 
+      this.saveProjectsToStorage();
       console.log("removed project id:", id);
       return true;
     } else {
