@@ -481,7 +481,7 @@ h3 {
   /* display:none; */
   position: absolute;
   top: 4.2rem;
-  position: absolute;
+
   left: 7.75rem;
   width: 5rem;
 }
@@ -542,6 +542,7 @@ h3 {
   width: 5rem;
   transform: translateY(0);
 }
+
 .drop-down-content.visible {
   visibility: visible;
   position: absolute;
@@ -631,7 +632,8 @@ h3 {
   right: 3.8rem;
 }
 /* --------------NEW TASK FORM----------- */
-#new-task-container {
+.new-task-container.hidden {
+  visibility: hidden;
   height: 18rem;
   width: 17.5rem;
   position: absolute;
@@ -642,6 +644,19 @@ h3 {
   padding: 1rem;
   border: none;
 }
+.new-task-container {
+  visibility: visible;
+  height: 18rem;
+  width: 17.5rem;
+  position: absolute;
+  top: 4.5rem;
+  left: 15.25rem;
+  background-color: var(--bluish-2);
+  backdrop-filter: var(--blur);
+  padding: 1rem;
+  border: none;
+}
+
 #new-task-form {
   width: 100%;
   height: 100%;
@@ -694,11 +709,10 @@ h3 {
   font-size: 1rem;
 }
 
-
 .drop-down-item {
   width: 100%;
   text-align: center;
-  overflow-x: scroll ;
+  overflow-x: scroll;
 }
 
 #new-task-priority {
@@ -748,6 +762,11 @@ h3 {
   color: var(--bluish-3);
 }
 #add-task-button {
+  position: relative;
+  right: 0.22rem;
+  bottom: 0.2rem;
+}
+#submit-task-button {
   position: absolute;
   right: 0.22rem;
   bottom: 0.2rem;

@@ -84,32 +84,31 @@ const submitEnter = (input, ...actions) => {
 };
 const clearTextInput = (input) => (input.value = "");
 
-const switchDisplay = (element) => {
-  element.classList.toggle("hidden");
-  console.log("element class list is:", element.classList);
-  if (element.classList.contains("hidden")) {
-    clearTextInput(projectTitleInput); // too tightly coupled???
-  }
-};
 class DisplaySwitcher {
   toggle(element) {
     element.classList.toggle("hidden");
   }
 }
 class TextInputCleaner {
-  clean(input) {
-    input.value = "";
+  clean(inputs) {
+    const elementList =
+      NodeList.prototype.isPrototypeOf(inputs) ||
+      HTMLCollection.prototype.isPrototypeOf(inputs) ||
+      Array.isArray(inputs)
+        ? inputs
+        : [inputs];
+    elementList.forEach((element) => {
+      element.value = "";
+    });
   }
 }
 const cleanerAndSwitcher = (element, input) => {
   const switcher = new DisplaySwitcher();
   const cleaner = new TextInputCleaner();
-
   switcher.toggle(element);
   if (element.classList.contains("hidden")) {
     cleaner.clean(input);
   }
-  return { switcher, cleaner };
 };
 
 // const projectPanelStarter = (() => {
@@ -189,14 +188,12 @@ localStorageManager.write(projectsKey, projects);
 localStorageManager.write(tabsKey, tabsList);
 localStorageManager.write(tasksKey, tasks);
 
-// ---------------objects-----------------------------------
+// ---------------objects projects-----------------------------------
 const projectList = document.querySelector("#project-list");
 const projectManager = new ProjectManager(projectsKey, inputUniqueValidator);
 const tabManager = new TabManager(tabsKey, projectManager, projectList);
 
-const dropDown = document.getElementById("edit-project-2");
-const arrows = document.querySelectorAll(".drop-arrow");
-const tabs = document.querySelectorAll(".project-tab");
+
 
 const addProjectBtn = document.querySelector("#add-project");
 const addProjectQuery = document.querySelector("#add-project-query");
@@ -207,9 +204,10 @@ console.log("tabs array is", projectList.children);
 // ------add starter listeners------------------
 
 //load rebuild tabs with projects  from tabManger.tabList localStorage
-window.addEventListener("load", tabManager.loadElementsFromStorage(projectList))
-
-
+window.addEventListener(
+  "load",
+  tabManager.loadElementsFromStorage(projectList)
+);
 
 addListener(addProjectBtn, "click", () =>
   cleanerAndSwitcher(addProjectQuery, projectTitleInput)
@@ -286,4 +284,14 @@ addParentListenerNearest(
       checkProjectAndTabLists();
     }
   }
+);
+//----------------objects tasks-----------------------------
+const addTaskBtn = document.querySelector("#add-task-button");
+const newTaskContainer = document.querySelector(".new-task-container");
+const inputsForCleaning = document.querySelectorAll(".input-for-cleaning");
+
+
+//-------------tasks listeners-----------------
+addListener(addTaskBtn, "click", () =>
+  cleanerAndSwitcher(newTaskContainer, inputsForCleaning)
 );

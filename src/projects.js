@@ -36,7 +36,7 @@ export class ProjectManager {
   getLastModifiedProject() {
     return this.projects[this.indexOfLastModified];
   }
-  addProject(input) {
+  addProject(input){
     const { isEmpty, isUnique } = ProjectManager.checkInput(
       this.validator,
       this.projects,
@@ -126,7 +126,7 @@ export class Task {
     title,
     dueDate = "17-10-2024",
     priority = "low",
-    projectAssigned = "defaultProject",
+    projectAssigned = "default",
     isComplete = false,
     description = "",
   } = {}) {
@@ -147,7 +147,7 @@ export class TaskManager {
     title,
     dueDate = "17-10-2024",
     priority = "low",
-    projectAssigned = "defaultProject",
+    projectAssigned = "default",
     isComplete = false,
     description = "",
   }) {

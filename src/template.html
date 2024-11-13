@@ -143,13 +143,13 @@
                 </div>
                 <ul id="project-list">
                   <li
-                    class="project-list-cell project-tab button "
+                    class="project-list-cell project-tab button"
                     data-project-tab="1"
                   >
-                    <div class = "project-cell-name-container">
-                      <span class = "project-cell-name">Default</span>
-                      <img src = "" alt=" " class="drop-arrow button" />
-                      <div class = "drop-down-content " id= "edit-project" >
+                    <div class="project-cell-name-container">
+                      <span class="project-cell-name">Default</span>
+                      <img src="" alt=" " class="drop-arrow button" />
+                      <div class="drop-down-content" id="edit-project">
                         <form action="" class="drop-down-form">
                           <ul class="drop-down-list">
                             <li>
@@ -170,16 +170,13 @@
                       <div class="progress-bar"></div>
                     </div>
                   </li>
-
-                  
-                  
                 </ul>
               </div>
               <div id="tasks-main-panel">
                 <div id="tasks-header">
                   <div id="header-left">
                     <h3>Tasks</h3>
-                    <div class="button plus-button" id="add-project">
+                    <div class="button plus-button" id="add-task-button">
                       <p class="plus-text">+</p>
                     </div>
                   </div>
@@ -190,7 +187,7 @@
                     class="drop-arrow button"
                     id="sort-drop"
                   />
-                  <dialog id="new-task-container" open>
+                  <div class="new-task-container hidden">
                     <form action="" id="new-task-form">
                       <ul id="new-task-list">
                         <li id="new-task-title">
@@ -199,6 +196,7 @@
                             name=""
                             id=""
                             placeholder="Title"
+                            class="new-task-title input-for-cleaning"
                           />
                         </li>
                         <li id="new-task-date">
@@ -206,7 +204,7 @@
                             <label for="date-range-start">Start:</label>
                             <input
                               type="date"
-                              class="date-input new-task-date-input"
+                              class="date-input new-task-date-input input-for-cleaning"
                               id="date-range-start"
                               name="date-range-start"
                             />
@@ -239,21 +237,21 @@
                             ></li>
                           </ul>
                         </li>
-                        
 
                         <li id="new-task-description">
                           <textarea
                             name=""
-                            id=""
+                            id="description"
                             placeholder="Description"
+                            class="input-for-cleaning"
                           ></textarea>
                         </li>
                       </ul>
-                      <div class="button plus-button" id="add-task-button">
+                      <div class="button plus-button" id="submit-task-button">
                         <p class="plus-text">+</p>
                       </div>
                     </form>
-                  </dialog>
+                  </div>
                 </div>
                 <ul id="task-list">
                   <li class="task-item">
