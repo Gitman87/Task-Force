@@ -193,8 +193,6 @@ const projectList = document.querySelector("#project-list");
 const projectManager = new ProjectManager(projectsKey, inputUniqueValidator);
 const tabManager = new TabManager(tabsKey, projectManager, projectList);
 
-
-
 const addProjectBtn = document.querySelector("#add-project");
 const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
@@ -290,8 +288,16 @@ const addTaskBtn = document.querySelector("#add-task-button");
 const newTaskContainer = document.querySelector(".new-task-container");
 const inputsForCleaning = document.querySelectorAll(".input-for-cleaning");
 
-
 //-------------tasks listeners-----------------
 addListener(addTaskBtn, "click", () =>
   cleanerAndSwitcher(newTaskContainer, inputsForCleaning)
 );
+// projectManager.projects[0].taskManager.addTask();
+// const taskToBeShown= projectManager.projects[0].taskManager.show();
+// projectManager.projects[0].taskManager.show();
+
+
+console.log(projectManager.projects[0].title);
+
+
+// console.log("this task is", projectManager.projects[0].taskManager.show());

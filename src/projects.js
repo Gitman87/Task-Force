@@ -1,14 +1,24 @@
 import LocalStorageManager from "./storage";
 
-
 export class Project {
-  constructor(title, tasks) {
+  constructor(title) {
     this.title = title;
-    this.tasks = tasks;
+    this.tasks = [];
     this.progress = 0;
-    this.taskManager = new TaskManager(this.tasks);
+    this.localStorageManager = new LocalStorageManager();
     this.id = title.split(" ").join("-").toLowerCase();
+    this.tasksStorage = this.setNewTasksArrayToLocalStorage(this.id, this.tasks);
+    this.taskManager = new TaskManager(this.id, this.tasksStorage);
   }
+  setNewTasksArrayToLocalStorage(id, tasksArray) {
+ 
+  this.localStorageManager.update(id,tasksArray);
+  return this.localStorageManager.read(id);
+  }
+  show(){
+    console.log("task storage is", this.tasksStorage)
+  }
+
 }
 export class ProjectManager {
   constructor(projectsKey, validator) {
@@ -26,7 +36,14 @@ export class ProjectManager {
   }
 
   loadProjectsFromStorage() {
-    return this.localStorageManager.read(this.projectsKey);
+
+    const storedProjects = this.localStorageManager.read(this.projectsKey);
+  console.log("Loaded projects from storage:", storedProjects);
+
+  // Map stored project data to actual instances of Project
+  return storedProjects
+    ? storedProjects.map(data => new Project(data.title, data.tasks || []))
+    : [];
   }
 
   saveProjectsToStorage() {
@@ -36,7 +53,7 @@ export class ProjectManager {
   getLastModifiedProject() {
     return this.projects[this.indexOfLastModified];
   }
-  addProject(input){
+  addProject(input) {
     const { isEmpty, isUnique } = ProjectManager.checkInput(
       this.validator,
       this.projects,
@@ -47,6 +64,7 @@ export class ProjectManager {
       console.log(`addProject project title is: ${project.title}`);
       this.projects.push(project);
       this.saveProjectsToStorage();
+      // this.projects[0].show();
       console.log(`Project added: ${this.projects[0].title}`);
       return project;
     } else {
@@ -140,8 +158,20 @@ export class Task {
 }
 
 export class TaskManager {
-  constructor(tasks) {
-    this.tasks = tasks;
+  constructor(projectId, tasksStorage) {
+    this.tasksStorage = tasksStorage;
+    this.tasksKey = projectId;
+    this.localStorageManager = new LocalStorageManager();
+    this.tasks = this.loadTasksFromStorage() || this.tasksStorage;
+  }
+  loadTasksFromStorage() {
+    return this.localStorageManager.read(this.tasksKey);
+  }
+  saveTasksToStorage() {
+    return this.localStorageManager.update(this.tasksKey, this.tasks);
+  }
+  show(){
+    console.log("No elo, mordo");
   }
   addTask({
     title,
@@ -160,6 +190,7 @@ export class TaskManager {
       description,
     });
     this.tasks.push(task);
+    this.saveTasksToStorage();
   }
   removeTask(title) {
     const index = this.tasks.findIndex((task) => task.title === title);
