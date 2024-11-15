@@ -287,17 +287,28 @@ addParentListenerNearest(
 const addTaskBtn = document.querySelector("#add-task-button");
 const newTaskContainer = document.querySelector(".new-task-container");
 const inputsForCleaning = document.querySelectorAll(".input-for-cleaning");
+const taskManager = new TaskManager(projectsKey);
 
 //-------------tasks listeners-----------------
 addListener(addTaskBtn, "click", () =>
   cleanerAndSwitcher(newTaskContainer, inputsForCleaning)
 );
+//submitting new task form
+// element should be assign after site loads, maybe after the plus btn is clicked?
+const newTaskTitleInput = document.querySelector(".new-task-title");
+const startDateInput = document.querySelector("#date-range-start");
+const endDateInput = document.querySelector("#date-range-end");
+const lowInput = document.querySelector(`[data-priority-level="low"]`); //if clicked, toggle class clicked
+const mediumInput = document.querySelector(`[data-priority-level="medium"]`);
+const highInput = document.querySelector(`[data-priority-level="high"]`);
+const descriptionInput = document.querySelector("#description");
+const submitTaskBtn = document.querySelector("#submit-task-button");
+
 // projectManager.projects[0].taskManager.addTask();
 // const taskToBeShown= projectManager.projects[0].taskManager.show();
 // projectManager.projects[0].taskManager.show();
 
-
 console.log(projectManager.projects[0].title);
-
+console.log(projectManager.projects[0].tasks[1]);
 
 // console.log("this task is", projectManager.projects[0].taskManager.show());

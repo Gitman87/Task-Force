@@ -3,22 +3,21 @@ import LocalStorageManager from "./storage";
 export class Project {
   constructor(title) {
     this.title = title;
-    this.tasks = [];
+    this.tasks = ["task1", "task2"]; //testing
     this.progress = 0;
-    this.localStorageManager = new LocalStorageManager();
     this.id = title.split(" ").join("-").toLowerCase();
-    this.tasksStorage = this.setNewTasksArrayToLocalStorage(this.id, this.tasks);
-    this.taskManager = new TaskManager(this.id, this.tasksStorage);
+    // this.localStorageManager = new LocalStorageManager();
+    // this.tasksStorage = this.setNewTasksArrayToLocalStorage(this.id, this.tasks);
+    // this.taskManager = new TaskManager(this.id, this.tasksStorage);
   }
-  setNewTasksArrayToLocalStorage(id, tasksArray) {
- 
-  this.localStorageManager.update(id,tasksArray);
-  return this.localStorageManager.read(id);
-  }
-  show(){
-    console.log("task storage is", this.tasksStorage)
-  }
+  // setNewTasksArrayToLocalStorage(id, tasksArray) {
 
+  // this.localStorageManager.update(id,tasksArray);
+  // return this.localStorageManager.read(id);
+  // }
+  // show(){
+  //   console.log("task storage is", this.tasksStorage)
+  // }
 }
 export class ProjectManager {
   constructor(projectsKey, validator) {
@@ -36,14 +35,7 @@ export class ProjectManager {
   }
 
   loadProjectsFromStorage() {
-
-    const storedProjects = this.localStorageManager.read(this.projectsKey);
-  console.log("Loaded projects from storage:", storedProjects);
-
-  // Map stored project data to actual instances of Project
-  return storedProjects
-    ? storedProjects.map(data => new Project(data.title, data.tasks || []))
-    : [];
+    return this.localStorageManager.read(this.projectsKey);
   }
 
   saveProjectsToStorage() {
@@ -142,40 +134,52 @@ export class ProjectManager {
 export class Task {
   constructor({
     title,
-    dueDate = "17-10-2024",
+    startDate= "17-10-2024",
+    endDate = "17-10-2024",
     priority = "low",
     projectAssigned = "default",
     isComplete = false,
     description = "",
   } = {}) {
     this.title = title;
-    this.dueDate = dueDate;
+    this.startDate = startDate;
+    this.endDate = endDate;
     this.priority = priority;
     this.projectAssigned = projectAssigned;
     this.isComplete = isComplete;
     this.description = description;
+    this.id = this.title.split(" ").join("-").toLowerCase();
   }
 }
 
 export class TaskManager {
-  constructor(projectId, tasksStorage) {
-    this.tasksStorage = tasksStorage;
-    this.tasksKey = projectId;
+  constructor(projectsKey) {
     this.localStorageManager = new LocalStorageManager();
-    this.tasks = this.loadTasksFromStorage() || this.tasksStorage;
+    this.projectsKey = projectsKey;
+    this.projects = this.loadProjectsFromStorage() || [];
   }
-  loadTasksFromStorage() {
-    return this.localStorageManager.read(this.tasksKey);
+  loadProjectsFromStorage() {
+    return this.localStorageManager.read(this.projectsKey);
   }
-  saveTasksToStorage() {
-    return this.localStorageManager.update(this.tasksKey, this.tasks);
+  saveProjectsToStorage() {
+    return this.localStorageManager.update(this.projectsKey, this.projects);
   }
-  show(){
-    console.log("No elo, mordo");
+  getProject(projectId) {
+    const index = this.projects.findIndex(
+      (project) => project.id === projectId
+    );
+    if (index !== -1) {
+      return this.projects[index];
+    }
   }
+  getProjectTasks(projectId) {
+    return this.getProject(projectId).tasks;
+  }
+
   addTask({
     title,
-    dueDate = "17-10-2024",
+    startDate = "17-10-2024",
+    endDate = "18-10-2024",
     priority = "low",
     projectAssigned = "default",
     isComplete = false,
@@ -183,19 +187,24 @@ export class TaskManager {
   }) {
     const task = new Task({
       title,
-      dueDate,
+      startDate,
+      endDate,
       priority,
       projectAssigned,
       isComplete,
       description,
     });
-    this.tasks.push(task);
-    this.saveTasksToStorage();
+    //check projectAssigned from activeTab
+    //this.getProjectTasks(activeTab.id).push(task)
+    const project = this.getProject(task.projectAssigned);
+    project.tasks.push(task);
+    this.saveProjectsToStorage();
   }
   removeTask(title) {
     const index = this.tasks.findIndex((task) => task.title === title);
     if (index !== -1) {
       this.tasks.splice(index, 1);
+      this.saveProjectsToStorage();
     }
   }
   getTask(title) {
