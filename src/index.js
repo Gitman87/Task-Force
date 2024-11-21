@@ -1,12 +1,14 @@
 // --------------styles------------------------
 import "./styles/style.css";
-import AirDatepicker from "air-datepicker";
-import "air-datepicker/air-datepicker.css";
+
 // -------------------storage-----------------------
 import LocalStorageManager from "./storage.js";
 const localStorageManager = new LocalStorageManager();
 // -----------------projects----------------------
-import { Project, ProjectManager, Task, TaskManager } from "./projects.js";
+import { Project, ProjectManager } from "./projects.js";
+// -------------------tasks---------------------------
+import { Task, TaskBarManager, TaskManager } from "./tasks.js";
+
 
 //--------------Tabs------------------------
 import { Tab, TabManager } from "./tabs.js";
@@ -14,6 +16,8 @@ import { Tab, TabManager } from "./tabs.js";
 // --------------Validation-----------------
 import { validateInput } from "./validation";
 const { inputValidator, inputUniqueValidator } = validateInput();
+// -------------------time---------------------
+import { format } from "date-fns";
 
 console.log(inputUniqueValidator);
 
@@ -182,15 +186,15 @@ const projectsKey = "projects";
 const projects = [];
 const tabsList = [];
 const tabsKey = "tabList";
-const tasksKey = "tasks";
+const taskBarsKey = "tasks";
 const tasks = [];
 localStorageManager.write(projectsKey, projects);
 localStorageManager.write(tabsKey, tabsList);
-localStorageManager.write(tasksKey, tasks);
+localStorageManager.write(taskBarsKey, tasks);
 
 // ---------------objects projects-----------------------------------
 const projectList = document.querySelector("#project-list");
-const projectManager = new ProjectManager(projectsKey, inputUniqueValidator);
+const projectManager = new ProjectManager(projectsKey);
 const tabManager = new TabManager(tabsKey, projectManager, projectList);
 
 const addProjectBtn = document.querySelector("#add-project");
@@ -199,6 +203,13 @@ const projectTitleInput = document.querySelector("#project-title-input");
 
 console.log("tabs array is", projectList.children);
 
+// add default project
+const loadDefault = () => {
+  const project = new Project("Default");
+  projectManager.projects.push(project);
+  projectManager.saveProjectsToStorage();
+};
+loadDefault();
 // ------add starter listeners------------------
 
 //load rebuild tabs with projects  from tabManger.tabList localStorage
@@ -223,16 +234,21 @@ submitEnter(
   () => addProjectQuery.classList.toggle("hidden")
 );
 //select current active tab
-let activeTab = undefined;
+let activeTab = document.querySelector(".active-tab ");
 
-//toggling active tab, style
+//toggling active tab, style and load tak bars
 addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   //remove active-tab from other tabs
   const tabs = projectList.querySelectorAll(".project-tab");
   removeClass(tabs, "active-tab");
   target.classList.add("active-tab");
   activeTab = target;
-  console.log("Active tab id is", activeTab.classList);
+  console.log("Active tab id is", activeTab.id);
+  //load task bars
+  taskBarsContainer.innerHTML = " ";
+  console.log(taskBarManager.taskBarsList);
+  taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
+  
 });
 //showing drop down list with project editing
 addParentListenerNearest("click", ".drop-arrow", projectList, (e, target) => {
@@ -262,7 +278,7 @@ addParentListenerNearest(
 );
 //rename tab/project
 addParentListenerNearest(
-  "keypress",
+  "keypress", 
   ".rename-project",
   projectList,
   (e, target) => {
@@ -273,9 +289,14 @@ addParentListenerNearest(
       const inputRename = target.closest(".rename-project");
       console.log("ParenTab id is: ", parentTab.id);
       const tabId = parentTab.id;
+      console.log("ParentTab id is ", tabId);
+      const oldProjectId = tabId;
       projectManager.renameProject(tabId, inputRename);
+     
       const renamedProject = projectManager.getLastModifiedProject();
+      console.log("New project  id is ", renamedProject.id);
       tabManager.renameTab(renamedProject, parentTab);
+      taskBarManager.reassignTaskBars(oldProjectId, renamedProject.id);
 
       console.log("Input rename is:  ", inputRename);
       clearTextInput(inputRename);
@@ -288,6 +309,8 @@ const addTaskBtn = document.querySelector("#add-task-button");
 const newTaskContainer = document.querySelector(".new-task-container");
 const inputsForCleaning = document.querySelectorAll(".input-for-cleaning");
 const taskManager = new TaskManager(projectsKey);
+const taskBarsContainer = document.querySelector("#task-list");
+const taskBarManager = new TaskBarManager(taskBarsKey, taskManager, taskBarsContainer);
 
 //-------------tasks listeners-----------------
 addListener(addTaskBtn, "click", () =>
@@ -298,17 +321,57 @@ addListener(addTaskBtn, "click", () =>
 const newTaskTitleInput = document.querySelector(".new-task-title");
 const startDateInput = document.querySelector("#date-range-start");
 const endDateInput = document.querySelector("#date-range-end");
-const lowInput = document.querySelector(`[data-priority-level="low"]`); //if clicked, toggle class clicked
-const mediumInput = document.querySelector(`[data-priority-level="medium"]`);
-const highInput = document.querySelector(`[data-priority-level="high"]`);
+const lowInput = document.querySelector("#low"); //if clicked, toggle class clicked
+const mediumInput = document.querySelector("#medium");
+const highInput = document.querySelector("#high");
+let clickedPriority = document.querySelector(".clicked");
 const descriptionInput = document.querySelector("#description");
 const submitTaskBtn = document.querySelector("#submit-task-button");
+
+//choose priority;
+
+const priorityElements = [lowInput, mediumInput, highInput];
+priorityElements.forEach((element) => {
+  element.addEventListener("click", (e) => {
+    priorityElements.forEach((element) => element.classList.remove("clicked"));
+    e.target.classList.toggle("clicked");
+    clickedPriority = document.querySelector(".clicked");
+    console.log("Clicked priority ", clickedPriority.id);
+  });
+});
+//add new task
+submitTaskBtn.addEventListener("click", () => {
+  const title = newTaskTitleInput;
+  const startDate = startDateInput.value;
+  const endDate = endDateInput.value;
+  const priority = clickedPriority.id;
+  const projectAssigned = activeTab.id;
+  const description = descriptionInput.value;
+
+  const addTaskCheck= taskManager.addTask({
+    title,
+    startDate,
+    endDate,
+    priority,
+    projectAssigned,
+    description,
+  });
+
+  //add task bar
+  addTaskCheck == 1 ? taskBarManager.addTaskBar(taskBarsContainer) : console.warn("Cannot add taskBar");
+  
+
+  cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
+});
 
 // projectManager.projects[0].taskManager.addTask();
 // const taskToBeShown= projectManager.projects[0].taskManager.show();
 // projectManager.projects[0].taskManager.show();
 
 console.log(projectManager.projects[0].title);
-console.log(projectManager.projects[0].tasks[1]);
+console.log(projectManager.projects[0].id);
 
+console.log(projectManager.projects[1].id);
+console.log(projectManager.projects[1].tasks[0]);
+console.log(projectManager.projects[1].tasks[0].projectAssigned);
 // console.log("this task is", projectManager.projects[0].taskManager.show());

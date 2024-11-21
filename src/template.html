@@ -143,8 +143,8 @@
                 </div>
                 <ul id="project-list">
                   <li
-                    class="project-list-cell project-tab button"
-                    data-project-tab="1"
+                    class="project-list-cell project-tab button active-tab"
+                   id="default"
                   >
                     <div class="project-cell-name-container">
                       <span class="project-cell-name">Default</span>
@@ -197,6 +197,7 @@
                             id=""
                             placeholder="Title"
                             class="new-task-title input-for-cleaning"
+                            onkeydown="return event.key != 'Enter'"
                           />
                         </li>
                         <li id="new-task-date">
@@ -209,11 +210,11 @@
                               name="date-range-start"
                             />
                           </div>
-                          <div class="date-range-container">
+                          <div class="date-range-container ">
                             <label for="date-range-end">End:</label>
                             <input
                               type="date"
-                              class="date-input new-task-date-input"
+                              class="date-input new-task-date-input input-for-cleaning"
                               id="date-range-end"
                               name="date-range-end"
                             />
@@ -224,16 +225,16 @@
 
                           <ul id="priority-list">
                             <li
-                              class="priority-item button push-button"
-                              data-priority-level="low"
+                              class="priority-item button push-button clicked"
+                              id="low"
                             ></li>
                             <li
                               class="priority-item button push-button"
-                              data-priority-level="medium"
+                              id="medium"
                             ></li>
                             <li
                               class="priority-item button push-button"
-                              data-priority-level="high"
+                              id="high"
                             ></li>
                           </ul>
                         </li>

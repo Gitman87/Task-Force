@@ -51,21 +51,19 @@ export class TabManager {
     this.tabList = this.loadTabsFromStorage() || [];
     this.projectManager = projectManager;
     this.container = container;
-   
   }
   _getNewestProjects() {
     const newestProjects = this.projectManager.getProjects();
     return newestProjects;
   }
-  loadTabsFromStorage(){
+  loadTabsFromStorage() {
     return this.localStorageManager.read(this.tabsKey);
   }
-  saveTabsToStorage(){
-    return this.localStorageManager.update(this.tabsKey, this.tabList)
+  saveTabsToStorage() {
+    return this.localStorageManager.update(this.tabsKey, this.tabList);
   }
-  loadElementsFromStorage(container){
-   
-    this.tabList.forEach(tab=>{
+  loadElementsFromStorage(container) {
+    this.tabList.forEach((tab) => {
       const newElement = document.createElement(TabManager.typeOfElement);
       newElement.innerHTML = TabManager.getHtmlContent(tab.title);
       TabManager.classes.forEach((className) => {
@@ -73,8 +71,7 @@ export class TabManager {
       });
       newElement.setAttribute("id", tab.idTab);
       container.appendChild(newElement);
-    })
-
+    });
   }
   addTab(container) {
     //select last added project
@@ -98,11 +95,10 @@ export class TabManager {
   }
 
   removeTab(id, tab) {
-    
     const tabIndex = this.tabList.findIndex((tab) => tab.idTab === id);
 
     if (tabIndex === -1) {
-      console.warn("Cannot remove tab- not found");
+      console.warn("Cannot remove tab - not found");
       return;
     }
     const tabToRemove = this.tabList[tabIndex];
@@ -123,7 +119,7 @@ export class TabManager {
       this.tabList[this.getTab(parentTab.id)[1]].idTab = renamedProject.id;
       parentTab.id = renamedProject.id;
       this.saveTabsToStorage();
-      //rename title html element 
+      //rename title html element
       const titleElement = parentTab.querySelector(".project-cell-name");
       titleElement.innerHTML = "";
       titleElement.innerHTML = renamedProject.title;
