@@ -169,14 +169,21 @@ const addParentListenerNearest = (
 }; // thanks, WDS
 //debug  function
 const checkProjectAndTabLists = () => {
+  const projects = localStorageManager.read(projectsKey);
   console.log("Projects list length: ", projectManager.projects.length);
-  projectManager.projects.forEach((object) => {
-    console.log("Project is ", object.title, object.id);
+ projects.forEach((object) => {
+   
+    console.log(`Project is  ${object.title}, ${object.id} and tasks are ${object.tasks.length} `)
   });
   console.log("Tabs list length is ", tabManager.tabList.length);
   tabManager.tabList.forEach((tab) => {
     console.log("Tab is ", tab.title, tab.idTab);
   });
+  console.log
+  taskManager.tasks.forEach((task)=>{
+    console.log(`Task ${task.id} of project ${task.projectAssigned}`)
+  })
+  console.log(`Task bars are ${localStorageManager.read(taskBarsKey)}`)
 };
 // =====================START=========================
 // -------------storage-----------------------------------
@@ -248,6 +255,7 @@ addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   taskBarsContainer.innerHTML = " ";
   console.log(taskBarManager.taskBarsList);
   taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
+  checkProjectAndTabLists();
   
 });
 //showing drop down list with project editing
@@ -367,11 +375,12 @@ submitTaskBtn.addEventListener("click", () => {
 // projectManager.projects[0].taskManager.addTask();
 // const taskToBeShown= projectManager.projects[0].taskManager.show();
 // projectManager.projects[0].taskManager.show();
+// checkProjectAndTabLists();
+// console.log(projectManager.projects[0].title);
+// console.log(projectManager.projects[0].id);
 
-console.log(projectManager.projects[0].title);
-console.log(projectManager.projects[0].id);
+// console.log(projectManager.projects[1].id);
+// console.log(projectManager.projects[1].tasks[0]);
+// console.log(projectManager.projects[1].tasks[0].projectAssigned);
 
-console.log(projectManager.projects[1].id);
-console.log(projectManager.projects[1].tasks[0]);
-console.log(projectManager.projects[1].tasks[0].projectAssigned);
 // console.log("this task is", projectManager.projects[0].taskManager.show());

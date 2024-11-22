@@ -127,6 +127,7 @@ export class TaskManager {
       });
       const project = this.getProject(task.projectAssigned);
       project.tasks.push(task);
+      console.log(`Pushed task to ${project.id} is ${project.tasks[project.tasks.length-1].id} and length of tasks array is ${project.tasks.length}`)
       this.saveProjectsToStorage();
       return 1;
       // console.log(

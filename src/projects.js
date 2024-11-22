@@ -38,15 +38,25 @@ export class ProjectManager {
   }
 
   loadProjectsFromStorage() {
-    return this.localStorageManager.read(this.projectsKey);
+    const projects = this.localStorageManager.read(this.projectsKey);
+    if (!projects) {
+      console.warn(
+        "Couldn't load projects in loadProjectsFromStorage of taskManger"
+      );
+    } else {
+      console.log("Loaded projects to projectManager are:", projects);
+      return projects;
+    }
   }
-
   saveProjectsToStorage() {
     this.localStorageManager.update(this.projectsKey, this.projects);
   }
 
   getLastModifiedProject() {
     return this.projects[this.indexOfLastModified];
+  }
+  updateProjects() {
+    this.projects = this.loadProjectsFromStorage() || [];
   }
   addProject(input) {
     const { isEmpty, isUnique } = ProjectManager.checkInput(
@@ -79,22 +89,27 @@ export class ProjectManager {
   }
   renameProject(id, input) {
     this.indexOfLastModified = null;
+    this.updateProjects();
+    
     const index = this.projects.findIndex((project) => project.id === id);
-
+    console.log("this.projects[index].tasks ",this.projects[index]);
     const { isEmpty, isUnique } = ProjectManager.checkInput(
       this.validator,
       this.projects,
       input
     );
     if (isEmpty && isUnique) {
+      
       this.projects[index].title = input.value;
       this.projects[index].id = input.value.split(" ").join("-").toLowerCase();
-      console.log("this projects index tasks 0 is ", this.projects[index].tasks[0])
+      
       if(this.projects[index].tasks[0]){
+       
         this.projects[index].tasks.forEach(element => {
           element.projectAssigned = this.projects[index].id
           });
           
+           
       }
       else{
         console.log("cannot rename tasks pproject assigned- no tasks exists");
@@ -102,6 +117,7 @@ export class ProjectManager {
      
       this.indexOfLastModified = index;
       this.saveProjectsToStorage();
+      console.log(`this projects ${this.projects[index].id} tasksare ${ this.projects[index].tasks[0].id}`);
       console.log(
         "Index of lat modified project is: ",
         this.indexOfLastModified
