@@ -90,38 +90,29 @@ export class ProjectManager {
   renameProject(id, input) {
     this.indexOfLastModified = null;
     this.updateProjects();
-    
+
     const index = this.projects.findIndex((project) => project.id === id);
-    console.log("this.projects[index].tasks ",this.projects[index]);
+    
     const { isEmpty, isUnique } = ProjectManager.checkInput(
       this.validator,
       this.projects,
       input
     );
     if (isEmpty && isUnique) {
-      
       this.projects[index].title = input.value;
       this.projects[index].id = input.value.split(" ").join("-").toLowerCase();
-      
-      if(this.projects[index].tasks[0]){
-       
-        this.projects[index].tasks.forEach(element => {
-          element.projectAssigned = this.projects[index].id
-          });
-          
-           
-      }
-      else{
+
+      if (this.projects[index].tasks[0]) {
+        this.projects[index].tasks.forEach((element) => {
+          element.projectAssigned = this.projects[index].id;
+        });
+      } else {
         console.log("cannot rename tasks pproject assigned- no tasks exists");
       }
-     
+
       this.indexOfLastModified = index;
       this.saveProjectsToStorage();
-      console.log(`this projects ${this.projects[index].id} tasksare ${ this.projects[index].tasks[0].id}`);
-      console.log(
-        "Index of lat modified project is: ",
-        this.indexOfLastModified
-      );
+     
     } else {
       if (!isEmpty) {
         alert("Project title cannot be empty!");
@@ -134,11 +125,14 @@ export class ProjectManager {
       return null;
     }
   }
-  removeProject(id) {
+  removeProject(id,taskBarsContainer) {
+    this.updateProjects();
     const index = this.projects.findIndex((project) => project.id === id);
     if (index !== -1) {
       this.projects.splice(index, 1);
       this.saveProjectsToStorage();
+      this.updateProjects();
+      taskBarsContainer.innerHTML = " ";
       console.log("removed project id:", id);
       return true;
     } else {
@@ -160,4 +154,3 @@ export class ProjectManager {
     strategy.sort(this.projects);
   }
 }
-

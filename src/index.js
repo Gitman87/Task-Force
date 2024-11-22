@@ -170,7 +170,7 @@ const addParentListenerNearest = (
 //debug  function
 const checkProjectAndTabLists = () => {
   const projects = localStorageManager.read(projectsKey);
-  console.log("Projects list length: ", projectManager.projects.length);
+  console.log("Projects list length: ", projectManager.projects);
  projects.forEach((object) => {
    
     console.log(`Project is  ${object.title}, ${object.id} and tasks are ${object.tasks.length} `)
@@ -242,7 +242,28 @@ submitEnter(
 );
 //select current active tab
 let activeTab = document.querySelector(".active-tab ");
-
+//removing tab and project
+addParentListenerNearest(
+  "click",
+  ".delete-project",
+  projectList,
+  (e, target) => {
+    const confirmation = confirm("Are you sure?");
+    if (confirmation) {
+      const parentTab = target.closest(".project-tab");
+      const tabId = parentTab.id;
+      
+      console.log(
+        `Projects array after removing  ${tabId} is ${projectManager.projects.length}`
+      );
+      taskBarManager.removeTaskBars(tabId);
+      tabManager.removeTab(tabId, parentTab);
+      projectManager.removeProject(tabId, taskBarsContainer);
+    } else {
+      console.log("User chose not to remove the project");
+    }
+  }
+);
 //toggling active tab, style and load tak bars
 addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   //remove active-tab from other tabs
@@ -264,26 +285,7 @@ addParentListenerNearest("click", ".drop-arrow", projectList, (e, target) => {
   const dropList = thisTab.querySelector(".drop-down-content");
   dropList.classList.toggle("visible");
 });
-//removing tab and project
-addParentListenerNearest(
-  "click",
-  ".delete-project",
-  projectList,
-  (e, target) => {
-    const confirmation = confirm("Are you sure?");
-    if (confirmation) {
-      const parentTab = target.closest(".project-tab");
-      const tabId = parentTab.id;
-      projectManager.removeProject(tabId);
-      console.log(
-        `Projects array after removing  ${tabId} is ${projectManager.projects.length}`
-      );
-      tabManager.removeTab(tabId, parentTab);
-    } else {
-      console.log("User chose not to remove the project");
-    }
-  }
-);
+
 //rename tab/project
 addParentListenerNearest(
   "keypress", 
@@ -308,7 +310,7 @@ addParentListenerNearest(
 
       console.log("Input rename is:  ", inputRename);
       clearTextInput(inputRename);
-      checkProjectAndTabLists();
+      
     }
   }
 );
@@ -381,6 +383,6 @@ submitTaskBtn.addEventListener("click", () => {
 
 // console.log(projectManager.projects[1].id);
 // console.log(projectManager.projects[1].tasks[0]);
-// console.log(projectManager.projects[1].tasks[0].projectAssigned);
+console.log(projectManager.projects[1].tasks[0].projectAssigned);
 
 // console.log("this task is", projectManager.projects[0].taskManager.show());

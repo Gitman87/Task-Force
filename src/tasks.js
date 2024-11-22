@@ -149,12 +149,15 @@ export class TaskManager {
     //this.getProjectTasks(activeTab.id).push(task)
   }
   removeTask(title) {
+    updateProjectsProjectTasks()
+    
     const index = this.tasks.findIndex((task) => task.title === title);
     if (index !== -1) {
       this.tasks.splice(index, 1);
       this.saveProjectsToStorage();
     }
   }
+
   getTask(title) {
     const index = this.tasks.findIndex((task) => task.title === title);
     if (index !== -1) {
@@ -219,6 +222,7 @@ export class TaskBarManager {
     this.container = container;
   }
   loadTaskBarsFromStorage() {
+    
     return this.localStorageManager.read(this.taskBarsKey);
   }
   saveTaskBarsToStorage() {
@@ -226,6 +230,14 @@ export class TaskBarManager {
   }
   getNewestProjects() {
     const newestProjects = this.taskManager.getProjects();
+  }
+  removeTaskBars(projectId){
+     const newList = this.taskBarsList.filter(item => item.projectAssigned != projectId);
+     this.taskBarsList = newList;
+     this.saveTaskBarsToStorage();
+     
+     console.log("taskbar list length is", this.taskBarsList.length)
+
   }
   addTaskBar(container) {
     const lastTask = this.taskManager.getLastTask();
@@ -246,6 +258,7 @@ export class TaskBarManager {
     container.appendChild(newElement);
   }
   loadElementsFromStorage(container, activeTab) {
+    console.log("taskbar list length is", this.taskBarsList.length);
     this.taskBarsList .forEach((taskBar) => {
       //only if taskBar's projectAssigned is matching active tab's id
       if(taskBar.projectAssigned === activeTab.id){
@@ -281,5 +294,9 @@ export class TaskBarManager {
     else {
       console.log("Cannot reassign any taskBar")
     }
+  }
+  removeAllTasksBars(container){
+    container.innerHTML="";
+
   }
 }
