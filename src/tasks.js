@@ -127,7 +127,11 @@ export class TaskManager {
       });
       const project = this.getProject(task.projectAssigned);
       project.tasks.push(task);
-      console.log(`Pushed task to ${project.id} is ${project.tasks[project.tasks.length-1].id} and length of tasks array is ${project.tasks.length}`)
+      console.log(
+        `Pushed task to ${project.id} is ${
+          project.tasks[project.tasks.length - 1].id
+        } and length of tasks array is ${project.tasks.length}`
+      );
       this.saveProjectsToStorage();
       return 1;
       // console.log(
@@ -149,8 +153,8 @@ export class TaskManager {
     //this.getProjectTasks(activeTab.id).push(task)
   }
   removeTask(title) {
-    updateProjectsProjectTasks()
-    
+    updateProjectsProjectTasks();
+
     const index = this.tasks.findIndex((task) => task.title === title);
     if (index !== -1) {
       this.tasks.splice(index, 1);
@@ -191,7 +195,10 @@ export class TaskBar {
 export class TaskBarManager {
   static typeOfElement = "li";
   static classes = ["task-item"];
+  static highClass = "high";
+  static mediumClass = "medium";
   static activeTaskBar = "active-task";
+  static taskBarBckgSelector = ".task-bar-bckg";
   static getHtmlContent(title, endDate) {
     return `<li class = "task-item">
                   <div class="task-bar-container">
@@ -222,7 +229,6 @@ export class TaskBarManager {
     this.container = container;
   }
   loadTaskBarsFromStorage() {
-    
     return this.localStorageManager.read(this.taskBarsKey);
   }
   saveTaskBarsToStorage() {
@@ -231,14 +237,34 @@ export class TaskBarManager {
   getNewestProjects() {
     const newestProjects = this.taskManager.getProjects();
   }
-  removeTaskBars(projectId){
-     const newList = this.taskBarsList.filter(item => item.projectAssigned != projectId);
-     this.taskBarsList = newList;
-     this.saveTaskBarsToStorage();
-     
-     console.log("taskbar list length is", this.taskBarsList.length)
+  removeTaskBars(projectId) {
+    const newList = this.taskBarsList.filter(
+      (item) => item.projectAssigned != projectId
+    );
+    this.taskBarsList = newList;
+    this.saveTaskBarsToStorage();
+
+    console.log("taskbar list length is", this.taskBarsList.length);
+  }
+  static addTaskBarPriority(element, newObject){
+   
+    const taskBarBckg = element.querySelector(TaskBarManager.taskBarBckgSelector);
+    console.log("element is ", taskBarBckg.classList);
+    console.log("element proproty  is ", newObject.priority)
+    if(newObject.priority === TaskBarManager.highClass){
+      taskBarBckg.classList.add(TaskBarManager.highClass);
+    }
+    else if(newObject.priority === TaskBarManager.mediumClass){
+      taskBarBckg.classList.add(TaskBarManager.mediumClass);
+    }
+    else{
+      console.warn("couldn't add new task bar priority")
+    }
 
   }
+  // static addSelectShadow(element){
+
+  // }
   addTaskBar(container) {
     const lastTask = this.taskManager.getLastTask();
     const newTaskBar = new TaskBar(lastTask);
@@ -254,49 +280,48 @@ export class TaskBarManager {
     TaskBarManager.classes.forEach((className) => {
       newElement.classList.add(className);
     });
+    // adding background depends on priority
+    TaskBarManager.addTaskBarPriority(newElement, newTaskBar);
+
     newElement.setAttribute("id", id);
     container.appendChild(newElement);
+    
   }
+  
   loadElementsFromStorage(container, activeTab) {
     console.log("taskbar list length is", this.taskBarsList.length);
-    this.taskBarsList .forEach((taskBar) => {
+    this.taskBarsList.forEach((taskBar) => {
       //only if taskBar's projectAssigned is matching active tab's id
-      if(taskBar.projectAssigned === activeTab.id){
+      if (taskBar.projectAssigned === activeTab.id) {
         const newElement = document.createElement(TaskBarManager.typeOfElement);
-      newElement.innerHTML = TaskBarManager.getHtmlContent(
-        taskBar.title,
-        taskBar.endDate
-      );
-      TaskBarManager.classes.forEach((className) => {
-        newElement.classList.add(className);
-      });
-      newElement.setAttribute("id", taskBar.id);
-      container.appendChild(newElement);
-
-      }
-      else{
+        newElement.innerHTML = TaskBarManager.getHtmlContent(
+          taskBar.title,
+          taskBar.endDate
+        );
+        TaskBarManager.classes.forEach((className) => {
+          newElement.classList.add(className);
+        });
+        TaskBarManager.addTaskBarPriority(newElement, taskBar);
+        newElement.setAttribute("id", taskBar.id);
+        container.appendChild(newElement);
+      } else {
         console.log("No task bars to load");
       }
-
-      
     });
   }
-  reassignTaskBars(oldProjectId, newProjectId){
-    if(this.taskBarsList[0]){
-
-      this.taskBarsList.forEach(element => {
-        if(element.projectAssigned === oldProjectId){
+  reassignTaskBars(oldProjectId, newProjectId) {
+    if (this.taskBarsList[0]) {
+      this.taskBarsList.forEach((element) => {
+        if (element.projectAssigned === oldProjectId) {
           element.projectAssigned = newProjectId;
         }
       });
       this.saveTaskBarsToStorage();
-    }
-    else {
-      console.log("Cannot reassign any taskBar")
+    } else {
+      console.log("Cannot reassign any taskBar");
     }
   }
-  removeAllTasksBars(container){
-    container.innerHTML="";
-
+  removeAllTasksBars(container) {
+    container.innerHTML = "";
   }
 }

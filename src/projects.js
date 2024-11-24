@@ -92,7 +92,7 @@ export class ProjectManager {
     this.updateProjects();
 
     const index = this.projects.findIndex((project) => project.id === id);
-    
+
     const { isEmpty, isUnique } = ProjectManager.checkInput(
       this.validator,
       this.projects,
@@ -112,7 +112,6 @@ export class ProjectManager {
 
       this.indexOfLastModified = index;
       this.saveProjectsToStorage();
-     
     } else {
       if (!isEmpty) {
         alert("Project title cannot be empty!");
@@ -125,7 +124,7 @@ export class ProjectManager {
       return null;
     }
   }
-  removeProject(id,taskBarsContainer) {
+  removeProject(id, taskBarsContainer) {
     this.updateProjects();
     const index = this.projects.findIndex((project) => project.id === id);
     if (index !== -1) {

@@ -9,7 +9,6 @@ import { Project, ProjectManager } from "./projects.js";
 // -------------------tasks---------------------------
 import { Task, TaskBarManager, TaskManager } from "./tasks.js";
 
-
 //--------------Tabs------------------------
 import { Tab, TabManager } from "./tabs.js";
 
@@ -171,19 +170,20 @@ const addParentListenerNearest = (
 const checkProjectAndTabLists = () => {
   const projects = localStorageManager.read(projectsKey);
   console.log("Projects list length: ", projectManager.projects);
- projects.forEach((object) => {
-   
-    console.log(`Project is  ${object.title}, ${object.id} and tasks are ${object.tasks.length} `)
+  projects.forEach((object) => {
+    console.log(
+      `Project is  ${object.title}, ${object.id} and tasks are ${object.tasks.length} `
+    );
   });
   console.log("Tabs list length is ", tabManager.tabList.length);
   tabManager.tabList.forEach((tab) => {
     console.log("Tab is ", tab.title, tab.idTab);
   });
-  console.log
-  taskManager.tasks.forEach((task)=>{
-    console.log(`Task ${task.id} of project ${task.projectAssigned}`)
-  })
-  console.log(`Task bars are ${localStorageManager.read(taskBarsKey)}`)
+  console.log;
+  taskManager.tasks.forEach((task) => {
+    console.log(`Task ${task.id} of project ${task.projectAssigned}`);
+  });
+  console.log(`Task bars are ${localStorageManager.read(taskBarsKey)}`);
 };
 // =====================START=========================
 // -------------storage-----------------------------------
@@ -212,9 +212,17 @@ console.log("tabs array is", projectList.children);
 
 // add default project
 const loadDefault = () => {
-  const project = new Project("Default");
-  projectManager.projects.push(project);
-  projectManager.saveProjectsToStorage();
+  if(!projectManager.getProject("Default")){
+    const project = new Project("Default");
+    projectManager.projects.push(project);
+    projectManager.saveProjectsToStorage();
+    
+  }
+  else{ 
+    console.log("Default project already exists");
+
+  }
+ 
 };
 loadDefault();
 // ------add starter listeners------------------
@@ -242,6 +250,7 @@ submitEnter(
 );
 //select current active tab
 let activeTab = document.querySelector(".active-tab ");
+let activeTaskbar = null;
 //removing tab and project
 addParentListenerNearest(
   "click",
@@ -252,7 +261,7 @@ addParentListenerNearest(
     if (confirmation) {
       const parentTab = target.closest(".project-tab");
       const tabId = parentTab.id;
-      
+
       console.log(
         `Projects array after removing  ${tabId} is ${projectManager.projects.length}`
       );
@@ -260,7 +269,7 @@ addParentListenerNearest(
       tabManager.removeTab(tabId, parentTab);
       projectManager.removeProject(tabId, taskBarsContainer);
     } else {
-      console.log("User chose not to remove the project");
+      console.log("User choose not to remove the project");
     }
   }
 );
@@ -277,8 +286,8 @@ addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   console.log(taskBarManager.taskBarsList);
   taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
   checkProjectAndTabLists();
-  
 });
+
 //showing drop down list with project editing
 addParentListenerNearest("click", ".drop-arrow", projectList, (e, target) => {
   const thisTab = target.closest(".project-tab");
@@ -288,7 +297,7 @@ addParentListenerNearest("click", ".drop-arrow", projectList, (e, target) => {
 
 //rename tab/project
 addParentListenerNearest(
-  "keypress", 
+  "keypress",
   ".rename-project",
   projectList,
   (e, target) => {
@@ -302,7 +311,7 @@ addParentListenerNearest(
       console.log("ParentTab id is ", tabId);
       const oldProjectId = tabId;
       projectManager.renameProject(tabId, inputRename);
-     
+
       const renamedProject = projectManager.getLastModifiedProject();
       console.log("New project  id is ", renamedProject.id);
       tabManager.renameTab(renamedProject, parentTab);
@@ -310,7 +319,6 @@ addParentListenerNearest(
 
       console.log("Input rename is:  ", inputRename);
       clearTextInput(inputRename);
-      
     }
   }
 );
@@ -320,7 +328,11 @@ const newTaskContainer = document.querySelector(".new-task-container");
 const inputsForCleaning = document.querySelectorAll(".input-for-cleaning");
 const taskManager = new TaskManager(projectsKey);
 const taskBarsContainer = document.querySelector("#task-list");
-const taskBarManager = new TaskBarManager(taskBarsKey, taskManager, taskBarsContainer);
+const taskBarManager = new TaskBarManager(
+  taskBarsKey,
+  taskManager,
+  taskBarsContainer
+);
 
 //-------------tasks listeners-----------------
 addListener(addTaskBtn, "click", () =>
@@ -357,8 +369,7 @@ submitTaskBtn.addEventListener("click", () => {
   const priority = clickedPriority.id;
   const projectAssigned = activeTab.id;
   const description = descriptionInput.value;
-
-  const addTaskCheck= taskManager.addTask({
+  const addTaskCheck = taskManager.addTask({
     title,
     startDate,
     endDate,
@@ -368,21 +379,20 @@ submitTaskBtn.addEventListener("click", () => {
   });
 
   //add task bar
-  addTaskCheck == 1 ? taskBarManager.addTaskBar(taskBarsContainer) : console.warn("Cannot add taskBar");
-  
+  addTaskCheck == 1
+    ? taskBarManager.addTaskBar(taskBarsContainer)
+    : console.warn("Cannot add taskBar");
 
   cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
 });
+// toggling active task bar
 
-// projectManager.projects[0].taskManager.addTask();
-// const taskToBeShown= projectManager.projects[0].taskManager.show();
-// projectManager.projects[0].taskManager.show();
-// checkProjectAndTabLists();
-// console.log(projectManager.projects[0].title);
-// console.log(projectManager.projects[0].id);
+addParentListenerNearest("click", ".task-bar-bckg", taskBarsContainer, (e, target) =>{
+  const taskBars = taskBarsContainer.querySelectorAll(".task-bar-bckg");
+  removeClass(taskBars, "active-task-bar");
+  target.classList.add("active-task-bar");
+  activeTaskbar = target;
+  console.log("Active task bar is ", activeTaskbar.id);
 
-// console.log(projectManager.projects[1].id);
-// console.log(projectManager.projects[1].tasks[0]);
-console.log(projectManager.projects[1].tasks[0].projectAssigned);
-
-// console.log("this task is", projectManager.projects[0].taskManager.show());
+})
+checkProjectAndTabLists();
