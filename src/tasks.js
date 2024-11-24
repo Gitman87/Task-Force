@@ -194,7 +194,7 @@ export class TaskBar {
 }
 export class TaskBarManager {
   static typeOfElement = "li";
-  static classes = ["task-item"];
+  static classes = ["task-bar-item"];
   static highClass = "high";
   static mediumClass = "medium";
   static activeTaskBar = "active-task";

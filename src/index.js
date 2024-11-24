@@ -250,7 +250,7 @@ submitEnter(
 );
 //select current active tab
 let activeTab = document.querySelector(".active-tab ");
-let activeTaskbar = null;
+let activeTaskBar = null;
 //removing tab and project
 addParentListenerNearest(
   "click",
@@ -391,8 +391,9 @@ addParentListenerNearest("click", ".task-bar-bckg", taskBarsContainer, (e, targe
   const taskBars = taskBarsContainer.querySelectorAll(".task-bar-bckg");
   removeClass(taskBars, "active-task-bar");
   target.classList.add("active-task-bar");
-  activeTaskbar = target;
-  console.log("Active task bar is ", activeTaskbar.id);
+  const parentTaskItem =  target.closest(".task-bar-item");
+  activeTaskBar = parentTaskItem;
+  console.log("Active task bar is ", activeTaskBar.id);
 
 })
 checkProjectAndTabLists();
