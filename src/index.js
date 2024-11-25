@@ -105,7 +105,7 @@ class TextInputCleaner {
     });
   }
 }
-const cleanerAndSwitcher = (element, input) => {
+export const cleanerAndSwitcher = (element, input) => {
   const switcher = new DisplaySwitcher();
   const cleaner = new TextInputCleaner();
   switcher.toggle(element);
@@ -333,10 +333,12 @@ const taskBarManager = new TaskBarManager(
   taskManager,
   taskBarsContainer
 );
+let addOrEditFlag = 0;
 
 //-------------tasks listeners-----------------
-addListener(addTaskBtn, "click", () =>
-  cleanerAndSwitcher(newTaskContainer, inputsForCleaning)
+addListener(addTaskBtn, "click", () =>{
+  addOrEditFlag = 0;
+  cleanerAndSwitcher(newTaskContainer, inputsForCleaning)}
 );
 //submitting new task form
 // element should be assign after site loads, maybe after the plus btn is clicked?
@@ -369,6 +371,7 @@ submitTaskBtn.addEventListener("click", () => {
   const priority = clickedPriority.id;
   const projectAssigned = activeTab.id;
   const description = descriptionInput.value;
+  if(addOrEditFlag=1){
   const addTaskCheck = taskManager.addTask({
     title,
     startDate,
@@ -382,13 +385,18 @@ submitTaskBtn.addEventListener("click", () => {
   addTaskCheck == 1
     ? taskBarManager.addTaskBar(taskBarsContainer)
     : console.warn("Cannot add taskBar");
+}
+else{
 
+  taskBarManager.editTaskBar(activeTaskBar, title, startDate, endDate, priority, description);
+}
   cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
+  
 });
 // toggling active task bar
 
-addParentListenerNearest("click", ".task-bar-bckg", taskBarsContainer, (e, target) =>{
-  const taskBars = taskBarsContainer.querySelectorAll(".task-bar-bckg");
+addParentListenerNearest("click", ".task-bar-item", taskBarsContainer, (e, target) =>{
+  const taskBars = taskBarsContainer.querySelectorAll(".task-bar-item");
   removeClass(taskBars, "active-task-bar");
   target.classList.add("active-task-bar");
   const parentTaskItem =  target.closest(".task-bar-item");

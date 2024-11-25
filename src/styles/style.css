@@ -633,6 +633,9 @@ h3 {
 }
 #task-list {
   /* background-color: greenyellow; */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   width: 100%;
   height: 92%;
   overflow-y: scroll;
@@ -651,6 +654,7 @@ h3 {
   border: none;
 }
 .new-task-container {
+  z-index: 2;
   visibility: visible;
   height: 18rem;
   width: 17.5rem;
@@ -729,12 +733,11 @@ h3 {
   flex-direction: column;
   gap: 0.4rem;
 }
-.clicked{
+.clicked {
   rotate: -90deg;
- 
 }
-.active-task-bar{
-  border: .25rem inset var(--bluish-4);
+.active-task-bar {
+  border: 0.25rem inset var(--bluish-4);
 }
 
 #new-task-item-title {
@@ -787,10 +790,15 @@ h3 {
 }
 
 /* ---------------TASKS------------- */
+.task-bar-item {
+  /* background-color: #ff0100; */
+  max-height: 6rem;
+  display: flex;
+}
 .task-item {
   /* background-color: darkkhaki; */
   width: 100%;
-  height: 3.5rem;
+  min-height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -798,10 +806,11 @@ h3 {
 .task-bar-container {
   /* background-color: brown; */
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  flex-direction: column;
   width: 75%;
-  height: 3rem;
+  height: 100%;
 }
 
 .task-bar-bckg.high {
@@ -867,7 +876,7 @@ h3 {
   width: 1.5rem;
   height: 1.5rem;
 }
-.description {
+.description-btn {
   background-image: url("../assets/images/show\ more\ button.webp");
 }
 .edit {
@@ -879,4 +888,25 @@ h3 {
 }
 .done {
   background-image: url("../assets/images/done\ button.webp");
+}
+/*task bar description*/
+.description-box {
+  visibility: hidden;
+  background-color: var(--brightest);
+  /* position: absolute; */
+  width: 100%;
+
+  height: 0rem;
+  transform: translateY(0);
+}
+.description-box.visible {
+  visibility: visible;
+  background-color: var(--brightest);
+  /* position: absolute; */
+  width: 100%;
+  min-height: 3.5rem;
+  overflow-y: scroll;
+  transform: translateY(0);
+  border: 0.25rem solid var(--bluish-5);
+  border-top: none;
 }

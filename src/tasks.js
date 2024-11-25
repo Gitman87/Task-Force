@@ -2,6 +2,7 @@ import LocalStorageManager from "./storage";
 import { validateInput } from "./validation";
 import { format } from "date-fns";
 const { inputValidator, inputUniqueValidator } = validateInput();
+import { cleanerAndSwitcher } from "./index.js";
 
 export class Task {
   constructor({
@@ -152,18 +153,18 @@ export class TaskManager {
     //check projectAssigned from activeTab
     //this.getProjectTasks(activeTab.id).push(task)
   }
-  removeTask(title) {
+  removeTask(id) {
     updateProjectsProjectTasks();
 
-    const index = this.tasks.findIndex((task) => task.title === title);
+    const index = this.tasks.findIndex((task) => task.id === id);
     if (index !== -1) {
       this.tasks.splice(index, 1);
       this.saveProjectsToStorage();
     }
   }
 
-  getTask(title) {
-    const index = this.tasks.findIndex((task) => task.title === title);
+  getTask(id) {
+    const index = this.tasks.findIndex((task) => task.id === id);
     if (index !== -1) {
       return this.tasks[index];
     }
@@ -199,11 +200,12 @@ export class TaskBarManager {
   static mediumClass = "medium";
   static activeTaskBar = "active-task";
   static taskBarBckgSelector = ".task-bar-bckg";
+
   static getHtmlContent(title, endDate) {
     return `<li class = "task-item">
                   <div class="task-bar-container">
                       <div class="task-bar-bckg">
-                        <div class="task-bar">
+                        <div class="task-bar button">
                           <div class="task-bar-content">
                             <div class="task-bar-name">${title}</div>
                             <div class="task-bar-time">
@@ -212,9 +214,14 @@ export class TaskBarManager {
                           </div>
                         </div>
                       </div>
+                      <div class="description-box">
+
+                          
+                      </div>
+                           
                     </div>
-                    <ul class="task-item-control">
-                      <li class="description button push-button"></li>
+                      <ul class="task-item-control">
+                      <li class="description-btn button push-button"></li>
                       <li class="edit button push-button"></li>
                       <li class="delete-button button push-button"></li>
                       <li class="done button push-button"></li>
@@ -235,7 +242,8 @@ export class TaskBarManager {
     return this.localStorageManager.update(this.taskBarsKey, this.taskBarsList);
   }
   getNewestProjects() {
-    const newestProjects = this.taskManager.getProjects();
+     const newestProjects = this.taskManager.getProjects();
+     return  newestProjects;
   }
   removeTaskBars(projectId) {
     const newList = this.taskBarsList.filter(
@@ -246,33 +254,32 @@ export class TaskBarManager {
 
     console.log("taskbar list length is", this.taskBarsList.length);
   }
-  static addTaskBarPriority(element, newObject){
-   
-    const taskBarBckg = element.querySelector(TaskBarManager.taskBarBckgSelector);
+  static addTaskBarPriority(element, newObject) {
+    const taskBarBckg = element.querySelector(
+      TaskBarManager.taskBarBckgSelector
+    );
     console.log("element is ", taskBarBckg.classList);
-    console.log("element proproty  is ", newObject.priority)
-    if(newObject.priority === TaskBarManager.highClass){
+    console.log("element proproty  is ", newObject.priority);
+    if (newObject.priority === TaskBarManager.highClass) {
       taskBarBckg.classList.add(TaskBarManager.highClass);
-    }
-    else if(newObject.priority === TaskBarManager.mediumClass){
+    } else if (newObject.priority === TaskBarManager.mediumClass) {
       taskBarBckg.classList.add(TaskBarManager.mediumClass);
+    } else {
+      console.warn("couldn't add new task bar priority");
     }
-    else{
-      console.warn("couldn't add new task bar priority")
-    }
-
   }
   // static addSelectShadow(element){
 
   // }
+
   addTaskBar(container) {
     const lastTask = this.taskManager.getLastTask();
-    const newTaskBar = new TaskBar(lastTask);
-    const title = newTaskBar.title;
-    const id = newTaskBar.id;
+    const taskBar = new TaskBar(lastTask);
+    const title = taskBar.title;
+    const id = taskBar.id;
     console.log("Id of new taskbar is ", id);
-    const endDate = newTaskBar.endDate;
-    this.taskBarsList.push(newTaskBar);
+    const endDate = taskBar.endDate;
+    this.taskBarsList.push(taskBar);
     this.saveTaskBarsToStorage();
     const newElement = document.createElement(TaskBarManager.typeOfElement);
     newElement.innerHTML = TaskBarManager.getHtmlContent(title, endDate);
@@ -281,13 +288,20 @@ export class TaskBarManager {
       newElement.classList.add(className);
     });
     // adding background depends on priority
-    TaskBarManager.addTaskBarPriority(newElement, newTaskBar);
+    TaskBarManager.addTaskBarPriority(newElement, taskBar);
+    //listeners
+    const descriptionBtn = newElement.querySelector(".description-btn");
+    const descriptionBox = newElement.querySelector(".description-box");
+
+    descriptionBtn.addEventListener("click", () => {
+      descriptionBox.classList.toggle("visible");
+      descriptionBox.innerText = taskBar.description;
+    });
 
     newElement.setAttribute("id", id);
     container.appendChild(newElement);
-    
   }
-  
+
   loadElementsFromStorage(container, activeTab) {
     console.log("taskbar list length is", this.taskBarsList.length);
     this.taskBarsList.forEach((taskBar) => {
@@ -303,12 +317,59 @@ export class TaskBarManager {
         });
         TaskBarManager.addTaskBarPriority(newElement, taskBar);
         newElement.setAttribute("id", taskBar.id);
+        //listeners for control panel
+        const descriptionBtn = newElement.querySelector(".description-btn");
+        const descriptionBox = newElement.querySelector(".description-box");
+        
+
+        descriptionBtn.addEventListener("click", () => {
+          descriptionBox.classList.toggle("visible");
+          descriptionBox.innerText = taskBar.description;
+        });
+        
+
         container.appendChild(newElement);
       } else {
         console.log("No task bars to load");
       }
     });
   }
+  addControlPanelListeners(taskBar){
+    const descriptionBtn = newElement.querySelector(".description-btn");
+    const descriptionBox = newElement.querySelector(".description-box");
+    const editBtn = newElement.querySelector("edit");
+    const editTaskForm = document.querySelector(".newTask-form");
+    const submitEditedTask = document.querySelector("#submit-task-button");
+
+
+
+    descriptionBtn.addEventListener("click", () => {
+      descriptionBox.classList.toggle("visible");
+      descriptionBox.innerText = taskBar.description;
+    });
+    editBtn.addEventListener("click", ()=>{
+      addOrEdit = 0;
+      editTaskForm.classList.toggle("hidden");
+    })
+    
+  }
+  editTaskBar(activeTaskBar, title, startDate, endDate, priority,description){
+    //consider putting this to task manger and leave updating task bar looks for this manager
+    this.taskManager.updateProjectsProjectTasks();
+    const taskIndex= this.taskManager.tasks.indexOf(activeTaskBar.id);
+    const oldTask = this.taskManager.getTask(activeTaskBar.id);
+    console.log("old task before modification id is ", oldTask.id);
+    oldTask.title = title;
+    oldTask.startDate = startDate;
+    oldTask.endDate = endDate;
+    oldTask.priority = priority;
+    oldTask.description = description;
+    oldTask.id = title.split(" ").join("-").toLowerCase();
+    const newTask = oldTask;
+    this.taskManager.tasks[taskIndex] = newTask;
+    activeTaskBar.id = newTask.id;
+    this.taskManager.saveProjectsToStorage();
+}
   reassignTaskBars(oldProjectId, newProjectId) {
     if (this.taskBarsList[0]) {
       this.taskBarsList.forEach((element) => {
