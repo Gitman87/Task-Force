@@ -24,7 +24,7 @@ export class Task {
     this.isComplete = false;
     this.description = description;
 
-    this.id = this.title.split(" ").join("-").toLowerCase();
+    this.id = title.value.split(" ").join("-").toLowerCase();
   }
 }
 
@@ -37,6 +37,7 @@ export class TaskManager {
     this.activeProjectId = this.getActiveProjectId(".active-tab") || "default";
     this.tasks = this.getProjectTasks(this.activeProjectId);
     this.indexOfLastModified = null;
+    this.idOfLastModified = "";
   }
   loadProjectsFromStorage() {
     const projects = this.localStorageManager.read(this.projectsKey);
@@ -61,14 +62,25 @@ export class TaskManager {
     return project;
   }
   getProjectTasks(projectId) {
+    
     const project = this.getProject(projectId);
     console.log("project in getProjectTasks is: ", project);
     return project.tasks;
+  }
+  getTaskFromProject(projectId, taskId){
+    const tasks = this.getProjectTasks(this.getActiveProjectId(".active-tab"));
+    console.log("tasks got prom project are ", tasks);
+    const index = tasks.findIndex((task) => task.id === task.id);
+    return tasks[index];
+
   }
   getActiveProjectId() {
     const activeTab = document.querySelector(".active-tab");
     console.log("Active tab id is :", activeTab.id);
     return activeTab.id;
+  }
+  saveActiveProjectId(){
+    this.activeProjectId = this.getActiveProjectId(".active-tab") || "default";
   }
   updateActiveProjectId() {
     const activeTab = document.querySelector(".active-tab");
@@ -79,9 +91,20 @@ export class TaskManager {
     this.tasks = this.getProjectTasks(this.activeProjectId);
   }
   getLastModifiedTask() {
+    this.updateProjectsProjectTasks();
     return this.tasks[this.indexOfLastModified];
   }
+  getTask(activeTab, activeTask){
+    const projects = this.localStorageManager.read(this.projectsKey);
+    const project = projects.find(activeTab.id);
+    const tasks = project.tasks;
+    const taskId = activeTask.id;
+    const index = tasks.indexOf((task)=> task.id === taskId);
+    return tasks[index];
+
+  }
   getLastTask() {
+    this.updateProjectsProjectTasks();
     return this.tasks[this.tasks.length - 1];
   }
   updateProjectsProjectTasks() {
@@ -128,12 +151,15 @@ export class TaskManager {
       });
       const project = this.getProject(task.projectAssigned);
       project.tasks.push(task);
+      this.saveActiveProjectId();
+
       console.log(
         `Pushed task to ${project.id} is ${
           project.tasks[project.tasks.length - 1].id
         } and length of tasks array is ${project.tasks.length}`
       );
       this.saveProjectsToStorage();
+      this.updateProjectsProjectTasks(); 
       return 1;
       // console.log(
       //   `Tasks array of project ${project.title} is ${project.tasks[3].priority}`
@@ -153,6 +179,24 @@ export class TaskManager {
     //check projectAssigned from activeTab
     //this.getProjectTasks(activeTab.id).push(task)
   }
+  editTask(activeTaskBar, title, startDate, endDate, priority, description) {
+    //consider putting this to task manger and leave updating task bar looks for this manager
+    this.updateProjectsProjectTasks();
+    const taskIndex = this.tasks.indexOf(activeTaskBar.id);
+    const oldTask = this.getTask(activeTaskBar.id);
+    console.log("old task before modification id is ", oldTask.id);
+    oldTask.title = title.value;
+    oldTask.startDate = startDate;
+    oldTask.endDate = endDate;
+    oldTask.priority = priority;
+    oldTask.description = description;
+    oldTask.id = title.value.split(" ").join("-").toLowerCase();
+    const newTask = oldTask;
+    tasks[taskIndex] = newTask;
+    this.indexOfLastModified = taskIndex;
+    // activeTaskBar.id = newTask.id;
+    this.saveProjectsToStorage();
+  }
   removeTask(id) {
     updateProjectsProjectTasks();
 
@@ -163,12 +207,23 @@ export class TaskManager {
     }
   }
 
-  getTask(id) {
-    const index = this.tasks.findIndex((task) => task.id === id);
-    if (index !== -1) {
-      return this.tasks[index];
-    }
-  }
+  // getTask(id) {
+  //   this.updateProjectsProjectTasks();
+
+  //   if (!Array.isArray(this.tasks)) {
+  //       console.warn("Tasks array is not initialized or is invalid.");
+  //       return null;
+  //   }
+
+  //   const index = this.tasks.findIndex((task) => task.id === id);
+
+  //   if (index !== -1) {
+  //       return this.tasks[index];
+  //   } else {
+  //       console.warn(`Task with ID "${id}" not found.`);
+  //       return null;
+  //   }
+  // }
   getTasks() {
     return this.tasks;
   }
@@ -242,8 +297,8 @@ export class TaskBarManager {
     return this.localStorageManager.update(this.taskBarsKey, this.taskBarsList);
   }
   getNewestProjects() {
-     const newestProjects = this.taskManager.getProjects();
-     return  newestProjects;
+    const newestProjects = this.taskManager.getProjects();
+    return newestProjects;
   }
   removeTaskBars(projectId) {
     const newList = this.taskBarsList.filter(
@@ -290,13 +345,7 @@ export class TaskBarManager {
     // adding background depends on priority
     TaskBarManager.addTaskBarPriority(newElement, taskBar);
     //listeners
-    const descriptionBtn = newElement.querySelector(".description-btn");
-    const descriptionBox = newElement.querySelector(".description-box");
-
-    descriptionBtn.addEventListener("click", () => {
-      descriptionBox.classList.toggle("visible");
-      descriptionBox.innerText = taskBar.description;
-    });
+    this.addControlPanelListeners(taskBar, newElement);
 
     newElement.setAttribute("id", id);
     container.appendChild(newElement);
@@ -318,15 +367,8 @@ export class TaskBarManager {
         TaskBarManager.addTaskBarPriority(newElement, taskBar);
         newElement.setAttribute("id", taskBar.id);
         //listeners for control panel
-        const descriptionBtn = newElement.querySelector(".description-btn");
-        const descriptionBox = newElement.querySelector(".description-box");
-        
-
-        descriptionBtn.addEventListener("click", () => {
-          descriptionBox.classList.toggle("visible");
-          descriptionBox.innerText = taskBar.description;
-        });
-        
+       
+        this.addControlPanelListeners(taskBar, newElement);
 
         container.appendChild(newElement);
       } else {
@@ -334,42 +376,40 @@ export class TaskBarManager {
       }
     });
   }
-  addControlPanelListeners(taskBar){
+  addControlPanelListeners(taskBar, newElement) {
     const descriptionBtn = newElement.querySelector(".description-btn");
     const descriptionBox = newElement.querySelector(".description-box");
-    const editBtn = newElement.querySelector("edit");
-    const editTaskForm = document.querySelector(".newTask-form");
-    const submitEditedTask = document.querySelector("#submit-task-button");
-
-
+    const editBtn = newElement.querySelector(".edit");
+    const editTaskForm = document.querySelector(".new-task-container");
+    const addTaskBtn = document.querySelector("#add-task-button");
 
     descriptionBtn.addEventListener("click", () => {
       descriptionBox.classList.toggle("visible");
       descriptionBox.innerText = taskBar.description;
     });
-    editBtn.addEventListener("click", ()=>{
-      addOrEdit = 0;
-      editTaskForm.classList.toggle("hidden");
-    })
-    
+    editBtn.addEventListener("click", () => {
+      console.log("EditBtn  clicked");
+      // addOrEditFlag = 1;
+      editBtn.classList.toggle("clicked");
+      editTaskForm.classList.add("for-edit");
+      addTaskBtn.click();
+      // editTaskForm.classList.toggle("hidden");
+    });
   }
-  editTaskBar(activeTaskBar, title, startDate, endDate, priority,description){
+  indexOfActiveTaskBar() {
+    const activeTaskBar = document.querySelector(".active-task-bar");
+    const index = this.taskBarsList.indexOf(activeTaskBar);
+    return index;
+  }
+  editTaskBar() {
+    const editedTask = this.taskManager.getLastModifiedTask();
+    console.log("Last edited task is ", editedTask);
     //consider putting this to task manger and leave updating task bar looks for this manager
-    this.taskManager.updateProjectsProjectTasks();
-    const taskIndex= this.taskManager.tasks.indexOf(activeTaskBar.id);
-    const oldTask = this.taskManager.getTask(activeTaskBar.id);
-    console.log("old task before modification id is ", oldTask.id);
-    oldTask.title = title;
-    oldTask.startDate = startDate;
-    oldTask.endDate = endDate;
-    oldTask.priority = priority;
-    oldTask.description = description;
-    oldTask.id = title.split(" ").join("-").toLowerCase();
-    const newTask = oldTask;
-    this.taskManager.tasks[taskIndex] = newTask;
-    activeTaskBar.id = newTask.id;
-    this.taskManager.saveProjectsToStorage();
-}
+    const newTaskBar = new TaskBar(editedTask);
+    this.taskBarsList[this.indexOfActiveTaskBar] = newTaskBar;
+
+    this.saveTaskBarsToStorage();
+  }
   reassignTaskBars(oldProjectId, newProjectId) {
     if (this.taskBarsList[0]) {
       this.taskBarsList.forEach((element) => {

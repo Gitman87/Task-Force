@@ -281,7 +281,10 @@ addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   target.classList.add("active-tab");
   activeTab = target;
   console.log("Active tab id is", activeTab.id);
+  console.log("TaskManager task are: ", taskManager.tasks);
+
   //load task bars
+  taskManager.updateProjectsProjectTasks();
   taskBarsContainer.innerHTML = " ";
   console.log(taskBarManager.taskBarsList);
   taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
@@ -333,13 +336,7 @@ const taskBarManager = new TaskBarManager(
   taskManager,
   taskBarsContainer
 );
-let addOrEditFlag = 0;
 
-//-------------tasks listeners-----------------
-addListener(addTaskBtn, "click", () =>{
-  addOrEditFlag = 0;
-  cleanerAndSwitcher(newTaskContainer, inputsForCleaning)}
-);
 //submitting new task form
 // element should be assign after site loads, maybe after the plus btn is clicked?
 const newTaskTitleInput = document.querySelector(".new-task-title");
@@ -351,7 +348,46 @@ const highInput = document.querySelector("#high");
 let clickedPriority = document.querySelector(".clicked");
 const descriptionInput = document.querySelector("#description");
 const submitTaskBtn = document.querySelector("#submit-task-button");
+//listeners
 
+
+//-------------tasks listeners-----------------
+// toggling active task bar
+
+addParentListenerNearest("click", ".task-bar-item", taskBarsContainer, (e, target) =>{
+  const taskBars = taskBarsContainer.querySelectorAll(".task-bar-item");
+  removeClass(taskBars, "active-task-bar");
+  target.classList.add("active-task-bar");
+  const parentTaskItem =  target.closest(".task-bar-item");
+  activeTaskBar = parentTaskItem;
+  console.log("Active task bar is ", activeTaskBar.id);
+
+})
+//adding task
+addListener(addTaskBtn, "click", () =>{
+  if(!newTaskContainer.classList.contains("for-edit")){
+    cleanerAndSwitcher(newTaskContainer, inputsForCleaning)
+    console.log("newTaskContainer, cleaned");
+  }
+  else{
+    cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
+    console.log("active task bar is: ", activeTaskBar.id);
+    const oldTask = taskManager.getTask(activeTab, activeTaskBar);
+    console.log("oldTask is: ", oldTask);
+    console.log("oldTask id is ", oldTask.id);
+    newTaskTitleInput.value = oldTask.title;
+    console.log("newTaskTitleInput.value is: ",  newTaskTitleInput.value)
+    startDateInput.value = oldTask.startDate;
+    console.log("startDateInput.value is: ", startDateInput.value);
+    endDateInput.value = oldTask.startDate;
+    console.log("endDateInput.value is: ", endDateInput.value);
+    descriptionInput.value = oldTask.description; 
+    console.log("descriptionInput.value is:", descriptionInput.value);
+  }
+}
+  
+  
+);
 //choose priority;
 
 const priorityElements = [lowInput, mediumInput, highInput];
@@ -364,6 +400,12 @@ priorityElements.forEach((element) => {
   });
 });
 //add new task
+
+// const thisEditButTon = document.querySelector(active-task-bar > edit);
+
+
+
+
 submitTaskBtn.addEventListener("click", () => {
   const title = newTaskTitleInput;
   const startDate = startDateInput.value;
@@ -371,7 +413,7 @@ submitTaskBtn.addEventListener("click", () => {
   const priority = clickedPriority.id;
   const projectAssigned = activeTab.id;
   const description = descriptionInput.value;
-  if(addOrEditFlag=1){
+  if(!newTaskContainer.classList.contains("for-edit")){
   const addTaskCheck = taskManager.addTask({
     title,
     startDate,
@@ -385,23 +427,22 @@ submitTaskBtn.addEventListener("click", () => {
   addTaskCheck == 1
     ? taskBarManager.addTaskBar(taskBarsContainer)
     : console.warn("Cannot add taskBar");
+    
+  cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
 }
 else{
+  
+  taskManager.editTask(activeTaskBar, title, startDate, endDate, priority, description);
+  taskBarManager.editTaskBar();
+  taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
+  newTaskContainer.classList.remove("for-edit");
 
-  taskBarManager.editTaskBar(activeTaskBar, title, startDate, endDate, priority, description);
-}
   cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
+}
+  
   
 });
-// toggling active task bar
 
-addParentListenerNearest("click", ".task-bar-item", taskBarsContainer, (e, target) =>{
-  const taskBars = taskBarsContainer.querySelectorAll(".task-bar-item");
-  removeClass(taskBars, "active-task-bar");
-  target.classList.add("active-task-bar");
-  const parentTaskItem =  target.closest(".task-bar-item");
-  activeTaskBar = parentTaskItem;
-  console.log("Active task bar is ", activeTaskBar.id);
-
-})
 checkProjectAndTabLists();
+console.log("TaskManager task are: ", taskManager.tasks);
+console.log("TaskManager projects are: ", taskManager.projects)
