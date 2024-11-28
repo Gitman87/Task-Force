@@ -119,11 +119,10 @@ export class TaskBarManager {
 
   loadElementsFromStorage(container, activeTab) {
     console.log("taskbar list length is", this.taskBarsList.length);
-    container.innerHTML="";
+    container.innerHTML = "";
     this.taskBarsList.forEach((taskBar) => {
       //only if taskBar's projectAssigned is matching active tab's id
       if (taskBar.projectAssigned === activeTab.id) {
-        
         const newElement = document.createElement(TaskBarManager.typeOfElement);
         newElement.innerHTML = TaskBarManager.getHtmlContent(
           taskBar.title,
@@ -135,9 +134,9 @@ export class TaskBarManager {
         TaskBarManager.addTaskBarPriority(newElement, taskBar);
         newElement.setAttribute("id", taskBar.id);
         //listeners for control panel
-       
+
         this.addControlPanelListeners(taskBar, newElement);
-        
+
         container.appendChild(newElement);
       } else {
         console.log("No task bars to load");
@@ -155,18 +154,28 @@ export class TaskBarManager {
       descriptionBox.classList.toggle("visible");
       descriptionBox.innerText = taskBar.description;
     });
-    editBtn.addEventListener("click", () => {
+    editBtn.addEventListener("click", (e) => {
       console.log("EditBtn  clicked");
       // addOrEditFlag = 1;
+      // let activeTaskBar = e.target.closest(".task-item");
       editBtn.classList.toggle("clicked");
-      editTaskForm.classList.add("for-edit");
-      addTaskBtn.click();
+      editTaskForm.classList.toggle("for-edit");
+      //delay to let the task bar get active
+      setTimeout(() => {
+        addTaskBtn.click();;
+      }, 100);
+      
+      
+      
+
       // editTaskForm.classList.toggle("hidden");
     });
   }
   indexOfActiveTaskBar() {
     const activeTaskBar = document.querySelector(".active-task-bar");
-    const index = this.taskBarsList.findIndex(taskBar=>taskBar.id ===activeTaskBar.id);
+    const index = this.taskBarsList.findIndex(
+      (taskBar) => taskBar.id === activeTaskBar.id
+    );
     return index;
   }
   editTaskBar() {
@@ -174,9 +183,12 @@ export class TaskBarManager {
     console.log("Last edited task is ", editedTask);
     //consider putting this to task manger and leave updating task bar looks for this manager
     const newTaskBar = new TaskBar(editedTask);
-    console.log("Active task bar is ", this.taskBarsList[this.indexOfActiveTaskBar()]);
+    console.log(
+      "Active task bar is ",
+      this.taskBarsList[this.indexOfActiveTaskBar()]
+    );
     this.taskBarsList[this.indexOfActiveTaskBar()] = newTaskBar;
-    console.log("taskBarlist  is: ", this.taskBarsList)
+    console.log("taskBarlist  is: ", this.taskBarsList);
 
     this.saveTaskBarsToStorage();
   }

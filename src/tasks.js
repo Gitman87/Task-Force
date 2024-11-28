@@ -1,7 +1,8 @@
 import LocalStorageManager from "./storage";
 import { validateInput } from "./validation";
 import { format } from "date-fns";
-const { inputValidator, inputUniqueValidator, inputIsUniqueForOthers } = validateInput();
+const { inputValidator, inputUniqueValidator, inputIsUniqueForOthers } =
+  validateInput();
 import { cleanerAndSwitcher } from "./index.js";
 
 export class Task {
@@ -23,7 +24,6 @@ export class Task {
     this.projectAssigned = projectAssigned;
     this.isComplete = false;
     this.description = description;
-
     this.id = title.value.split(" ").join("-").toLowerCase();
   }
 }
@@ -34,7 +34,7 @@ export class TaskManager {
     this.projectsKey = projectsKey;
     this.projects = this.loadProjectsFromStorage() || [];
     this.validator = inputUniqueValidator;
-    this.inputIsUniqueForOthers =inputIsUniqueForOthers;
+    this.inputIsUniqueForOthers = inputIsUniqueForOthers;
     this.activeProjectId = this.getActiveProjectId(".active-tab") || "default";
     this.tasks = this.loadTasksFromStorage(this.activeProjectId);
     this.indexOfLastModified = null;
@@ -54,14 +54,14 @@ export class TaskManager {
   saveProjectsToStorage() {
     return this.localStorageManager.update(this.projectsKey, this.projects);
   }
-  loadTasksFromStorage(id){
+  loadTasksFromStorage(id) {
     // const projects = this.loadProjectsFromStorage() || [];
-    const project = this.projects.find((project)=>project.id === id);
+    const project = this.projects.find((project) => project.id === id);
     console.log("founded project to load tasks from is ", project.id);
     const tasks = project.tasks;
     return tasks;
   }
-  
+
   getProject(projectId) {
     const project = this.projects.find((project) => project.id === projectId);
     if (!project) {
@@ -71,24 +71,22 @@ export class TaskManager {
     return project;
   }
   getProjectTasks(projectId) {
-    
     const project = this.getProject(projectId);
     console.log("project in getProjectTasks is: ", project);
     return project.tasks;
   }
-  getTaskFromProject(projectId, taskId){
-    const tasks = this.getProjectTasks(this.getActiveProjectId(".active-tab"));
-    console.log("tasks got prom project are ", tasks);
-    const index = tasks.findIndex((task) => task.id === task.id);
-    return tasks[index];
-
-  }
+  // getTaskFromProject(projectId, taskId) {
+  //   const tasks = this.getProjectTasks(this.getActiveProjectId(".active-tab"));
+  //   console.log("tasks got prom project are ", tasks);
+  //   const index = tasks.findIndex((task) => task.id === task.id);
+  //   return tasks[index];
+  // }
   getActiveProjectId() {
     const activeTab = document.querySelector(".active-tab");
     console.log("getActiveProjectId is :", activeTab.id);
     return activeTab.id;
   }
-  saveActiveProjectId(){
+  saveActiveProjectId() {
     this.activeProjectId = this.getActiveProjectId(".active-tab") || "default";
   }
   updateActiveProjectId() {
@@ -103,18 +101,17 @@ export class TaskManager {
     this.updateProjectsProjectTasks();
     return this.tasks[this.indexOfLastModified];
   }
-  getTaskIndex(activeTask){
-    const index = this.tasks.findIndex((task)=> task.id === activeTask.id);
+  getTaskIndex(activeTask) {
+    const index = this.tasks.findIndex((task) => task.id === activeTask.id);
     return index;
-
   }
-  getTask(activeTask){
+  getTask(activeTask) {
     // const projects = this.localStorageManager.read(this.projectsKey);
     // const project = projects.find(activeTab.id);
     // const tasks = project.tasks;
     // const taskId= activeTask.id;
-    const index = this.tasks.findIndex((task)=> task.id === activeTask.id);
-    console.log("  get task this task is  ", this.tasks[index])
+    const index = this.tasks.findIndex((task) => task.id === activeTask.id);
+    console.log("  get task this task is  ", this.tasks[index]);
     return this.tasks[index];
   }
   getLastTask() {
@@ -135,9 +132,13 @@ export class TaskManager {
 
     return { isEmpty, isUnique };
   }
-  checkInputForOthers(input,array, index){
+  checkInputForOthers(input, array, index) {
     const isEmpty = this.validator.isEmpty(input);
-    const isUniqueForOthers = this.inputIsUniqueForOthers.isUniqueForOthers(input,array, index );
+    const isUniqueForOthers = this.inputIsUniqueForOthers.isUniqueForOthers(
+      input,
+      array,
+      index
+    );
 
     return { isEmpty, isUniqueForOthers };
   }
@@ -179,7 +180,7 @@ export class TaskManager {
         } and length of tasks array is ${project.tasks.length}`
       );
       this.saveProjectsToStorage();
-      this.updateProjectsProjectTasks(); 
+      this.updateProjectsProjectTasks();
       return 1;
       // console.log(
       //   `Tasks array of project ${project.title} is ${project.tasks[3].priority}`
@@ -204,29 +205,32 @@ export class TaskManager {
     // this.updateProjectsProjectTasks();
     // const taskIndex = this.this.getLastModifiedTask();
     // console.log("taskIndex is ", taskIndex);
-    
-    const taskIndex =this.getTaskIndex(activeTaskBar);
+
+    const taskIndex = this.getTaskIndex(activeTaskBar);
     console.log("edit task taskIndex is ", taskIndex);
     const oldTask = this.getTask(activeTaskBar);
     console.log("old task before modification id is ", oldTask.id);
-    const { isEmpty, isUniqueForOthers } = this.checkInputForOthers(title,this.tasks, taskIndex);
-    if (isEmpty && isUniqueForOthers){
-    oldTask.title = title.value;
-    oldTask.startDate = startDate;
-    oldTask.endDate = endDate;
-    oldTask.priority = priority;
-    oldTask.description = description;
-    oldTask.id = title.value.split(" ").join("-").toLowerCase();
-    const newTask = oldTask;
-    tasks[taskIndex] = newTask;
-    this.indexOfLastModified = taskIndex;
-    console.log("Index of last modified task is ", this.indexOfLastModified)
-    // activeTaskBar.id = newTask.id;
-    this.saveProjectsToStorage();
-    this.updateProjectsProjectTasks();
-    return 1;
-    }
-    else {
+    const { isEmpty, isUniqueForOthers } = this.checkInputForOthers(
+      title,
+      this.tasks,
+      taskIndex
+    );
+    if (isEmpty && isUniqueForOthers) {
+      oldTask.title = title.value;
+      oldTask.startDate = startDate;
+      oldTask.endDate = endDate;
+      oldTask.priority = priority;
+      oldTask.description = description;
+      oldTask.id = title.value.split(" ").join("-").toLowerCase();
+      const newTask = oldTask;
+      tasks[taskIndex] = newTask;
+      this.indexOfLastModified = taskIndex;
+      console.log("Index of last modified task is ", this.indexOfLastModified);
+      // activeTaskBar.id = newTask.id;
+      this.saveProjectsToStorage();
+      this.updateProjectsProjectTasks();
+      return 1;
+    } else {
       if (!isEmpty) {
         alert("task title cannot be empty!");
         return null;
@@ -277,4 +281,3 @@ export class TaskManager {
     return totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
   }
 }
-

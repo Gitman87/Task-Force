@@ -269,7 +269,7 @@ addParentListenerNearest(
     }
   }
 );
-//toggling active tab, style and load tak bars
+//toggling active tab, style and load task bars
 addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   //remove active-tab from other tabs
   const tabs = projectList.querySelectorAll(".project-tab");
@@ -359,8 +359,8 @@ addParentListenerNearest(
     const taskBars = taskBarsContainer.querySelectorAll(".task-bar-item");
     removeClass(taskBars, "active-task-bar");
     target.classList.add("active-task-bar");
-    const parentTaskItem = target.closest(".task-bar-item");
-    activeTaskBar = parentTaskItem;
+    // const parentTaskItem = target.closest(".task-bar-item");
+    activeTaskBar = target;
     console.log("Active task bar is ", activeTaskBar.id);
   }
 );

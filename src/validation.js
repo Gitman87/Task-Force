@@ -18,7 +18,7 @@ export const validateInput = () => {
   }
   function isUnique(array, input) {
     if (array.some((item) => item.title === input.value)) {
-      alert(" isUnique, Value already exists");
+      alert("Value already exists");
       return;
     } else {
       console.log("isUnique, Value is unique");
@@ -26,17 +26,14 @@ export const validateInput = () => {
     }
   }
   function isUniqueForOthers(input,array,  index){
-    console.log("Array in isUniqueForOthers is ", array); 
-    console.log("Index in isUniqueForOthers is ", index);
-    console.log("Input in isUniqueForOthers is ", input.value);
+    
 
     const copiedArray = array.slice();
     const  splicedArray = copiedArray.splice(index, 1);
     
-    console.log("SplicedArray is ", splicedArray);
-    console.log("Copied array after splicing is ", copiedArray);
+  
     if (copiedArray.some((item) => item.title === input.value)) {
-      alert("isUniqueForOthers, Value already exists");
+      alert("Value already exists");
       return;
     } else {
       console.log("isUniqueForOthers, Value is unique");
