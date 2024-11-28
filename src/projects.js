@@ -1,7 +1,7 @@
 import LocalStorageManager from "./storage";
 import { validateInput } from "./validation";
 import { format } from "date-fns";
-const { inputValidator, inputUniqueValidator } = validateInput();
+const { inputValidator, inputUniqueValidator, inputUniqueForOthersValidator } = validateInput();
 
 export class Project {
   constructor(title) {

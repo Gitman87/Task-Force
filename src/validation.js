@@ -18,22 +18,44 @@ export const validateInput = () => {
   }
   function isUnique(array, input) {
     if (array.some((item) => item.title === input.value)) {
-      alert("Value already exists");
+      alert(" isUnique, Value already exists");
       return;
     } else {
-      console.log("Value is unique");
+      console.log("isUnique, Value is unique");
       return true;
     }
   }
+  function isUniqueForOthers(input,array,  index){
+    console.log("Array in isUniqueForOthers is ", array); 
+    console.log("Index in isUniqueForOthers is ", index);
+    console.log("Input in isUniqueForOthers is ", input.value);
+
+    const copiedArray = array.slice();
+    const  splicedArray = copiedArray.splice(index, 1);
+    
+    console.log("SplicedArray is ", splicedArray);
+    console.log("Copied array after splicing is ", copiedArray);
+    if (copiedArray.some((item) => item.title === input.value)) {
+      alert("isUniqueForOthers, Value already exists");
+      return;
+    } else {
+      console.log("isUniqueForOthers, Value is unique");
+      return true;
+    }
+
+  }
   const inputValidator = new InputValidator();
-  const inputUniqueValidator = addMethod(new InputValidator(), isUnique);
+ const inputUniqueValidator = addMethod(new InputValidator(), isUnique);
+ const inputIsUniqueForOthers = addMethod(new InputValidator(), isUniqueForOthers)
 
   return {
     inputValidator,
     inputUniqueValidator,
+    inputIsUniqueForOthers
+    
   };
 };
-const { inputValidator, inputUniqueValidator } = validateInput();
+const { inputValidator, inputUniqueValidator,  } = validateInput();
 const array = ["value1", "value2"];
 const input = { value: "value3" };
 // const inputUniqueValidator = addMethod(new InputValidator(), isUnique);

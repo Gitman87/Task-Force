@@ -6,11 +6,12 @@ import LocalStorageManager from "./storage.js";
 const localStorageManager = new LocalStorageManager();
 // -----------------projects----------------------
 import { Project, ProjectManager } from "./projects.js";
-// -------------------tasks---------------------------
-import { Task, TaskBarManager, TaskManager } from "./tasks.js";
-
-//--------------Tabs------------------------
+//--------------Tabs---------------------------
 import { Tab, TabManager } from "./tabs.js";
+// -------------------tasks---------------------------
+import { Task, TaskManager } from "./tasks.js";
+//-------------task bars-----------------------
+import { TaskBar, TaskBarManager } from "./bars.js";
 
 // --------------Validation-----------------
 import { validateInput } from "./validation";
@@ -203,7 +204,6 @@ localStorageManager.write(taskBarsKey, tasks);
 const projectList = document.querySelector("#project-list");
 const projectManager = new ProjectManager(projectsKey);
 const tabManager = new TabManager(tabsKey, projectManager, projectList);
-
 const addProjectBtn = document.querySelector("#add-project");
 const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
@@ -212,17 +212,13 @@ console.log("tabs array is", projectList.children);
 
 // add default project
 const loadDefault = () => {
-  if(!projectManager.getProject("Default")){
+  if (!projectManager.getProject("Default")) {
     const project = new Project("Default");
     projectManager.projects.push(project);
     projectManager.saveProjectsToStorage();
-    
-  }
-  else{ 
+  } else {
     console.log("Default project already exists");
-
   }
- 
 };
 loadDefault();
 // ------add starter listeners------------------
@@ -281,12 +277,14 @@ addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   target.classList.add("active-tab");
   activeTab = target;
   console.log("Active tab id is", activeTab.id);
-  console.log("TaskManager task are: ", taskManager.tasks);
+  console.log("TaskManager tasks are: ", taskManager.tasks);
 
   //load task bars
   taskManager.updateProjectsProjectTasks();
+  console.log("TaskManager tasks are: ", taskManager.tasks);
+
   taskBarsContainer.innerHTML = " ";
-  console.log(taskBarManager.taskBarsList);
+  console.log("Task bar list", taskBarManager.taskBarsList);
   taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
   checkProjectAndTabLists();
 });
@@ -350,44 +348,43 @@ const descriptionInput = document.querySelector("#description");
 const submitTaskBtn = document.querySelector("#submit-task-button");
 //listeners
 
-
 //-------------tasks listeners-----------------
 // toggling active task bar
 
-addParentListenerNearest("click", ".task-bar-item", taskBarsContainer, (e, target) =>{
-  const taskBars = taskBarsContainer.querySelectorAll(".task-bar-item");
-  removeClass(taskBars, "active-task-bar");
-  target.classList.add("active-task-bar");
-  const parentTaskItem =  target.closest(".task-bar-item");
-  activeTaskBar = parentTaskItem;
-  console.log("Active task bar is ", activeTaskBar.id);
-
-})
-//adding task
-addListener(addTaskBtn, "click", () =>{
-  if(!newTaskContainer.classList.contains("for-edit")){
-    cleanerAndSwitcher(newTaskContainer, inputsForCleaning)
-    console.log("newTaskContainer, cleaned");
+addParentListenerNearest(
+  "click",
+  ".task-bar-item",
+  taskBarsContainer,
+  (e, target) => {
+    const taskBars = taskBarsContainer.querySelectorAll(".task-bar-item");
+    removeClass(taskBars, "active-task-bar");
+    target.classList.add("active-task-bar");
+    const parentTaskItem = target.closest(".task-bar-item");
+    activeTaskBar = parentTaskItem;
+    console.log("Active task bar is ", activeTaskBar.id);
   }
-  else{
+);
+//adding task
+addListener(addTaskBtn, "click", () => {
+  if (!newTaskContainer.classList.contains("for-edit")) {
+    cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
+    console.log("newTaskContainer, cleaned");
+  } else {
     cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
     console.log("active task bar is: ", activeTaskBar.id);
-    const oldTask = taskManager.getTask(activeTab, activeTaskBar);
+    const oldTask = taskManager.getTask(activeTaskBar);
     console.log("oldTask is: ", oldTask);
     console.log("oldTask id is ", oldTask.id);
     newTaskTitleInput.value = oldTask.title;
-    console.log("newTaskTitleInput.value is: ",  newTaskTitleInput.value)
+    console.log("newTaskTitleInput.value is: ", newTaskTitleInput.value);
     startDateInput.value = oldTask.startDate;
     console.log("startDateInput.value is: ", startDateInput.value);
-    endDateInput.value = oldTask.startDate;
+    endDateInput.value = oldTask.endDate;
     console.log("endDateInput.value is: ", endDateInput.value);
-    descriptionInput.value = oldTask.description; 
+    descriptionInput.value = oldTask.description;
     console.log("descriptionInput.value is:", descriptionInput.value);
   }
-}
-  
-  
-);
+});
 //choose priority;
 
 const priorityElements = [lowInput, mediumInput, highInput];
@@ -403,9 +400,6 @@ priorityElements.forEach((element) => {
 
 // const thisEditButTon = document.querySelector(active-task-bar > edit);
 
-
-
-
 submitTaskBtn.addEventListener("click", () => {
   const title = newTaskTitleInput;
   const startDate = startDateInput.value;
@@ -413,36 +407,44 @@ submitTaskBtn.addEventListener("click", () => {
   const priority = clickedPriority.id;
   const projectAssigned = activeTab.id;
   const description = descriptionInput.value;
-  if(!newTaskContainer.classList.contains("for-edit")){
-  const addTaskCheck = taskManager.addTask({
-    title,
-    startDate,
-    endDate,
-    priority,
-    projectAssigned,
-    description,
-  });
+  if (!newTaskContainer.classList.contains("for-edit")) {
+    const addTaskCheck = taskManager.addTask({
+      title,
+      startDate,
+      endDate,
+      priority,
+      projectAssigned,
+      description,
+    });
 
-  //add task bar
-  addTaskCheck == 1
-    ? taskBarManager.addTaskBar(taskBarsContainer)
-    : console.warn("Cannot add taskBar");
-    
-  cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
-}
-else{
-  
-  taskManager.editTask(activeTaskBar, title, startDate, endDate, priority, description);
-  taskBarManager.editTaskBar();
-  taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
-  newTaskContainer.classList.remove("for-edit");
+    //add task bar
+    addTaskCheck == 1
+      ? taskBarManager.addTaskBar(taskBarsContainer)
+      : console.warn("Cannot add taskBar");
 
-  cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
-}
-  
-  
+    cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
+  } else {
+    // edit task and add taskBar
+    const editTaskCheck = taskManager.editTask(
+      activeTaskBar,
+      title,
+      startDate,
+      endDate,
+      priority,
+      description
+    );
+    editTaskCheck == 1
+      ? taskBarManager.editTaskBar()
+      : console.warn("Cannot edit taskBar");
+
+    console.log("talsbar list is ", taskBarManager.taskBarsList);
+    taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
+    newTaskContainer.classList.remove("for-edit");
+
+    cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
+  }
 });
 
 checkProjectAndTabLists();
 console.log("TaskManager task are: ", taskManager.tasks);
-console.log("TaskManager projects are: ", taskManager.projects)
+console.log("TaskManager projects are: ", taskManager.projects);
