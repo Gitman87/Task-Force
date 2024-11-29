@@ -162,11 +162,8 @@ export class TaskBarManager {
       editTaskForm.classList.toggle("for-edit");
       //delay to let the task bar get active
       setTimeout(() => {
-        addTaskBtn.click();;
+        addTaskBtn.click();
       }, 100);
-      
-      
-      
 
       // editTaskForm.classList.toggle("hidden");
     });

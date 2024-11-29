@@ -641,7 +641,7 @@ h3 {
   overflow-y: scroll;
 }
 /* --------------NEW TASK FORM----------- */
-.new-task-container.hidden {
+/* .new-task-container.hidden {
   visibility: hidden;
   height: 18rem;
   width: 17.5rem;
@@ -652,19 +652,20 @@ h3 {
   backdrop-filter: var(--blur);
   padding: 1rem;
   border: none;
-}
+} */
 .new-task-container {
-  z-index: 2;
-  visibility: visible;
+  
+  /* visibility: visible; */
   height: 18rem;
   width: 17.5rem;
   position: absolute;
-  top: 4.5rem;
-  left: 15.25rem;
+  top: 10.5rem;
+  left: 69.25rem;
   background-color: var(--bluish-2);
   backdrop-filter: var(--blur);
-  padding: 1rem;
-  border: none;
+  overflow:visible;
+  /* padding: 1rem; */
+  /* border: none; */
 }
 
 #new-task-form {

@@ -43,19 +43,40 @@ dateInputImg.src = dateSrc;
 
 // ================= DRAFT ======================
 
-class sortByDueDate {
-  sort(tasks) {
-    return tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+// class sortByDueDate {
+//   sort(tasks) {
+//     return tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+//   }
+// }
+// class sortByPriority {
+//   sort(tasks) {
+//     const priorityOrder = { high: 1, medium: 2, low: 3 };
+//     return tasks.sort(
+//       (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
+//     );
+//   }
+// }
+function toggleDialog(element) {
+  const dialog = document.getElementById('myDialog');
+  if (element.open) {
+    element.close();
+  } else {
+    element.showModal();
   }
 }
-class sortByPriority {
-  sort(tasks) {
-    const priorityOrder = { high: 1, medium: 2, low: 3 };
-    return tasks.sort(
-      (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
-    );
-  }
+function cleanInputs(inputs){
+  const elementList =
+      NodeList.prototype.isPrototypeOf(inputs) ||
+      HTMLCollection.prototype.isPrototypeOf(inputs) ||
+      Array.isArray(inputs)
+        ? inputs
+        : [inputs];
+    elementList.forEach((element) => {
+      element.value = "";
+    });
+  
 }
+
 
 const removeClass = (elements, selector) => {
   //check if iterable
@@ -93,6 +114,7 @@ class DisplaySwitcher {
     element.classList.toggle("hidden");
   }
 }
+
 class TextInputCleaner {
   clean(inputs) {
     const elementList =
@@ -366,11 +388,15 @@ addParentListenerNearest(
 );
 //adding task
 addListener(addTaskBtn, "click", () => {
+  
   if (!newTaskContainer.classList.contains("for-edit")) {
-    cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
+    toggleDialog(newTaskContainer);
+    cleanInputs(inputsForCleaning);
+    // cleanerAndSwitcher(newTaskContainer, in  putsForCleaning);
     console.log("newTaskContainer, cleaned");
   } else {
-    cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
+    toggleDialog(newTaskContainer);
+    cleanInputs(inputsForCleaning);
     console.log("active task bar is: ", activeTaskBar.id);
     const oldTask = taskManager.getTask(activeTaskBar);
     console.log("oldTask is: ", oldTask);
@@ -422,7 +448,8 @@ submitTaskBtn.addEventListener("click", () => {
       ? taskBarManager.addTaskBar(taskBarsContainer)
       : console.warn("Cannot add taskBar");
 
-    cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
+      toggleDialog(newTaskContainer);
+      cleanInputs(inputsForCleaning);
   } else {
     // edit task and add taskBar
     const editTaskCheck = taskManager.editTask(
@@ -441,7 +468,8 @@ submitTaskBtn.addEventListener("click", () => {
     taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
     newTaskContainer.classList.remove("for-edit");
 
-    cleanerAndSwitcher(newTaskContainer, inputsForCleaning);
+    toggleDialog(newTaskContainer);
+    cleanInputs(inputsForCleaning);
   }
 });
 
