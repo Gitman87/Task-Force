@@ -13,17 +13,17 @@ export class Task {
     priority = "low",
     projectAssigned = "default",
 
-    description = "",
+    description
   } = {}) {
     const currentDate = new Date();
-    const formattedCurrentDate = format(currentDate, "dd-MM-yyyy");
+    const formattedCurrentDate = format(currentDate, "yyyy-MM-dd");
     this.title = title.value;
     this.startDate = startDate || formattedCurrentDate;
-    this.endDate = endDate || formattedCurrentDate;
+    this.endDate = endDate|| formattedCurrentDate;
     this.priority = priority;
     this.projectAssigned = projectAssigned;
     this.isComplete = false;
-    this.description = description;
+    this.description = description || "";
     this.id = title.value.split(" ").join("-").toLowerCase();
   }
 }
@@ -216,9 +216,11 @@ export class TaskManager {
       taskIndex
     );
     if (isEmpty && isUniqueForOthers) {
-      oldTask.title = title.value;
-      oldTask.startDate = startDate;
-      oldTask.endDate = endDate;
+      const currentDate = new Date();
+      const formattedCurrentDate = format(currentDate, "yyyy-MM-dd");
+      oldTask.title = title.value ;
+      oldTask.startDate = startDate || formattedCurrentDate;
+      oldTask.endDate = endDate || formattedCurrentDate;
       oldTask.priority = priority;
       oldTask.description = description;
       oldTask.id = title.value.split(" ").join("-").toLowerCase();
@@ -243,8 +245,7 @@ export class TaskManager {
     }
   }
   removeTask(id) {
-    updateProjectsProjectTasks();
-
+    this.updateProjectsProjectTasks();
     const index = this.tasks.findIndex((task) => task.id === id);
     if (index !== -1) {
       this.tasks.splice(index, 1);

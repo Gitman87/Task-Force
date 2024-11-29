@@ -6,12 +6,22 @@ const { inputValidator, inputUniqueValidator } = validateInput();
 export class TaskBar {
   constructor(task) {
     this.title = task.title;
-    this.startDate = task.startDate;
-    this.endDate = task.endDate;
+    this.startDate = this.formatDate(task.startDate);
+    this.endDate = this.formatDate(task.endDate);
     this.priority = task.priority;
     this.projectAssigned = task.projectAssigned;
     this.description = task.description;
     this.id = this.title.split(" ").join("-").toLowerCase();
+  }
+  formatDate(date) {
+    const dateParts = date.split("-");
+
+    // Rearrange to 'dd-MM-yyyy' format
+    const reformattedDate =
+      dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
+    console.log("Reformatted date is:", reformattedDate);
+
+    return reformattedDate;
   }
 }
 export class TaskBarManager {
@@ -56,6 +66,7 @@ export class TaskBarManager {
     this.taskManager = taskManager;
     this.container = container;
   }
+
   loadTaskBarsFromStorage() {
     return this.localStorageManager.read(this.taskBarsKey);
   }
@@ -93,7 +104,7 @@ export class TaskBarManager {
 
   // }
 
-  addTaskBar(container) {
+  addTaskBar() {
     const lastTask = this.taskManager.getLastTask();
     const taskBar = new TaskBar(lastTask);
     const title = taskBar.title;
@@ -104,7 +115,6 @@ export class TaskBarManager {
     this.saveTaskBarsToStorage();
     const newElement = document.createElement(TaskBarManager.typeOfElement);
     newElement.innerHTML = TaskBarManager.getHtmlContent(title, endDate);
-
     TaskBarManager.classes.forEach((className) => {
       newElement.classList.add(className);
     });
@@ -114,7 +124,7 @@ export class TaskBarManager {
     this.addControlPanelListeners(taskBar, newElement);
 
     newElement.setAttribute("id", id);
-    container.appendChild(newElement);
+    this.container.appendChild(newElement);
   }
 
   loadElementsFromStorage(container, activeTab) {
@@ -147,14 +157,16 @@ export class TaskBarManager {
     const descriptionBtn = newElement.querySelector(".description-btn");
     const descriptionBox = newElement.querySelector(".description-box");
     const editBtn = newElement.querySelector(".edit");
+   
     const editTaskForm = document.querySelector(".new-task-container");
     const addTaskBtn = document.querySelector("#add-task-button");
 
     descriptionBtn.addEventListener("click", () => {
       descriptionBox.classList.toggle("visible");
       descriptionBox.innerText = taskBar.description;
+      descriptionBtn.classList.toggle("clicked");
     });
-    editBtn.addEventListener("click", (e) => {
+    editBtn.addEventListener("click", () => {
       console.log("EditBtn  clicked");
       // addOrEditFlag = 1;
       // let activeTaskBar = e.target.closest(".task-item");
@@ -167,6 +179,7 @@ export class TaskBarManager {
 
       // editTaskForm.classList.toggle("hidden");
     });
+    
   }
   indexOfActiveTaskBar() {
     const activeTaskBar = document.querySelector(".active-task-bar");
@@ -186,7 +199,6 @@ export class TaskBarManager {
     );
     this.taskBarsList[this.indexOfActiveTaskBar()] = newTaskBar;
     console.log("taskBarlist  is: ", this.taskBarsList);
-
     this.saveTaskBarsToStorage();
   }
   reassignTaskBars(oldProjectId, newProjectId) {
@@ -201,7 +213,12 @@ export class TaskBarManager {
       console.log("Cannot reassign any taskBar");
     }
   }
-  removeAllTasksBars(container) {
-    container.innerHTML = "";
+  removeTaskBar(id) {
+    const index = this.taskBarsList.findIndex((taskBar) => taskBar.id === id);
+    if (index !== -1) {
+      this.taskBarsList.splice(index, 1);
+      
+      this.saveTaskBarsToStorage();
+    }
   }
 }

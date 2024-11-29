@@ -280,17 +280,19 @@ addParentListenerNearest(
       const parentTab = target.closest(".project-tab");
       const tabId = parentTab.id;
 
+      
+      taskBarManager.removeTaskBars(tabId);
+      tabManager.removeTab(tabId, parentTab);
       console.log(
         `Projects array after removing  ${tabId} is ${projectManager.projects.length}`
       );
-      taskBarManager.removeTaskBars(tabId);
-      tabManager.removeTab(tabId, parentTab);
       projectManager.removeProject(tabId, taskBarsContainer);
     } else {
-      console.log("User choose not to remove the project");
+      console.log("User chooe not to remove the project");
     }
   }
 );
+
 //toggling active tab, style and load task bars
 addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   //remove active-tab from other tabs
@@ -403,6 +405,7 @@ addListener(addTaskBtn, "click", () => {
     console.log("oldTask id is ", oldTask.id);
     newTaskTitleInput.value = oldTask.title;
     console.log("newTaskTitleInput.value is: ", newTaskTitleInput.value);
+    console.log("OldTask startDate is: ", oldTask.startDate);
     startDateInput.value = oldTask.startDate;
     console.log("startDateInput.value is: ", startDateInput.value);
     endDateInput.value = oldTask.endDate;
@@ -445,7 +448,7 @@ submitTaskBtn.addEventListener("click", () => {
 
     //add task bar
     addTaskCheck == 1
-      ? taskBarManager.addTaskBar(taskBarsContainer)
+      ? taskBarManager.addTaskBar()
       : console.warn("Cannot add taskBar");
 
       toggleDialog(newTaskContainer);
@@ -472,6 +475,31 @@ submitTaskBtn.addEventListener("click", () => {
     cleanInputs(inputsForCleaning);
   }
 });
+//deleting task
+addParentListenerNearest("click", ".delete-button", taskBarsContainer,(e,target)=>{
+  const confirmation = confirm("Are you sure?");
+  if(confirmation){
+    const parentTaskBar =target.closest(".task-bar-item");
+    target.classList.toggle("clicked");
+    const taskBarId = parentTaskBar.id;
+    taskManager.removeTask(taskBarId);
+    taskBarManager.removeTaskBar(taskBarId);
+    taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
+  }
+  else {
+    console.log("User chose not to remove the project");}
+
+})
+//marking complete task
+  addParentListenerNearest("click", ".done", taskBarsContainer,(e, target)=>{
+    const parentTaskBar =target.closest(".task-bar-item");
+    const taskBarId = parentTaskBar.id;
+    target.classList.toggle("marked");
+    // const newElement= document.createElement("span");
+    // newElement.classList.add(".dot");
+    // target.appendChild(newElement);
+
+  })
 
 checkProjectAndTabLists();
 console.log("TaskManager task are: ", taskManager.tasks);

@@ -889,6 +889,29 @@ h3 {
 }
 .done {
   background-image: url("../assets/images/done\ button.webp");
+  
+ 
+}
+.marked{
+  scale: 1;
+  }
+.marked::before{
+    content: "";
+    rotate:-45deg;
+    position:absolute;
+    border: .3rem solid var(--brightest);
+    left:.5rem;
+    top:.5rem;
+   
+    /* position:absolute; */
+    
+    
+  }
+.dot{
+  width: .2rem;
+  height: .2rem;
+  background-color: var(--brightest);
+  border-radius:.1rem;
 }
 /*task bar description*/
 .description-box {
