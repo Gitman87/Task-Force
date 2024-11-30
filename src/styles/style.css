@@ -654,7 +654,6 @@ h3 {
   border: none;
 } */
 .new-task-container {
-  
   /* visibility: visible; */
   height: 18rem;
   width: 17.5rem;
@@ -663,7 +662,7 @@ h3 {
   left: 69.25rem;
   background-color: var(--bluish-2);
   backdrop-filter: var(--blur);
-  overflow:visible;
+  overflow: visible;
   /* padding: 1rem; */
   /* border: none; */
 }
@@ -889,29 +888,25 @@ h3 {
 }
 .done {
   background-image: url("../assets/images/done\ button.webp");
-  
- 
 }
-.marked{
+.marked {
   scale: 1;
-  }
-.marked::before{
-    content: "";
-    rotate:-45deg;
-    position:absolute;
-    border: .3rem solid var(--brightest);
-    left:.5rem;
-    top:.5rem;
-   
-    /* position:absolute; */
-    
-    
-  }
-.dot{
-  width: .2rem;
-  height: .2rem;
+}
+.marked::before {
+  content: "";
+  rotate: -45deg;
+  position: absolute;
+  border: 0.3rem solid var(--brightest);
+  left: 0.5rem;
+  top: 0.5rem;
+
+  /* position:absolute; */
+}
+.dot {
+  width: 0.2rem;
+  height: 0.2rem;
   background-color: var(--brightest);
-  border-radius:.1rem;
+  border-radius: 0.1rem;
 }
 /*task bar description*/
 .description-box {

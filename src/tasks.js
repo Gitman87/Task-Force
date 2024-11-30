@@ -12,14 +12,13 @@ export class Task {
     endDate,
     priority = "low",
     projectAssigned = "default",
-
     description
   } = {}) {
     const currentDate = new Date();
     const formattedCurrentDate = format(currentDate, "yyyy-MM-dd");
     this.title = title.value;
     this.startDate = startDate || formattedCurrentDate;
-    this.endDate = endDate|| formattedCurrentDate;
+    this.endDate = endDate || formattedCurrentDate;
     this.priority = priority;
     this.projectAssigned = projectAssigned;
     this.isComplete = false;
@@ -218,7 +217,7 @@ export class TaskManager {
     if (isEmpty && isUniqueForOthers) {
       const currentDate = new Date();
       const formattedCurrentDate = format(currentDate, "yyyy-MM-dd");
-      oldTask.title = title.value ;
+      oldTask.title = title.value;
       oldTask.startDate = startDate || formattedCurrentDate;
       oldTask.endDate = endDate || formattedCurrentDate;
       oldTask.priority = priority;
@@ -252,7 +251,16 @@ export class TaskManager {
       this.saveProjectsToStorage();
     }
   }
-
+  isComplete(activeTask, trueOrFalse){
+    // console.log("activeTask in isCompleter is: ", activeTask);
+    this.updateProjectsProjectTasks();
+    const index = this.tasks.findIndex((task) => task.id === activeTask.id);
+    console.log("Get task  in this.tasks[index] ", this.tasks[index]);
+    this.tasks[index].isComplete = trueOrFalse;
+    this.indexOfLastModified = index;
+    this.saveProjectsToStorage();
+  
+  }
   // getTask(id) {
   //   this.updateProjectsProjectTasks();
 

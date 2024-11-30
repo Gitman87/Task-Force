@@ -57,26 +57,24 @@ dateInputImg.src = dateSrc;
 //   }
 // }
 function toggleDialog(element) {
-  const dialog = document.getElementById('myDialog');
+  const dialog = document.getElementById("myDialog");
   if (element.open) {
     element.close();
   } else {
     element.showModal();
   }
 }
-function cleanInputs(inputs){
+function cleanInputs(inputs) {
   const elementList =
-      NodeList.prototype.isPrototypeOf(inputs) ||
-      HTMLCollection.prototype.isPrototypeOf(inputs) ||
-      Array.isArray(inputs)
-        ? inputs
-        : [inputs];
-    elementList.forEach((element) => {
-      element.value = "";
-    });
-  
+    NodeList.prototype.isPrototypeOf(inputs) ||
+    HTMLCollection.prototype.isPrototypeOf(inputs) ||
+    Array.isArray(inputs)
+      ? inputs
+      : [inputs];
+  elementList.forEach((element) => {
+    element.value = "";
+  });
 }
-
 
 const removeClass = (elements, selector) => {
   //check if iterable
@@ -280,7 +278,6 @@ addParentListenerNearest(
       const parentTab = target.closest(".project-tab");
       const tabId = parentTab.id;
 
-      
       taskBarManager.removeTaskBars(tabId);
       tabManager.removeTab(tabId, parentTab);
       console.log(
@@ -390,7 +387,6 @@ addParentListenerNearest(
 );
 //adding task
 addListener(addTaskBtn, "click", () => {
-  
   if (!newTaskContainer.classList.contains("for-edit")) {
     toggleDialog(newTaskContainer);
     cleanInputs(inputsForCleaning);
@@ -451,8 +447,8 @@ submitTaskBtn.addEventListener("click", () => {
       ? taskBarManager.addTaskBar()
       : console.warn("Cannot add taskBar");
 
-      toggleDialog(newTaskContainer);
-      cleanInputs(inputsForCleaning);
+    toggleDialog(newTaskContainer);
+    cleanInputs(inputsForCleaning);
   } else {
     // edit task and add taskBar
     const editTaskCheck = taskManager.editTask(
@@ -476,30 +472,38 @@ submitTaskBtn.addEventListener("click", () => {
   }
 });
 //deleting task
-addParentListenerNearest("click", ".delete-button", taskBarsContainer,(e,target)=>{
-  const confirmation = confirm("Are you sure?");
-  if(confirmation){
-    const parentTaskBar =target.closest(".task-bar-item");
-    target.classList.toggle("clicked");
-    const taskBarId = parentTaskBar.id;
-    taskManager.removeTask(taskBarId);
-    taskBarManager.removeTaskBar(taskBarId);
-    taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
+addParentListenerNearest(
+  "click",
+  ".delete-button",
+  taskBarsContainer,
+  (e, target) => {
+    const confirmation = confirm("Are you sure?");
+    if (confirmation) {
+      const parentTaskBar = target.closest(".task-bar-item");
+      target.classList.toggle("clicked");
+      const taskBarId = parentTaskBar.id;
+      taskManager.removeTask(taskBarId);
+      taskBarManager.removeTaskBar(taskBarId);
+      taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
+    } else {
+      console.log("User chose not to remove the project");
+    }
   }
-  else {
-    console.log("User chose not to remove the project");}
-
-})
+);
 //marking complete task
-  addParentListenerNearest("click", ".done", taskBarsContainer,(e, target)=>{
-    const parentTaskBar =target.closest(".task-bar-item");
-    const taskBarId = parentTaskBar.id;
-    target.classList.toggle("marked");
-    // const newElement= document.createElement("span");
-    // newElement.classList.add(".dot");
-    // target.appendChild(newElement);
-
-  })
+addParentListenerNearest("click", ".done", taskBarsContainer, (e, target) => {
+  const parentTaskBar = target.closest(".task-bar-item");
+  const taskBarId = parentTaskBar.id;
+  target.classList.toggle("marked");
+  let trueOrFalse = false;
+  if (target.classList.contains("marked")) {
+    trueOrFalse = true;
+    taskManager.isComplete(parentTaskBar, trueOrFalse);
+  } else {
+    taskManager.isComplete(parentTaskBar, trueOrFalse);
+  }
+ taskBarManager.isComplete(parentTaskBar.id);
+});
 
 checkProjectAndTabLists();
 console.log("TaskManager task are: ", taskManager.tasks);

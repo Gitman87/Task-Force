@@ -10,17 +10,16 @@ export class TaskBar {
     this.endDate = this.formatDate(task.endDate);
     this.priority = task.priority;
     this.projectAssigned = task.projectAssigned;
+    this.isComplete = task.isComplete;
     this.description = task.description;
     this.id = this.title.split(" ").join("-").toLowerCase();
   }
   formatDate(date) {
     const dateParts = date.split("-");
-
     // Rearrange to 'dd-MM-yyyy' format
     const reformattedDate =
       dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
     console.log("Reformatted date is:", reformattedDate);
-
     return reformattedDate;
   }
 }
@@ -144,6 +143,14 @@ export class TaskBarManager {
         TaskBarManager.addTaskBarPriority(newElement, taskBar);
         newElement.setAttribute("id", taskBar.id);
         //listeners for control panel
+        const doneBtn = newElement.querySelector('.done');
+        console.log("Task bar in load elements is :", taskBar.isComplete)
+        if(taskBar.isComplete) {
+          doneBtn.classList.add("marked");
+        }
+        else {
+          console.log("Loaded task isn't marked as complete.")
+        }
 
         this.addControlPanelListeners(taskBar, newElement);
 
@@ -157,7 +164,6 @@ export class TaskBarManager {
     const descriptionBtn = newElement.querySelector(".description-btn");
     const descriptionBox = newElement.querySelector(".description-box");
     const editBtn = newElement.querySelector(".edit");
-   
     const editTaskForm = document.querySelector(".new-task-container");
     const addTaskBtn = document.querySelector("#add-task-button");
 
@@ -177,7 +183,7 @@ export class TaskBarManager {
         addTaskBtn.click();
       }, 100);
 
-      // editTaskForm.classList.toggle("hidden");
+      //editTaskForm.classList.toggle("hidden");
     });
     
   }
@@ -220,5 +226,18 @@ export class TaskBarManager {
       
       this.saveTaskBarsToStorage();
     }
+  }
+  isComplete(id){
+    const index = this.taskBarsList.findIndex((taskBar) => taskBar.id === id);
+    const editedTask = this.taskManager.getLastModifiedTask();
+    if (index !== -1) {
+      this.taskBarsList[index].isComplete = editedTask.isComplete;
+      
+      this.saveTaskBarsToStorage();
+    }
+    else {
+      console.log(" Cannot mark complete ");
+    }
+    
   }
 }
