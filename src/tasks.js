@@ -287,6 +287,8 @@ export class TaskManager {
   calculateProgress() {
     const totalTasks = this.tasks.length;
     const completedTasks = this.tasks.filter((task) => task.isComplete).length;
-    return totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+    const number =totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+    console.log("Calculated number of progress is: ")
+    return  number;
   }
 }

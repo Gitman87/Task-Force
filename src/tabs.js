@@ -14,6 +14,7 @@ export class Tab {
   constructor(title, id) {
     this.title = title;
     this.idTab = id;
+    this.progress = 0;
   }
 }
 export class TabManager {
@@ -70,6 +71,17 @@ export class TabManager {
         newElement.classList.add(className);
       });
       newElement.setAttribute("id", tab.idTab);
+      const progressBar = newElement.querySelector(".progress-bar");
+      if(tab.progress== 100){
+        progressBar.style.backgroundColor = "var(--brightest)";
+        progressBar.style.width = tab.progress+"%";
+        
+      }
+      else{
+        progressBar.style.backgroundColor = "var(--reddish)";
+
+        progressBar.style.width = tab.progress+"%";
+      }
       container.appendChild(newElement);
     });
   }
@@ -135,6 +147,21 @@ export class TabManager {
     if (index !== -1) {
       return [this.tabList[index], index];
     }
+  }
+  changeProgress(tab, progress) {
+    console.log("Tab id is", tab);
+    const index = this.tabList.findIndex((item) => item.idTab === tab.id);
+    if (index !== -1) {
+     this.tabList[index].progress = progress;
+     console.log("Tab's object changed its progress to ", this.tabList[index].progress )
+    }
+    else {
+      console.warn("Couldn't change tab's object progress");
+    }
+
+    
+    
+    this.saveTabsToStorage();
   }
   getActiveTab(container, selector) {
     const activeTabElement = container.querySelector(selector);

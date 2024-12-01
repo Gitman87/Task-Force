@@ -30,32 +30,7 @@ import dateSrc from "./assets/images/type date.webp";
 const dateInputImg = document.querySelector("#custom-date-input");
 dateInputImg.src = dateSrc;
 
-// ----------DATE PICKER---------------
-// new AirDatepicker("#el", {
-//   dateFormat(date) {
-//     return date.toLocaleString("ja", {
-//       year: "numeric",
-//       day: "2-digit",
-//       month: "long",
-//     });
-//   },
-// });
 
-// ================= DRAFT ======================
-
-// class sortByDueDate {
-//   sort(tasks) {
-//     return tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-//   }
-// }
-// class sortByPriority {
-//   sort(tasks) {
-//     const priorityOrder = { high: 1, medium: 2, low: 3 };
-//     return tasks.sort(
-//       (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
-//     );
-//   }
-// }
 function toggleDialog(element) {
   const dialog = document.getElementById("myDialog");
   if (element.open) {
@@ -135,20 +110,6 @@ export const cleanerAndSwitcher = (element, input) => {
   }
 };
 
-// const projectPanelStarter = (() => {
-//   let projectPanel;
-//   return {
-//     initialize: () => {
-//       if (!projectPanel) {
-//         projectPanel = new ProjectPanel();
-//         projectPanel.initialized();
-//         return projectPanel;
-//       } else {
-//         console.log("projectPanel already exists!");
-//       }
-//     },
-//   };
-// })(); // I have to build local memory checker
 
 // ----------------------GLOBAL LISTENERS---------------------
 const addListener = (elements, type, action) => {
@@ -173,9 +134,7 @@ const addParentListenerNearest = (
   parent.addEventListener(type, (e) => {
     console.log(`Clicked, ${e.target.classList}`);
 
-    /*const nearestTarget = e.target.matches(selector)
-      ? e.target
-      : e.target.closest(selector);*/
+    
     let nearestTarget = e.target;
     if (nearestTarget.matches(selector)) {
       nearestTarget = nearestTarget;
@@ -449,6 +408,7 @@ submitTaskBtn.addEventListener("click", () => {
 
     toggleDialog(newTaskContainer);
     cleanInputs(inputsForCleaning);
+    changeProgress();
   } else {
     // edit task and add taskBar
     const editTaskCheck = taskManager.editTask(
@@ -502,9 +462,45 @@ addParentListenerNearest("click", ".done", taskBarsContainer, (e, target) => {
   } else {
     taskManager.isComplete(parentTaskBar, trueOrFalse);
   }
- taskBarManager.isComplete(parentTaskBar.id);
+  taskBarManager.isComplete(parentTaskBar.id);
+  //change progress
+  const progressNumber = taskManager.calculateProgress();
+  console.log("Progress number is: ", progressNumber);
+  const projectId = taskManager.getActiveProjectId();
+  projectManager.changeProgress(projectId, progressNumber);
+  //change tab object progress
+  // const {tabObject, index} = tabManager.getTab(projectId);
+  tabManager.changeProgress(activeTab, progressNumber);
+  //change tab element progress bar
+  // const tab = activeTab;
+  changeProgress();
+ 
 });
+function changeProgress(){
+  const progressNumber = taskManager.calculateProgress();
+  console.log("Progress number is: ", progressNumber);
+  const projectId = taskManager.getActiveProjectId();
+  projectManager.changeProgress(projectId, progressNumber);
+  //change tab object progress
+  // const {tabObject, index} = tabManager.getTab(projectId);
+  tabManager.changeProgress(activeTab, progressNumber);
+  //change tab element progress bar
+  // const tab = activeTab;
+  const progressBar = activeTab.querySelector(".progress-bar");
+  console.log("Selected tab is ", activeTab.id)
+  console.log("Selected progress bar is ",  progressBar)
+  // progressBar.style.width = progressNumber +"%";
+  if(progressNumber== 100){
+    progressBar.style.backgroundColor = "var(--brightest)";
+    progressBar.style.width = progressNumber+"%";
+    
+  }
+  else{
+    progressBar.style.backgroundColor = "var(--reddish)";
 
+    progressBar.style.width = progressNumber +"%";
+  }
+}
 checkProjectAndTabLists();
 console.log("TaskManager task are: ", taskManager.tasks);
 console.log("TaskManager projects are: ", taskManager.projects);
