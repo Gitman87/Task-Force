@@ -10,6 +10,7 @@
 //   }
 // }
 import LocalStorageManager from "./storage";
+import { format } from "date-fns";
 export class Tab {
   constructor(title, id) {
     this.title = title;
@@ -21,6 +22,8 @@ export class TabManager {
   static typeOfElement = "li";
   static classes = ["project-list-cell", "project-tab", "button"];
   static activeTabClass = "active-tab";
+  static today =new Date();
+  static todayDate =  format(new Date(),"dd-MM-yyyy");
   static getHtmlContent(title) {
     return `<div class="project-cell-name-container">
                       <span class="project-cell-name">${title}</span>
@@ -68,7 +71,15 @@ export class TabManager {
       const newElement = document.createElement(TabManager.typeOfElement);
       newElement.innerHTML = TabManager.getHtmlContent(tab.title);
       TabManager.classes.forEach((className) => {
-        newElement.classList.add(className);
+        if(tab.id==="today"){
+        newElement.classList.add(className, "active-tab");
+        
+
+        }
+        else{
+          newElement.classList.add(className);
+        }
+
       });
       newElement.setAttribute("id", tab.idTab);
       const progressBar = newElement.querySelector(".progress-bar");

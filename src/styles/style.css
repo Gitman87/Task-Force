@@ -146,139 +146,64 @@ body {
 /* ------------MAIN SCAFFOLDING------------------*/
 #wrapper {
   /* background-color: orange; */
-  width: 1780px;
+  max-width: 1780px;
   height: 100vh;
-  margin: 0 auto;
-  padding-top: 1.5rem;
+
+ 
+  display:flex;
+  justify-content:center;
 }
-#content {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  top: 1.5rem;
-}
-header {
-  width: 100%;
-  display: flex;
+header{
+  /* background-color: greenyellow; */
+  width:100%;
+  display:flex;
   justify-content: start;
-}
-#logo {
+  bottom:2rem;
   position: relative;
-  left: 3.5rem;
+}
+
+#content {
+  /* background-color: orange; */
+  display: flex;
+  justify-content: center;
+  flex-direction:column;
+  align-items: start;
+ 
+}
+
+#logo {
+ 
   width: 17.5rem;
   height: auto;
 }
 /* ----------------CALENDAR---------------- */
-#calendar {
-  /* background-color: rgb(118, 255, 129); */
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 55rem;
-  height: 40rem;
-}
-#calendar-inner {
-  /* background-color: goldenrod; */
-  width: 100%;
-  height: 90%;
-  display: flex;
-}
-#calendar-blur {
-  background-color: var(--bluish-2);
-  backdrop-filter: var(--blur);
-  width: 100%;
-  height: 100%;
-  padding: 1rem;
-}
-#calendar-bckg {
-  background-color: var(--brightest);
-  height: 100%;
-  overflow: scroll;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(8, 1fr);
-  column-gap: 1rem;
-  grid-template-areas:
-    "month-year month-year month-year month-year month-year"
-    "week-day-1 week-day-2 week-day-3 week-day-4 week-day-5";
-}
 
-#calendar-bckg > .week-day {
-  background-color: var(--cell-1);
-}
-#calendar-bckg .week-day:nth-child(2n) {
-  background-color: var(--cell-2);
-}
-#calendar-bckg .week-day .date-list .date-item:nth-child(2n) {
-  background-color: var(--cell-3);
-}
-#calendar-bckg .week-day:nth-child(2n) .date-list .date-item:nth-child(2n) {
-  background-color: var(--cell-4);
-}
-
-.date-list {
-  overflow-y: scroll;
-}
-
-.date-header,
-.week-day {
-  font-family: "Tomorrow-Regular", "Courier New", sans-serif;
-  font-size: 2.25rem;
-  text-align: center;
-  color: var(--bluish-6);
-}
-.date-item:first-child {
-  border-bottom: 0.2rem solid var(--brightest);
-}
-#year-header {
-  width: 100%;
-  text-align: center;
-  position: sticky;
-  top: 0;
-  grid-area: month-year;
-  justify-self: center;
-  background-color: var(--brightest);
-}
-#month {
-  margin-right: 1rem;
-}
-#monday {
-  grid-area: 1fr;
-  text-align: center;
-  box-shadow: 0px 10px 5px 0px rgba(0, 0, 0, 0.75);
-  -webkit-box-shadow: 0px 10px 5px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 10px 5px 0px rgba(0, 0, 0, 0.75);
-}
-#day-3 {
-  border: 2px solid var(--reddish);
-}
 /* -----------------COUNT BUTTON------------------- */
 #count-button {
-  width: 8rem;
-  height: 8rem;
+  width: 4rem;
+  height: 4rem;
   background-color: transparent;
 
-  border-top: 4rem solid hsla(0, 100%, 50%, 0.7);
-  border-right: 4rem solid transparent;
-  border-bottom: 4rem solid transparent;
-  border-left: 4rem solid hsla(0, 100%, 50%, 0.7);
+  border-top: 2rem solid hsla(0, 100%, 50%, 0.7);
+  border-left: 2rem solid transparent;
+  border-bottom: 2rem solid transparent;
+  border-right: 2rem solid hsla(0, 100%, 50%, 0.7);
   z-index: 2;
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
 }
 #count-button-number {
   position: absolute;
-  top: -3rem;
-  left: -2.5rem;
+  top: -1.8rem;
+  right: -1.25rem;
   font-family: "Tomorrow-Bold", "Courier New", sans-serif;
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   color: var(--brightest);
-  -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
 }
 
 /* -------SCROLL BUTTONS------------------------- */
@@ -393,7 +318,7 @@ header {
 /* ================TASK MANAGER========================= */
 #tasks {
   /* background-color: violet; */
-  top: 5rem;
+  top: 2rem;
   width: 55rem;
   height: 39.7rem;
 }
@@ -657,10 +582,11 @@ h3 {
 .new-task-container {
   /* visibility: visible; */
   height: 18rem;
+  min-height: 18rem;
   width: 17.5rem;
-  position: absolute;
-  top: 10.5rem;
-  left: 69.25rem;
+  position: relative;
+  top: 30vh;
+  left: 40vw;
   background-color: var(--bluish-2);
   backdrop-filter: var(--blur);
   overflow: visible;
@@ -929,4 +855,7 @@ h3 {
   transform: translateY(0);
   border: 0.25rem solid var(--bluish-5);
   border-top: none;
+}
+.disable{
+  pointer-events: none;
 }

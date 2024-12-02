@@ -11,8 +11,8 @@ export class Task {
     startDate,
     endDate,
     priority = "low",
-    projectAssigned = "default",
-    description
+    projectAssigned,
+    description,
   } = {}) {
     const currentDate = new Date();
     const formattedCurrentDate = format(currentDate, "yyyy-MM-dd");
@@ -34,7 +34,7 @@ export class TaskManager {
     this.projects = this.loadProjectsFromStorage() || [];
     this.validator = inputUniqueValidator;
     this.inputIsUniqueForOthers = inputIsUniqueForOthers;
-    this.activeProjectId = this.getActiveProjectId(".active-tab") || "default";
+    this.activeProjectId = this.getActiveProjectId(".active-tab") || "today";
     this.tasks = this.loadTasksFromStorage(this.activeProjectId);
     this.indexOfLastModified = null;
     this.idOfLastModified = "";
@@ -82,15 +82,20 @@ export class TaskManager {
   // }
   getActiveProjectId() {
     const activeTab = document.querySelector(".active-tab");
-    console.log("getActiveProjectId is :", activeTab.id);
-    return activeTab.id;
+    if (activeTab) {
+      return activeTab.id;
+      console.log("getActiveProjectId is :", activeTab.id);
+    } else {
+      return null;
+      console.log("no active tab in getActiveProjectId");
+    }
   }
   saveActiveProjectId() {
-    this.activeProjectId = this.getActiveProjectId(".active-tab") || "default";
+    this.activeProjectId = this.getActiveProjectId(".active-tab") || "today";
   }
   updateActiveProjectId() {
     const activeTab = document.querySelector(".active-tab");
-    this.activeProjectId = activeTab ? activeTab.id : "default"; // Validate here
+    this.activeProjectId = activeTab ? activeTab.id : "today"; // Validate here
   }
   updateProjectTasks() {
     console.log("Active project ID:", this.activeProjectId);
@@ -109,6 +114,7 @@ export class TaskManager {
     // const project = projects.find(activeTab.id);
     // const tasks = project.tasks;
     // const taskId= activeTask.id;
+    this.updateProjectsProjectTasks();
     const index = this.tasks.findIndex((task) => task.id === activeTask.id);
     console.log("  get task this task is  ", this.tasks[index]);
     return this.tasks[index];
@@ -251,7 +257,7 @@ export class TaskManager {
       this.saveProjectsToStorage();
     }
   }
-  isComplete(activeTask, trueOrFalse){
+  isComplete(activeTask, trueOrFalse) {
     // console.log("activeTask in isCompleter is: ", activeTask);
     this.updateProjectsProjectTasks();
     const index = this.tasks.findIndex((task) => task.id === activeTask.id);
@@ -259,7 +265,6 @@ export class TaskManager {
     this.tasks[index].isComplete = trueOrFalse;
     this.indexOfLastModified = index;
     this.saveProjectsToStorage();
-  
   }
   // getTask(id) {
   //   this.updateProjectsProjectTasks();
@@ -287,8 +292,8 @@ export class TaskManager {
   calculateProgress() {
     const totalTasks = this.tasks.length;
     const completedTasks = this.tasks.filter((task) => task.isComplete).length;
-    const number =totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-    console.log("Calculated number of progress is: ")
-    return  number;
+    const number = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+    console.log("Calculated number of progress is: ");
+    return number;
   }
 }
