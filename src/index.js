@@ -208,6 +208,7 @@ function loadToday() {
     projectManager.saveProjectsToStorage();
     console.log(`Project added: ${projectManager.projects[0].id}`);
     tabManager.addTab(projectList);
+    // tabManager.loadElementsFromStorage(projectList);
   } else {
     console.log("Today project has been already loaded");
     tabManager.loadElementsFromStorage(projectList);

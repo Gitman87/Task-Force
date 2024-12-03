@@ -506,6 +506,16 @@ h3 {
   overflow-x: scroll;
   overflow-y: hidden;
 }
+.project-cell-name.today {
+  font-family: "Tomorrow-Regular", "Courier New", sans-serif;
+  color: var(--brightest);
+  width: 90%;
+  height: 1.5rem;
+  white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
 .project-tab {
   background-color: hsla(183, 19%, 40%, 0.31);
 }
@@ -721,6 +731,9 @@ h3 {
   /* background-color: #ff0100; */
   max-height: 6rem;
   display: flex;
+}
+.expired{
+  filter:grayscale(100%);
 }
 .task-item {
   /* background-color: darkkhaki; */

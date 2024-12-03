@@ -1,6 +1,6 @@
 import LocalStorageManager from "./storage";
 import { validateInput } from "./validation";
-import { format } from "date-fns";
+import { format, compareAsc} from "date-fns";
 const { inputValidator, inputUniqueValidator } = validateInput();
 
 export class TaskBar {
@@ -90,7 +90,7 @@ export class TaskBarManager {
       TaskBarManager.taskBarBckgSelector
     );
     console.log("element is ", taskBarBckg.classList);
-    console.log("element proproty  is ", newObject.priority);
+    console.log("element property  is ", newObject.priority);
     if (newObject.priority === TaskBarManager.highClass) {
       taskBarBckg.classList.add(TaskBarManager.highClass);
     } else if (newObject.priority === TaskBarManager.mediumClass) {
@@ -119,6 +119,7 @@ export class TaskBarManager {
     TaskBarManager.classes.forEach((className) => {
       newElement.classList.add(className);
     });
+    
     // adding background depends on priority
     TaskBarManager.addTaskBarPriority(newElement, taskBar);
     //listeners
@@ -147,6 +148,7 @@ export class TaskBarManager {
         );
         TaskBarManager.classes.forEach((className) => {
           newElement.classList.add(className);
+          
         });
         TaskBarManager.addTaskBarPriority(newElement, taskBar);
         newElement.setAttribute("id", taskBar.id);
@@ -159,6 +161,11 @@ export class TaskBarManager {
           console.log("Task bar marked as complete during loading");
         } else {
           console.log("Loaded task isn't marked as complete.");
+        }
+        //check if expired
+        if(compareAsc(taskBar.endDate, formattedCurrentDate)== -1){
+          console.log(`endDate in isAfter is ${taskBar.endDate} and today is ${formattedCurrentDate}`);
+          newElement.classList.add("expired");
         }
 
         this.addControlPanelListeners(taskBar, newElement);

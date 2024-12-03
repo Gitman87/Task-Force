@@ -83,11 +83,11 @@ export class TaskManager {
   getActiveProjectId() {
     const activeTab = document.querySelector(".active-tab");
     if (activeTab) {
-      return activeTab.id;
       console.log("getActiveProjectId is :", activeTab.id);
+      return activeTab.id;
     } else {
-      return null;
       console.log("no active tab in getActiveProjectId");
+      return null;
     }
   }
   saveActiveProjectId() {
