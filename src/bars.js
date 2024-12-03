@@ -286,4 +286,14 @@ export class TaskBarManager {
       console.log(" Cannot mark complete ");
     }
   }
+  countIncomplete(){
+    let number = 0;
+    this.taskBarsList.forEach((taskBar)=>{if(!taskBar.isComplete){
+      number++;
+    }
+  })
+  
+  return  number;
+
+  }
 }
