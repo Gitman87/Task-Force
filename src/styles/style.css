@@ -121,6 +121,21 @@ html {
 
   --blur: blur(2px);
 }
+/* ==================DARK MODE========================== */
+
+.dark-mode{
+  
+    --brightest:  #0000009a;
+    --cell-1: #7f9899;
+  --cell-2: #648d8f;
+  --cell-3: #90a6a7;
+  --cell-4: #718d8d;
+  
+}
+
+
+
+
 /* ========STYLING=================STYLING============== */
 
 .button {
@@ -149,16 +164,15 @@ body {
   max-width: 1780px;
   height: 100vh;
 
- 
-  display:flex;
-  justify-content:center;
+  display: flex;
+  justify-content: center;
 }
-header{
+header {
   /* background-color: greenyellow; */
-  width:100%;
-  display:flex;
+  width: 100%;
+  display: flex;
   justify-content: start;
-  bottom:2rem;
+  bottom: 2rem;
   position: relative;
 }
 
@@ -166,13 +180,11 @@ header{
   /* background-color: orange; */
   display: flex;
   justify-content: center;
-  flex-direction:column;
+  flex-direction: column;
   align-items: start;
- 
 }
 
 #logo {
- 
   width: 17.5rem;
   height: auto;
 }
@@ -459,13 +471,42 @@ h3 {
   animation-play-state: paused;
   rotate: 180deg;
 }
-
+.dark-mode-container{
+  position:relative;
+  right: 4rem;
+  top: 1.5rem;
+  /* background-color: orange; */
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
 .drop-down-content {
   visibility: hidden;
   position: absolute;
   left: 7.75rem;
   width: 5rem;
   transform: translateY(0);
+}
+#dark-mode-list {
+  visibility: hidden;
+  position: relative;
+  left:0rem;
+  
+  transform: translateY(0rem);
+}
+#dark-mode-list.visible {
+  visibility: visible;
+  position: relative;
+  left:0rem;
+  bottom:1rem;
+  
+  transform: translateY(3rem);
+}
+#dark-mode-arrow{
+  position:relative;
+  width:2.5rem;
+  height:1.8rem;
+  top:2rem;
 }
 
 .drop-down-content.visible {
@@ -708,7 +749,9 @@ h3 {
   background-size: cover;
   background-repeat: no-repeat;
 }
-
+textarea{
+  background-color: var(--cell-4);
+}
 #new-task-description textarea {
   width: 100%;
   height: 100%;
@@ -732,8 +775,8 @@ h3 {
   max-height: 6rem;
   display: flex;
 }
-.expired{
-  filter:grayscale(100%);
+.expired {
+  filter: grayscale(100%);
 }
 .task-item {
   /* background-color: darkkhaki; */
@@ -869,6 +912,6 @@ h3 {
   border: 0.25rem solid var(--bluish-5);
   border-top: none;
 }
-.disable{
+.disable {
   pointer-events: none;
 }

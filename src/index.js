@@ -276,9 +276,9 @@ addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   taskBarsContainer.innerHTML = " ";
   console.log("Task bar list", taskBarManager.taskBarsList);
   taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
-  const number=taskBarManager.countIncomplete();
-  counter.textContent=number; 
-  
+  const number = taskBarManager.countIncomplete();
+  counter.textContent = number;
+
   checkProjectAndTabLists();
 });
 
@@ -459,8 +459,8 @@ submitTaskBtn.addEventListener("click", () => {
     toggleDialog(newTaskContainer);
     cleanInputs(inputsForCleaning);
     changeProgress();
-    const number=taskBarManager.countIncomplete();
-    counter.textContent=number; 
+    const number = taskBarManager.countIncomplete();
+    counter.textContent = number;
   } else {
     // edit task and add taskBar
     const editTaskCheck = taskManager.editTask(
@@ -508,8 +508,8 @@ addParentListenerNearest(
       //change tab element progress bar
       // const tab = activeTab;
       changeProgress();
-      const number=taskBarManager.countIncomplete();
-      counter.textContent=number; 
+      const number = taskBarManager.countIncomplete();
+      counter.textContent = number;
     } else {
       console.log("User chose not to remove the project");
     }
@@ -539,8 +539,8 @@ addParentListenerNearest("click", ".done", taskBarsContainer, (e, target) => {
   //change tab element progress bar
   // const tab = activeTab;
   changeProgress();
-  const number=taskBarManager.countIncomplete();
-  counter.textContent=number; 
+  const number = taskBarManager.countIncomplete();
+  counter.textContent = number;
 });
 function changeProgress() {
   const progressNumber = taskManager.calculateProgress();
@@ -565,6 +565,32 @@ function changeProgress() {
     progressBar.style.width = progressNumber + "%";
   }
 }
+//dark mode and clearing storage
+const arrowBtnDarkMode = document.querySelector("#dark-mode-arrow");
+const darkModeList = document.querySelector("#dark-mode-list");
+const clearMemoryBtn = document.querySelector(".clear-memory");
+const darkModeBtn = document.querySelector(".dark-mode");
+
+arrowBtnDarkMode.addEventListener("click", ()=>{
+  darkModeList.classList.toggle("visible");
+})
+clearMemoryBtn.addEventListener("click",()=> {
+  const confirmation = confirm("Are you sure?");
+  if(confirmation){
+    localStorage.clear()
+  }
+  else{
+    console.log("Clearing localStorage cancelled");
+  }
+})
+darkModeBtn.addEventListener("click",()=>{
+  const body= document.body;
+  body.classList.toggle("dark-mode");
+})
+  
+
+
+
 checkProjectAndTabLists();
 console.log("TaskManager task are: ", taskManager.tasks);
 console.log("TaskManager projects are: ", taskManager.projects);
