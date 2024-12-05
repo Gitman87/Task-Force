@@ -267,8 +267,11 @@ addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   taskBarsContainer.innerHTML = " ";
   console.log("Task bar list", taskBarManager.taskBarsList);
   taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
-  const number = taskBarManager.countIncomplete();
+  if(activeTab.id!="today"){
+  const number = taskManager.countIncomplete();
   counter.textContent = number;
+  }
+  
 
   checkProjectAndTabLists();
 });
@@ -450,8 +453,10 @@ submitTaskBtn.addEventListener("click", () => {
     toggleDialog(newTaskContainer);
     cleanInputs(inputsForCleaning);
     changeProgress();
-    const number = taskBarManager.countIncomplete();
-    counter.textContent = number;
+    if(activeTab.id!="today"){
+      const number = taskManager.countIncomplete();
+      counter.textContent = number;
+      }
   } else {
     // edit task and add taskBar
     const editTaskCheck = taskManager.editTask(
@@ -499,8 +504,10 @@ addParentListenerNearest(
       //change tab element progress bar
       // const tab = activeTab;
       changeProgress();
-      const number = taskBarManager.countIncomplete();
-      counter.textContent = number;
+      if(activeTab.id!="today"){
+        const number = taskManager.countIncomplete();
+        counter.textContent = number;
+        }
     } else {
       console.log("User chose not to remove the project");
     }
@@ -530,8 +537,10 @@ addParentListenerNearest("click", ".done", taskBarsContainer, (e, target) => {
   //change tab element progress bar
   // const tab = activeTab;
   changeProgress();
-  const number = taskBarManager.countIncomplete();
-  counter.textContent = number;
+  if(activeTab.id!="today"){
+    const number = taskManager.countIncomplete();
+    counter.textContent = number;
+    }
 });
 function changeProgress() {
   const progressNumber = taskManager.calculateProgress();
@@ -568,7 +577,8 @@ arrowBtnDarkMode.addEventListener("click", ()=>{
 clearMemoryBtn.addEventListener("click",()=> {
   const confirmation = confirm("Are you sure?");
   if(confirmation){
-    localStorage.clear()
+    localStorage.clear();
+    window.location.reload();
   }
   else{
     console.log("Clearing localStorage cancelled");

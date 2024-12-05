@@ -296,4 +296,14 @@ export class TaskManager {
     console.log("Calculated number of progress is: ");
     return number;
   }
+  countIncomplete(){
+    let number = 0;
+    this.tasks.forEach((task)=>{if(!task.isComplete){
+      number++;
+    }
+  })
+  
+  return  number;
+
+  }
 }
