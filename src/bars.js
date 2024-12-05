@@ -128,10 +128,17 @@ export class TaskBarManager {
     newElement.setAttribute("id", id);
     this.container.appendChild(newElement);
   }
+   convertToDate(dateString) {
+    const [day, month, year] = dateString.split('-');
+    return new Date(`${year}-${month}-${day}`);
+  }
   sortDates(){
     const oldArray = this.taskBarsList;
     const newArray = oldArray.sort((a,b)=>{
-      return compareAsc(new Date(a.endDate), new Date(b.endDate));
+
+      const aDate =this.convertToDate(a.endDate);
+      const bDate =this.convertToDate(b.endDate);
+      return compareAsc(aDate, bDate);
     })
     console.log("newArray after sorting is ", newArray);
     return newArray;

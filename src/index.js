@@ -192,7 +192,6 @@ const counter = document.querySelector("#count-button-number");
 
 console.log("tabs array is", projectList.children);
 
-
 function loadToday() {
   if (!projectManager.getProject("Today")) {
     const project = new Project("Today");
@@ -216,7 +215,7 @@ addListener(addProjectBtn, "click", () =>
 submitEnter(
   projectTitleInput,
   () => projectManager.addProject(projectTitleInput),
-  
+
   () => tabManager.addTab(projectList),
   () => {
     const cleaner = new TextInputCleaner();
@@ -267,11 +266,10 @@ addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   taskBarsContainer.innerHTML = " ";
   console.log("Task bar list", taskBarManager.taskBarsList);
   taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
-  if(activeTab.id!="today"){
-  const number = taskManager.countIncomplete();
-  counter.textContent = number;
+  if (activeTab.id != "today") {
+    const number = taskManager.countIncomplete();
+    counter.textContent = number;
   }
-  
 
   checkProjectAndTabLists();
 });
@@ -453,10 +451,10 @@ submitTaskBtn.addEventListener("click", () => {
     toggleDialog(newTaskContainer);
     cleanInputs(inputsForCleaning);
     changeProgress();
-    if(activeTab.id!="today"){
+    if (activeTab.id != "today") {
       const number = taskManager.countIncomplete();
       counter.textContent = number;
-      }
+    }
   } else {
     // edit task and add taskBar
     const editTaskCheck = taskManager.editTask(
@@ -504,10 +502,10 @@ addParentListenerNearest(
       //change tab element progress bar
       // const tab = activeTab;
       changeProgress();
-      if(activeTab.id!="today"){
+      if (activeTab.id != "today") {
         const number = taskManager.countIncomplete();
         counter.textContent = number;
-        }
+      }
     } else {
       console.log("User chose not to remove the project");
     }
@@ -537,10 +535,10 @@ addParentListenerNearest("click", ".done", taskBarsContainer, (e, target) => {
   //change tab element progress bar
   // const tab = activeTab;
   changeProgress();
-  if(activeTab.id!="today"){
+  if (activeTab.id != "today") {
     const number = taskManager.countIncomplete();
     counter.textContent = number;
-    }
+  }
 });
 function changeProgress() {
   const progressNumber = taskManager.calculateProgress();
@@ -571,26 +569,22 @@ const darkModeList = document.querySelector("#dark-mode-list");
 const clearMemoryBtn = document.querySelector(".clear-memory");
 const darkModeBtn = document.querySelector(".dark-mode");
 
-arrowBtnDarkMode.addEventListener("click", ()=>{
+arrowBtnDarkMode.addEventListener("click", () => {
   darkModeList.classList.toggle("visible");
-})
-clearMemoryBtn.addEventListener("click",()=> {
+});
+clearMemoryBtn.addEventListener("click", () => {
   const confirmation = confirm("Are you sure?");
-  if(confirmation){
+  if (confirmation) {
     localStorage.clear();
     window.location.reload();
-  }
-  else{
+  } else {
     console.log("Clearing localStorage cancelled");
   }
-})
-darkModeBtn.addEventListener("click",()=>{
-  const body= document.body;
+});
+darkModeBtn.addEventListener("click", () => {
+  const body = document.body;
   body.classList.toggle("dark-mode");
-})
-  
-
-
+});
 
 checkProjectAndTabLists();
 console.log("TaskManager task are: ", taskManager.tasks);

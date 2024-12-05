@@ -1,7 +1,8 @@
 import LocalStorageManager from "./storage";
 import { validateInput } from "./validation";
 import { format } from "date-fns";
-const { inputValidator, inputUniqueValidator, inputUniqueForOthersValidator } = validateInput();
+const { inputValidator, inputUniqueValidator, inputUniqueForOthersValidator } =
+  validateInput();
 
 export class Project {
   constructor(title) {
@@ -149,25 +150,24 @@ export class ProjectManager {
       return this.projects[index];
     }
   }
-  getProjectById(id){
+  getProjectById(id) {
     const index = this.projects.findIndex((project) => project.id === id);
     if (index !== -1) {
       return this.projects[index];
     }
   }
-  changeProgress(id, number){
+  changeProgress(id, number) {
     const index = this.projects.findIndex((project) => project.id === id);
     if (index !== -1) {
-       this.projects[index].progress = number;
-       const project = this.getProjectById(id);
-       console.log(`Project with id ${id} has changed its progress ${project.progress}`);
-    }
-    else{
+      this.projects[index].progress = number;
+      const project = this.getProjectById(id);
+      console.log(
+        `Project with id ${id} has changed its progress ${project.progress}`
+      );
+    } else {
       console.warn("Couldn't change progress property of the project");
     }
-
   }
-  
 
   sortProjects(strategy) {
     strategy.sort(this.projects);
