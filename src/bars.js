@@ -128,13 +128,21 @@ export class TaskBarManager {
     newElement.setAttribute("id", id);
     this.container.appendChild(newElement);
   }
-
+  sortDates(){
+    const oldArray = this.taskBarsList;
+    const newArray = oldArray.sort((a,b)=>{
+      return compareAsc(new Date(a.endDate), new Date(b.endDate));
+    })
+    console.log("newArray after sorting is ", newArray);
+    return newArray;
+  }
   loadElementsFromStorage(container, activeTab) {
     console.log("taskbar list length is", this.taskBarsList.length);
     container.innerHTML = "";
     const today = new Date();
     const formattedCurrentDate = format(today, "dd-MM-yyyy");
     console.log("New date in loadElementFromStorage is ", formattedCurrentDate);
+    this.taskBarsList = this.sortDates();
     this.taskBarsList.forEach((taskBar) => {
       console.log(
         `taskBar endDate = ${taskBar.endDate}and today is ${formattedCurrentDate}`

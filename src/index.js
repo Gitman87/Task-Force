@@ -192,16 +192,7 @@ const counter = document.querySelector("#count-button-number");
 
 console.log("tabs array is", projectList.children);
 
-// add default project
-// const loadDefault = () => {
-//   if (!projectManager.getProject("Today")) {
-//     const project = new Project("Today");
-//     projectManager.projects.push(project);
-//     projectManager.saveProjectsToStorage();
-//   } else {
-//     console.log("Default project already exists");
-//   }
-// };
+
 function loadToday() {
   if (!projectManager.getProject("Today")) {
     const project = new Project("Today");
@@ -225,7 +216,7 @@ addListener(addProjectBtn, "click", () =>
 submitEnter(
   projectTitleInput,
   () => projectManager.addProject(projectTitleInput),
-
+  
   () => tabManager.addTab(projectList),
   () => {
     const cleaner = new TextInputCleaner();

@@ -65,6 +65,7 @@ export class ProjectManager {
       input
     );
     if (isEmpty && isUnique) {
+      this.updateProjects();
       const project = new Project(input.value);
       console.log(`addProject project title is: ${project.title}`);
       this.projects.push(project);
