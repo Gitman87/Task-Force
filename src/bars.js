@@ -1,6 +1,6 @@
 import LocalStorageManager from "./storage";
 import { validateInput } from "./validation";
-import { format, compareAsc} from "date-fns";
+import { format, compareAsc } from "date-fns";
 const { inputValidator, inputUniqueValidator } = validateInput();
 
 export class TaskBar {
@@ -16,10 +16,10 @@ export class TaskBar {
   }
   static formatDate(date) {
     const dateParts = date.split("-");
-    // Rearrange to 'dd-MM-yyyy' format
+
     const reformattedDate =
       dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
-    console.log("Reformatted date is:", reformattedDate);
+
     return reformattedDate;
   }
 }
@@ -82,44 +82,36 @@ export class TaskBarManager {
     );
     this.taskBarsList = newList;
     this.saveTaskBarsToStorage();
-
-    console.log("taskbar list length is", this.taskBarsList.length);
   }
   static addTaskBarPriority(element, newObject) {
     const taskBarBckg = element.querySelector(
       TaskBarManager.taskBarBckgSelector
     );
-    console.log("element is ", taskBarBckg.classList);
-    console.log("element property  is ", newObject.priority);
+
     if (newObject.priority === TaskBarManager.highClass) {
       taskBarBckg.classList.add(TaskBarManager.highClass);
     } else if (newObject.priority === TaskBarManager.mediumClass) {
       taskBarBckg.classList.add(TaskBarManager.mediumClass);
-    } else {
-      console.warn("couldn't add new task bar priority");
     }
   }
-  // static addSelectShadow(element){
-
-  // }
 
   addTaskBar() {
     const lastTask = this.taskManager.getLastTask();
     const taskBar = new TaskBar(lastTask);
     const title = taskBar.title;
     const id = taskBar.id;
-    console.log("Id of new taskbar is ", id);
+
     const endDate = taskBar.endDate;
-    
+
     this.taskBarsList.push(taskBar);
     this.saveTaskBarsToStorage();
     const newElement = document.createElement(TaskBarManager.typeOfElement);
     newElement.innerHTML = TaskBarManager.getHtmlContent(title, endDate);
-    newElement.setAttribute('data-project-assigned', taskBar.projectAssigned);
+    newElement.setAttribute("data-project-assigned", taskBar.projectAssigned);
     TaskBarManager.classes.forEach((className) => {
       newElement.classList.add(className);
     });
-    
+
     // adding background depends on priority
     TaskBarManager.addTaskBarPriority(newElement, taskBar);
     //listeners
@@ -128,32 +120,27 @@ export class TaskBarManager {
     newElement.setAttribute("id", id);
     this.container.appendChild(newElement);
   }
-   convertToDate(dateString) {
-    const [day, month, year] = dateString.split('-');
+  convertToDate(dateString) {
+    const [day, month, year] = dateString.split("-");
     return new Date(`${year}-${month}-${day}`);
   }
-  sortDates(){
+  sortDates() {
     const oldArray = this.taskBarsList;
-    const newArray = oldArray.sort((a,b)=>{
-
-      const aDate =this.convertToDate(a.endDate);
-      const bDate =this.convertToDate(b.endDate);
+    const newArray = oldArray.sort((a, b) => {
+      const aDate = this.convertToDate(a.endDate);
+      const bDate = this.convertToDate(b.endDate);
       return compareAsc(aDate, bDate);
-    })
-    console.log("newArray after sorting is ", newArray);
+    });
+
     return newArray;
   }
   loadElementsFromStorage(container, activeTab) {
-    console.log("taskbar list length is", this.taskBarsList.length);
     container.innerHTML = "";
     const today = new Date();
     const formattedCurrentDate = format(today, "dd-MM-yyyy");
-    console.log("New date in loadElementFromStorage is ", formattedCurrentDate);
+
     this.taskBarsList = this.sortDates();
     this.taskBarsList.forEach((taskBar) => {
-      console.log(
-        `taskBar endDate = ${taskBar.endDate}and today is ${formattedCurrentDate}`
-      );
       //only if taskBar's projectAssigned is matching active tab's id
       if (taskBar.projectAssigned === activeTab.id) {
         const newElement = document.createElement(TaskBarManager.typeOfElement);
@@ -163,23 +150,21 @@ export class TaskBarManager {
         );
         TaskBarManager.classes.forEach((className) => {
           newElement.classList.add(className);
-          
         });
         TaskBarManager.addTaskBarPriority(newElement, taskBar);
         newElement.setAttribute("id", taskBar.id);
-        newElement.setAttribute('data-project-assigned', taskBar.projectAssigned);
+        newElement.setAttribute(
+          "data-project-assigned",
+          taskBar.projectAssigned
+        );
         //listeners for control panel
         const doneBtn = newElement.querySelector(".done");
-        console.log("Task bar in load elements is :", taskBar.isComplete);
+
         if (taskBar.isComplete) {
           doneBtn.classList.add("marked");
-          console.log("Task bar marked as complete during loading");
-        } else {
-          console.log("Loaded task isn't marked as complete.");
         }
         //check if expired
-        if(compareAsc(taskBar.endDate, formattedCurrentDate)== -1){
-          console.log(`endDate in isAfter is ${taskBar.endDate} and today is ${formattedCurrentDate}`);
+        if (compareAsc(taskBar.endDate, formattedCurrentDate) == -1) {
           newElement.classList.add("expired");
         }
 
@@ -200,27 +185,26 @@ export class TaskBarManager {
         });
         TaskBarManager.addTaskBarPriority(newElement, taskBar);
         newElement.setAttribute("id", taskBar.id);
-        newElement.setAttribute('data-project-assigned', taskBar.projectAssigned);
+        newElement.setAttribute(
+          "data-project-assigned",
+          taskBar.projectAssigned
+        );
         //listeners for control panel
         const doneBtn = newElement.querySelector(".done");
         const editBtn = newElement.querySelector(".edit");
         const deleteBtn = newElement.querySelector(".delete-button");
-        console.log("Task bar in load elements is :", taskBar.isComplete);
+
         doneBtn.classList.add("disable");
         editBtn.classList.add("disable");
         deleteBtn.classList.add("disable");
 
         if (taskBar.isComplete) {
           doneBtn.classList.add("marked");
-        } else {
-          console.log("Loaded task isn't marked as complete.");
         }
 
         this.addControlPanelListeners(taskBar, newElement);
 
         container.appendChild(newElement);
-      } else {
-        console.log("No task bars to load");
       }
     });
   }
@@ -237,17 +221,12 @@ export class TaskBarManager {
       descriptionBtn.classList.toggle("clicked");
     });
     editBtn.addEventListener("click", () => {
-      console.log("EditBtn  clicked");
-      // addOrEditFlag = 1;
-      // let activeTaskBar = e.target.closest(".task-item");
       editBtn.classList.toggle("clicked");
       editTaskForm.classList.toggle("for-edit");
-      //delay to let the task bar get active
+
       setTimeout(() => {
         addTaskBtn.click();
       }, 100);
-
-      //editTaskForm.classList.toggle("hidden");
     });
   }
   indexOfActiveTaskBar() {
@@ -259,15 +238,11 @@ export class TaskBarManager {
   }
   editTaskBar() {
     const editedTask = this.taskManager.getLastModifiedTask();
-    console.log("Last edited task is ", editedTask);
-    //consider putting this to task manger and leave updating task bar looks for this manager
+
     const newTaskBar = new TaskBar(editedTask);
-    console.log(
-      "Active task bar is ",
-      this.taskBarsList[this.indexOfActiveTaskBar()]
-    );
+
     this.taskBarsList[this.indexOfActiveTaskBar()] = newTaskBar;
-    console.log("taskBarlist  is: ", this.taskBarsList);
+
     this.saveTaskBarsToStorage();
   }
   reassignTaskBars(oldProjectId, newProjectId) {
@@ -278,8 +253,6 @@ export class TaskBarManager {
         }
       });
       this.saveTaskBarsToStorage();
-    } else {
-      console.log("Cannot reassign any taskBar");
     }
   }
   removeTaskBar(id) {
@@ -297,18 +270,16 @@ export class TaskBarManager {
       this.taskBarsList[index].isComplete = editedTask.isComplete;
 
       this.saveTaskBarsToStorage();
-    } else {
-      console.log(" Cannot mark complete ");
     }
   }
-  countIncomplete(){
+  countIncomplete() {
     let number = 0;
-    this.taskBarsList.forEach((taskBar)=>{if(!taskBar.isComplete){
-      number++;
-    }
-  })
-  
-  return  number;
+    this.taskBarsList.forEach((taskBar) => {
+      if (!taskBar.isComplete) {
+        number++;
+      }
+    });
 
+    return number;
   }
 }

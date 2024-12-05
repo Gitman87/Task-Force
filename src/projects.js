@@ -10,18 +10,9 @@ export class Project {
     this.tasks = [];
     this.progress = 0;
     this.id = title.split(" ").join("-").toLowerCase();
-    // this.localStorageManager = new LocalStorageManager();
-    // this.tasksStorage = this.setNewTasksArrayToLocalStorage(this.id, this.tasks);
-    // this.taskManager = new TaskManager(this.id, this.tasksStorage);
+    
   }
-  // setNewTasksArrayToLocalStorage(id, tasksArray) {
 
-  // this.localStorageManager.update(id,tasksArray);
-  // return this.localStorageManager.read(id);
-  // }
-  // show(){
-  //   console.log("task storage is", this.tasksStorage)
-  // }
 }
 export class ProjectManager {
   constructor(projectsKey) {
@@ -45,7 +36,7 @@ export class ProjectManager {
         "Couldn't load projects in loadProjectsFromStorage of taskManger"
       );
     } else {
-      console.log("Loaded projects to projectManager are:", projects);
+      
       return projects;
     }
   }
@@ -68,11 +59,10 @@ export class ProjectManager {
     if (isEmpty && isUnique) {
       this.updateProjects();
       const project = new Project(input.value);
-      console.log(`addProject project title is: ${project.title}`);
+      
       this.projects.push(project);
       this.saveProjectsToStorage();
-      // this.projects[0].show();
-      console.log(`Project added: ${this.projects[0].title}`);
+      
       return project;
     } else {
       if (!isEmpty) {
@@ -82,7 +72,7 @@ export class ProjectManager {
         alert("Project title already exists!");
         return null;
       }
-      console.warn("Project validation failed.");
+     
       return null;
     }
   }
@@ -109,7 +99,7 @@ export class ProjectManager {
           element.projectAssigned = this.projects[index].id;
         });
       } else {
-        console.log("cannot rename tasks pproject assigned- no tasks exists");
+        
       }
 
       this.indexOfLastModified = index;
@@ -122,7 +112,7 @@ export class ProjectManager {
         alert("Project title already exists!");
         return null;
       }
-      console.warn("Project validation failed.");
+      
       return null;
     }
   }
@@ -134,10 +124,10 @@ export class ProjectManager {
       this.saveProjectsToStorage();
       this.updateProjects();
       taskBarsContainer.innerHTML = " ";
-      console.log("removed project id:", id);
+      
       return true;
     } else {
-      console.warn(" couldn't remove project", id);
+      
       return false;
     }
   }
@@ -160,10 +150,7 @@ export class ProjectManager {
     const index = this.projects.findIndex((project) => project.id === id);
     if (index !== -1) {
       this.projects[index].progress = number;
-      const project = this.getProjectById(id);
-      console.log(
-        `Project with id ${id} has changed its progress ${project.progress}`
-      );
+     
     } else {
       console.warn("Couldn't change progress property of the project");
     }

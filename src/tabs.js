@@ -1,14 +1,3 @@
-// export class TabPanel {
-//   constructor(container, projectManager) {
-//     this.container = container;
-//     this.tabList = [];
-//     this.tabManager = new TabManager(this.tabList, projectManager);
-//     this.projectPanel = projectPanel;
-//   }
-//   initialized() {
-//     console.log("TabPanel  initialized!");
-//   }
-// }
 import LocalStorageManager from "./storage";
 import { format } from "date-fns";
 export class Tab {
@@ -75,10 +64,8 @@ export class TabManager {
   loadElementsFromStorage(container) {
     this.tabList.forEach((tab) => {
       const newElement = document.createElement(TabManager.typeOfElement);
-      console.log("tab id in load elements for today is", tab.title);
 
       if (tab.title === "Today") {
-        console.log("tab id in load elements for today is", tab.id);
         const today = new Date();
         const todayDate = format(today, "dd-MM-yyyy");
 
@@ -86,19 +73,17 @@ export class TabManager {
           tab.title,
           todayDate
         );
-      }
-      else{
-
+      } else {
         newElement.innerHTML = TabManager.getHtmlContent(tab.title);
         const progressBar = newElement.querySelector(".progress-bar");
-      if (tab.progress == 100) {
-        progressBar.style.backgroundColor = "var(--brightest)";
-        progressBar.style.width = tab.progress + "%";
-      } else {
-        progressBar.style.backgroundColor = "var(--reddish)";
+        if (tab.progress == 100) {
+          progressBar.style.backgroundColor = "var(--brightest)";
+          progressBar.style.width = tab.progress + "%";
+        } else {
+          progressBar.style.backgroundColor = "var(--reddish)";
 
-        progressBar.style.width = tab.progress + "%";
-      }
+          progressBar.style.width = tab.progress + "%";
+        }
       }
 
       TabManager.classes.forEach((className) => {
@@ -109,7 +94,7 @@ export class TabManager {
         }
       });
       newElement.setAttribute("id", tab.idTab);
-      
+
       container.appendChild(newElement);
     });
   }
@@ -122,7 +107,7 @@ export class TabManager {
       const id = project.id;
       const today = new Date();
       const todayDate = format(today, "dd-MM-yyyy");
-      console.log(`idTitle of tab ${title} is ${id}`);
+
       const newTab = new Tab(title, id);
       this.tabList.push(newTab);
       this.saveTabsToStorage();
@@ -141,7 +126,7 @@ export class TabManager {
     } else {
       const title = project.title;
       const id = project.id;
-      console.log(`idTitle of tab ${title} is ${id}`);
+
       const newTab = new Tab(title, id);
       this.tabList.push(newTab);
       this.saveTabsToStorage();
@@ -161,18 +146,14 @@ export class TabManager {
     const tabIndex = this.tabList.findIndex((tab) => tab.idTab === id);
 
     if (tabIndex === -1) {
-      console.warn("Cannot remove tab - not found");
       return;
     }
     const tabToRemove = this.tabList[tabIndex];
-    const projectTitle = tabToRemove.title;
 
     //remove tab
     this.tabList.splice(tabIndex, 1);
     this.saveTabsToStorage();
-    console.log(
-      `Tab with id: ${tabToRemove.idTab} removed for project title: ${projectTitle}`
-    );
+
     tab.remove();
   }
   renameTab(renamedProject, parentTab) {
@@ -186,8 +167,6 @@ export class TabManager {
       const titleElement = parentTab.querySelector(".project-cell-name");
       titleElement.innerHTML = "";
       titleElement.innerHTML = renamedProject.title;
-    } else {
-      console.log("nic z tego mlody paadawanie");
     }
   }
   getTabs() {
@@ -200,14 +179,9 @@ export class TabManager {
     }
   }
   changeProgress(tab, progress) {
-    console.log("Tab id is", tab);
     const index = this.tabList.findIndex((item) => item.idTab === tab.id);
     if (index !== -1) {
       this.tabList[index].progress = progress;
-      console.log(
-        "Tab's object changed its progress to ",
-        this.tabList[index].progress
-      );
     } else {
       console.warn("Couldn't change tab's object progress");
     }
@@ -223,23 +197,3 @@ export class TabManager {
     return { activeTabElement, activeTabObject };
   }
 }
-
-// const projectList = document.querySelector("#project-list");
-// const tabPanel = new TabPanel(projectList, projectPanel);
-// const actions = {
-//   "delete-project": (e)=>
-//     tabPanel.tabManager.
-// }
-
-// -----------------for analizing ----------
-
-// const addGlobalListener = (type, selector, callback) => {
-//   document.addEventListener(type, (e) => {
-//     if (e.target.matches(selector)) {
-//       callback();
-//     }
-//   });
-// }; // thanks, WDS
-// addGlobalListener("click", ".project-tab", (e) => {
-//   e.target.classList.toggle("active-tab");
-// });

@@ -46,7 +46,6 @@ export class TaskManager {
         "Couldn't load projects in loadProjectsFromStorage of taskManger"
       );
     } else {
-      console.log("Loaded projects to taskManager are:", projects);
       return projects;
     }
   }
@@ -54,9 +53,8 @@ export class TaskManager {
     return this.localStorageManager.update(this.projectsKey, this.projects);
   }
   loadTasksFromStorage(id) {
-    // const projects = this.loadProjectsFromStorage() || [];
     const project = this.projects.find((project) => project.id === id);
-    console.log("founded project to load tasks from is ", project.id);
+
     const tasks = project.tasks;
     return tasks;
   }
@@ -64,29 +62,21 @@ export class TaskManager {
   getProject(projectId) {
     const project = this.projects.find((project) => project.id === projectId);
     if (!project) {
-      console.warn(`Project with ID "${projectId}" not found.`);
       return null;
     }
     return project;
   }
   getProjectTasks(projectId) {
     const project = this.getProject(projectId);
-    console.log("project in getProjectTasks is: ", project);
+
     return project.tasks;
   }
-  // getTaskFromProject(projectId, taskId) {
-  //   const tasks = this.getProjectTasks(this.getActiveProjectId(".active-tab"));
-  //   console.log("tasks got prom project are ", tasks);
-  //   const index = tasks.findIndex((task) => task.id === task.id);
-  //   return tasks[index];
-  // }
+
   getActiveProjectId() {
     const activeTab = document.querySelector(".active-tab");
     if (activeTab) {
-      console.log("getActiveProjectId is :", activeTab.id);
       return activeTab.id;
     } else {
-      console.log("no active tab in getActiveProjectId");
       return null;
     }
   }
@@ -98,7 +88,6 @@ export class TaskManager {
     this.activeProjectId = activeTab ? activeTab.id : "today"; // Validate here
   }
   updateProjectTasks() {
-    console.log("Active project ID:", this.activeProjectId);
     this.tasks = this.loadTasksFromStorage(this.activeProjectId);
   }
   getLastModifiedTask() {
@@ -110,13 +99,9 @@ export class TaskManager {
     return index;
   }
   getTask(activeTask) {
-    // const projects = this.localStorageManager.read(this.projectsKey);
-    // const project = projects.find(activeTab.id);
-    // const tasks = project.tasks;
-    // const taskId= activeTask.id;
     this.updateProjectsProjectTasks();
     const index = this.tasks.findIndex((task) => task.id === activeTask.id);
-    console.log("  get task this task is  ", this.tasks[index]);
+
     return this.tasks[index];
   }
   getLastTask() {
@@ -179,17 +164,9 @@ export class TaskManager {
       project.tasks.push(task);
       this.saveActiveProjectId();
 
-      console.log(
-        `Pushed task to ${project.id} is ${
-          project.tasks[project.tasks.length - 1].id
-        } and length of tasks array is ${project.tasks.length}`
-      );
       this.saveProjectsToStorage();
       this.updateProjectsProjectTasks();
       return 1;
-      // console.log(
-      //   `Tasks array of project ${project.title} is ${project.tasks[3].priority}`
-      // );
     } else {
       if (!isEmpty) {
         alert("task title cannot be empty!");
@@ -198,23 +175,15 @@ export class TaskManager {
         alert("Task title already exists!");
         return null;
       }
-      console.warn("Task validation failed.");
+
       return null;
     }
-
-    //check projectAssigned from activeTab
-    //this.getProjectTasks(activeTab.id).push(task)
   }
   editTask(activeTaskBar, title, startDate, endDate, priority, description) {
-    //consider putting this to task manger and leave updating task bar looks for this manager
-    // this.updateProjectsProjectTasks();
-    // const taskIndex = this.this.getLastModifiedTask();
-    // console.log("taskIndex is ", taskIndex);
-
     const taskIndex = this.getTaskIndex(activeTaskBar);
-    console.log("edit task taskIndex is ", taskIndex);
+
     const oldTask = this.getTask(activeTaskBar);
-    console.log("old task before modification id is ", oldTask.id);
+
     const { isEmpty, isUniqueForOthers } = this.checkInputForOthers(
       title,
       this.tasks,
@@ -232,8 +201,7 @@ export class TaskManager {
       const newTask = oldTask;
       tasks[taskIndex] = newTask;
       this.indexOfLastModified = taskIndex;
-      console.log("Index of last modified task is ", this.indexOfLastModified);
-      // activeTaskBar.id = newTask.id;
+
       this.saveProjectsToStorage();
       this.updateProjectsProjectTasks();
       return 1;
@@ -245,7 +213,7 @@ export class TaskManager {
         alert("Task title already exists!");
         return null;
       }
-      console.warn("Task validation failed.");
+
       return null;
     }
   }
@@ -258,31 +226,14 @@ export class TaskManager {
     }
   }
   isComplete(activeTask, trueOrFalse) {
-    // console.log("activeTask in isCompleter is: ", activeTask);
     this.updateProjectsProjectTasks();
     const index = this.tasks.findIndex((task) => task.id === activeTask.id);
-    console.log("Get task  in this.tasks[index] ", this.tasks[index]);
+
     this.tasks[index].isComplete = trueOrFalse;
     this.indexOfLastModified = index;
     this.saveProjectsToStorage();
   }
-  // getTask(id) {
-  //   this.updateProjectsProjectTasks();
 
-  //   if (!Array.isArray(this.tasks)) {
-  //       console.warn("Tasks array is not initialized or is invalid.");
-  //       return null;
-  //   }
-
-  //   const index = this.tasks.findIndex((task) => task.id === id);
-
-  //   if (index !== -1) {
-  //       return this.tasks[index];
-  //   } else {
-  //       console.warn(`Task with ID "${id}" not found.`);
-  //       return null;
-  //   }
-  // }
   getTasks() {
     return this.tasks;
   }
@@ -293,7 +244,7 @@ export class TaskManager {
     const totalTasks = this.tasks.length;
     const completedTasks = this.tasks.filter((task) => task.isComplete).length;
     const number = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-    console.log("Calculated number of progress is: ");
+
     return number;
   }
   countIncomplete() {

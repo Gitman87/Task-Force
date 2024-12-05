@@ -16,19 +16,11 @@ import { TaskBar, TaskBarManager } from "./bars.js";
 // --------------Validation-----------------
 import { validateInput } from "./validation";
 const { inputValidator, inputUniqueValidator } = validateInput();
-// -------------------time---------------------
-import { format } from "date-fns";
-
-console.log(inputUniqueValidator);
 
 // =======IMAGES===========
 import logoSrc from "./assets/images/logo.webp";
 const logo = document.querySelector("#logo");
 logo.src = logoSrc;
-
-// import dateSrc from "./assets/images/type date.webp";
-// const dateInputImg = document.querySelector("#custom-date-input");
-// dateInputImg.src = dateSrc;
 
 function toggleDialog(element) {
   const dialog = document.getElementById("myDialog");
@@ -62,22 +54,16 @@ const removeClass = (elements, selector) => {
     if (element.classList.contains(selector)) {
       element.classList.remove(selector);
     } else {
-      console.log("element doesn't contain selector");
     }
   });
 };
 const submitEnter = (input, ...actions) => {
   input.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
-      console.log("submit enter initialized");
-
       for (const action of actions) {
         const result = action();
         if (result === null) {
-          console.log("Action stopped");
           break;
-        } else {
-          console.log("Action executed");
         }
       }
     }
@@ -112,7 +98,6 @@ export const cleanerAndSwitcher = (element, input) => {
     cleaner.clean(input);
   }
 };
-//load rebuild tabs with projects  from tabManger.tabList localStorage
 
 // ----------------------GLOBAL LISTENERS---------------------
 const addListener = (elements, type, action) => {
@@ -135,8 +120,6 @@ const addParentListenerNearest = (
   callback
 ) => {
   parent.addEventListener(type, (e) => {
-    console.log(`Clicked, ${e.target.classList}`);
-
     let nearestTarget = e.target;
     if (nearestTarget.matches(selector)) {
       nearestTarget = nearestTarget;
@@ -190,18 +173,15 @@ const addProjectQuery = document.querySelector("#add-project-query");
 const projectTitleInput = document.querySelector("#project-title-input");
 const counter = document.querySelector("#count-button-number");
 
-console.log("tabs array is", projectList.children);
-
 function loadToday() {
   if (!projectManager.getProject("Today")) {
     const project = new Project("Today");
     projectManager.projects.push(project);
     projectManager.saveProjectsToStorage();
-    console.log(`Project added: ${projectManager.projects[0].id}`);
+
     tabManager.addTab(projectList);
     // tabManager.loadElementsFromStorage(projectList);
   } else {
-    console.log("Today project has been already loaded");
     tabManager.loadElementsFromStorage(projectList);
   }
 }
@@ -239,12 +219,8 @@ addParentListenerNearest(
 
       taskBarManager.removeTaskBars(tabId);
       tabManager.removeTab(tabId, parentTab);
-      console.log(
-        `Projects array after removing  ${tabId} is ${projectManager.projects.length}`
-      );
+
       projectManager.removeProject(tabId, taskBarsContainer);
-    } else {
-      console.log("User chooe not to remove the project");
     }
   }
 );
@@ -256,15 +232,12 @@ addParentListenerNearest("click", ".project-tab", projectList, (e, target) => {
   removeClass(tabs, "active-tab");
   target.classList.add("active-tab");
   activeTab = target;
-  console.log("Active tab id is", activeTab.id);
-  console.log("TaskManager tasks are: ", taskManager.tasks);
 
   //load task bars
   taskManager.updateProjectsProjectTasks();
-  console.log("TaskManager tasks are: ", taskManager.tasks);
 
   taskBarsContainer.innerHTML = " ";
-  console.log("Task bar list", taskBarManager.taskBarsList);
+
   taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
   if (activeTab.id != "today") {
     const number = taskManager.countIncomplete();
@@ -292,18 +265,17 @@ addParentListenerNearest(
 
       const parentTab = target.closest(".project-tab");
       const inputRename = target.closest(".rename-project");
-      console.log("ParenTab id is: ", parentTab.id);
+
       const tabId = parentTab.id;
-      console.log("ParentTab id is ", tabId);
+
       const oldProjectId = tabId;
       projectManager.renameProject(tabId, inputRename);
 
       const renamedProject = projectManager.getLastModifiedProject();
-      console.log("New project  id is ", renamedProject.id);
+
       tabManager.renameTab(renamedProject, parentTab);
       taskBarManager.reassignTaskBars(oldProjectId, renamedProject.id);
 
-      console.log("Input rename is:  ", inputRename);
       clearTextInput(inputRename);
     }
   }
@@ -347,32 +319,28 @@ addParentListenerNearest(
       target.classList.add("active-task-bar");
       // const parentTaskItem = target.closest(".task-bar-item");
       activeTaskBar = target;
-      console.log("Active task bar is ", activeTaskBar.id);
+
       const confirmation = confirm("Do you want to see project?");
       if (confirmation) {
         const datasetValue = activeTaskBar.getAttribute(
           "data-project-assigned"
         );
-        console.log("Active taskBar project assigned is", datasetValue);
+
         const destinyTab = document.getElementById(datasetValue);
 
         destinyTab.click();
         const destinyTaskBar = document.getElementById(target.id);
-        console.log("destiny task bar id is", destinyTaskBar.id);
 
         destinyTaskBar.classList.add("active-task-bar");
 
         // tabManager.getTab(task.)
-      } else {
-        console.log("user decided to stay in today");
       }
     } else {
       const taskBars = taskBarsContainer.querySelectorAll(".task-bar-item");
       removeClass(taskBars, "active-task-bar");
       target.classList.add("active-task-bar");
-      // const parentTaskItem = target.closest(".task-bar-item");
+
       activeTaskBar = target;
-      console.log("Active task bar is ", activeTaskBar.id);
     }
   }
 );
@@ -383,24 +351,19 @@ addListener(addTaskBtn, "click", () => {
       if (!newTaskContainer.classList.contains("for-edit")) {
         toggleDialog(newTaskContainer);
         cleanInputs(inputsForCleaning);
-        // cleanerAndSwitcher(newTaskContainer, in  putsForCleaning);
-        console.log("newTaskContainer, cleaned");
       } else {
         toggleDialog(newTaskContainer);
         cleanInputs(inputsForCleaning);
-        console.log("active task bar is: ", activeTaskBar.id);
+
         const oldTask = taskManager.getTask(activeTaskBar);
-        console.log("oldTask is: ", oldTask);
-        console.log("oldTask id is ", oldTask.id);
+
         newTaskTitleInput.value = oldTask.title;
-        console.log("newTaskTitleInput.value is: ", newTaskTitleInput.value);
-        console.log("OldTask startDate is: ", oldTask.startDate);
+
         startDateInput.value = oldTask.startDate;
-        console.log("startDateInput.value is: ", startDateInput.value);
+
         endDateInput.value = oldTask.endDate;
-        console.log("endDateInput.value is: ", endDateInput.value);
+
         descriptionInput.value = oldTask.description;
-        console.log("descriptionInput.value is:", descriptionInput.value);
       }
     } else {
       alert(
@@ -419,12 +382,9 @@ priorityElements.forEach((element) => {
     priorityElements.forEach((element) => element.classList.remove("clicked"));
     e.target.classList.toggle("clicked");
     clickedPriority = document.querySelector(".clicked");
-    console.log("Clicked priority ", clickedPriority.id);
   });
 });
 //add new task
-
-// const thisEditButTon = document.querySelector(active-task-bar > edit);
 
 submitTaskBtn.addEventListener("click", () => {
   const title = newTaskTitleInput;
@@ -469,7 +429,6 @@ submitTaskBtn.addEventListener("click", () => {
       ? taskBarManager.editTaskBar()
       : console.warn("Cannot edit taskBar");
 
-    console.log("talsbar list is ", taskBarManager.taskBarsList);
     taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
     newTaskContainer.classList.remove("for-edit");
 
@@ -491,23 +450,19 @@ addParentListenerNearest(
       taskManager.removeTask(taskBarId);
       taskBarManager.removeTaskBar(taskBarId);
       taskBarManager.loadElementsFromStorage(taskBarsContainer, activeTab);
-      //prgress bar
+
       const progressNumber = taskManager.calculateProgress();
-      console.log("Progress number is: ", progressNumber);
+
       const projectId = taskManager.getActiveProjectId();
       projectManager.changeProgress(projectId, progressNumber);
-      //change tab object progress
-      // const {tabObject, index} = tabManager.getTab(projectId);
+
       tabManager.changeProgress(activeTab, progressNumber);
-      //change tab element progress bar
-      // const tab = activeTab;
+
       changeProgress();
       if (activeTab.id != "today") {
         const number = taskManager.countIncomplete();
         counter.textContent = number;
       }
-    } else {
-      console.log("User chose not to remove the project");
     }
   }
 );
@@ -526,14 +481,12 @@ addParentListenerNearest("click", ".done", taskBarsContainer, (e, target) => {
   taskBarManager.isComplete(parentTaskBar.id);
   //change progress
   const progressNumber = taskManager.calculateProgress();
-  console.log("Progress number is: ", progressNumber);
+
   const projectId = taskManager.getActiveProjectId();
   projectManager.changeProgress(projectId, progressNumber);
-  //change tab object progress
-  // const {tabObject, index} = tabManager.getTab(projectId);
+
   tabManager.changeProgress(activeTab, progressNumber);
-  //change tab element progress bar
-  // const tab = activeTab;
+
   changeProgress();
   if (activeTab.id != "today") {
     const number = taskManager.countIncomplete();
@@ -542,18 +495,14 @@ addParentListenerNearest("click", ".done", taskBarsContainer, (e, target) => {
 });
 function changeProgress() {
   const progressNumber = taskManager.calculateProgress();
-  console.log("Progress number is: ", progressNumber);
+
   const projectId = taskManager.getActiveProjectId();
   projectManager.changeProgress(projectId, progressNumber);
-  //change tab object progress
-  // const {tabObject, index} = tabManager.getTab(projectId);
+
   tabManager.changeProgress(activeTab, progressNumber);
-  //change tab element progress bar
-  // const tab = activeTab;
+
   const progressBar = activeTab.querySelector(".progress-bar");
-  console.log("Selected tab is ", activeTab.id);
-  console.log("Selected progress bar is ", progressBar);
-  // progressBar.style.width = progressNumber +"%";
+
   if (progressNumber == 100) {
     progressBar.style.backgroundColor = "var(--brightest)";
     progressBar.style.width = progressNumber + "%";
@@ -577,15 +526,9 @@ clearMemoryBtn.addEventListener("click", () => {
   if (confirmation) {
     localStorage.clear();
     window.location.reload();
-  } else {
-    console.log("Clearing localStorage cancelled");
   }
 });
 darkModeBtn.addEventListener("click", () => {
   const body = document.body;
   body.classList.toggle("dark-mode");
 });
-
-checkProjectAndTabLists();
-console.log("TaskManager task are: ", taskManager.tasks);
-console.log("TaskManager projects are: ", taskManager.projects);

@@ -37,7 +37,6 @@ export default class LocalStorageManager {
     }
   }
   remove(key) {
-    
     if (localStorage.getItem(key)) {
       localStorage.removeItem(key);
     } else {
@@ -51,11 +50,8 @@ export default class LocalStorageManager {
   update(key, item) {
     if (localStorage.getItem(key)) {
       localStorage.setItem(key, JSON.stringify(item));
-      // localStorage.getItem(key) = JSON.stringify(item);
-      console.log(`Object with the key ${key} has been updated`);
     } else {
       localStorage.setItem(key, JSON.stringify(item));
-      console.log(`Object with the key ${key} has been written down. `);
     }
   }
 }
