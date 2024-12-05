@@ -494,7 +494,6 @@ h3 {
   position: relative;
   left: 0rem;
   bottom: 1rem;
-
   transform: translateY(3rem);
 }
 #dark-mode-arrow {
@@ -510,12 +509,14 @@ h3 {
   position: absolute;
   left: 7.75rem;
   width: 5rem;
+  pointer-events: all;
   transform: translateY(3rem);
 }
 
 .drop-down-item,
 .drop-down-item:active {
   background-color: var(--cell-3);
+  pointer-events: all;
 }
 .drop-down-item:nth-child(2n) {
   background-color: var(--cell-1);
