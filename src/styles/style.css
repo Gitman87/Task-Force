@@ -502,6 +502,7 @@ h3 {
   width: 2.5rem;
   height: 1.8rem;
   top: 2rem;
+  pointer-events: all;
 }
 
 .drop-down-content.visible {
