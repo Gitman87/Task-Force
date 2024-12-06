@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Force</title>
+  <script defer src="bundle4cf212d78d125557d850.js"></script></head>
+  <body>
+    <div id="wrapper">
+      <section id="content">
+        
+          <header>
+            <img src="" id="logo" alt="task force title " />
+          </header>
+        
+        <section id="tasks">
+          <div id="task-manager-blur">
+            <div id="task-manager-inner">
+              <div id="project-panel">
+                <div
+                  id="project-panel-header"
+                  class="project-panel-header-cell"
+                >
+                  <div id="project-panel-inner-title-container">
+                    <h3>Projects</h3>
+                    <div class="button plus-button" title="Add project" id="add-project">
+                      <p class="plus-text">+</p>
+                    </div>
+                  </div>
+                  <div class="hidden" id="add-project-query">
+                    <ul class="drop-down-list">
+                      <li>
+                        <input
+                          type="text"
+                          class="drop-down-item button"
+                          id="project-title-input"
+                          
+                          placeholder="Title"
+                          required
+                        />
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <ul id="project-list">
+                  
+                </ul>
+              </div>
+              <div id="tasks-main-panel">
+                <div id="tasks-header">
+                  <div id="header-left">
+                    <h3>Tasks</h3>
+                    <div class="button plus-button" title="Add task" id="add-task-button">
+                      <p class="plus-text">+</p>
+                    </div>
+                  </div>
+                <div class="dark-mode-container">
+                  <img
+                  src=""
+                  alt=" "
+                  class="drop-arrow button" title="Clean memory or dark mode"
+                  id="dark-mode-arrow"
+                />
+                  <div class="drop-down-content " id="dark-mode-list">
+                    <form action="" class="drop-down-form">
+                      <ul class="drop-down-list">
+                        <li>
+                          <li class="drop-down-item button clear-memory">
+                            Clear memory
+                          </li>
+                        <li class="drop-down-item button dark-mode">
+                          Dark mode
+                        </li> 
+                      </ul>
+                    </form>
+                  </div>
+                </div>
+                 
+                  <div id="count-button" title="Incomplete tasks" >
+                    <span id="count-button-number">0</span>
+                  </div>
+                  <dialog class="new-task-container ">
+                    <form action="" id="new-task-form">
+                      <ul id="new-task-list">
+                        <li id="new-task-title">
+                          <input
+                            type="text"
+                            name=""
+                            id=""
+                            placeholder="Title"
+                            class="new-task-title input-for-cleaning"
+                            onkeydown="return event.key != 'Enter'"
+                          />
+                        </li>
+                        <li id="new-task-date">
+                          <div class="date-range-container">
+                            <label for="date-range-start">Start:</label>
+                            <input
+                              type = "date"
+                              class = "date-input new-task-date-input input-for-cleaning"
+                              id="date-range-start"
+                              name="date-range-start" required
+                            />
+                          </div>
+                          <div class = "date-range-container ">
+                            <label for = "date-range-end">End:</label>
+                            <input
+                              type = "date"
+                              class = "date-input new-task-date-input input-for-cleaning"
+                              id = "date-range-end"
+                              name = "date-range-end" required
+                            />
+                          </div>
+                        </li>
+                        <li id="new-task-priority">
+                          <p id="new-task-item-title">Priority</p>
+
+                          <ul id="priority-list">
+                            <li
+                              class="priority-item button push-button clicked"
+                              id="low" title="low"
+                            ></li>
+                            <li
+                              class="priority-item button push-button"
+                              id="medium" title="medium"
+                            ></li>
+                            <li
+                              class="priority-item button push-button"
+                              id="high" title="high"
+                            ></li>
+                          </ul>
+                        </li>
+
+                        <li id="new-task-description">
+                          <textarea
+                            name=""
+                            id="description"
+                            placeholder="Description"
+                            class="input-for-cleaning"
+                          ></textarea>
+                        </li>
+                      </ul>
+                      <div class="button plus-button" type="submit" title="Submit task" id="submit-task-button">
+                        <p class="plus-text">+</p>
+                      </div>
+                    </form>
+                  </dialog>
+                </div>
+                <ul id="task-list">
+                  
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </div>
+  </body>
+</html>
