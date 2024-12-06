@@ -23,7 +23,7 @@
                 >
                   <div id="project-panel-inner-title-container">
                     <h3>Projects</h3>
-                    <div class="button plus-button" id="add-project">
+                    <div class="button plus-button" title="Add project" id="add-project">
                       <p class="plus-text">+</p>
                     </div>
                   </div>
@@ -34,6 +34,7 @@
                           type="text"
                           class="drop-down-item button"
                           id="project-title-input"
+                          
                           placeholder="Title"
                           required
                         />
@@ -49,7 +50,7 @@
                 <div id="tasks-header">
                   <div id="header-left">
                     <h3>Tasks</h3>
-                    <div class="button plus-button" id="add-task-button">
+                    <div class="button plus-button" title="Add task" id="add-task-button">
                       <p class="plus-text">+</p>
                     </div>
                   </div>
@@ -57,7 +58,7 @@
                   <img
                   src=""
                   alt=" "
-                  class="drop-arrow button"
+                  class="drop-arrow button" title="Clean memory or dark mode"
                   id="dark-mode-arrow"
                 />
                   <div class="drop-down-content " id="dark-mode-list">
@@ -75,7 +76,7 @@
                   </div>
                 </div>
                  
-                  <div id="count-button" >
+                  <div id="count-button" title="Incomplete tasks" >
                     <span id="count-button-number">0</span>
                   </div>
                   <dialog class="new-task-container ">
@@ -117,15 +118,15 @@
                           <ul id="priority-list">
                             <li
                               class="priority-item button push-button clicked"
-                              id="low"
+                              id="low" title="low"
                             ></li>
                             <li
                               class="priority-item button push-button"
-                              id="medium"
+                              id="medium" title="medium"
                             ></li>
                             <li
                               class="priority-item button push-button"
-                              id="high"
+                              id="high" title="high"
                             ></li>
                           </ul>
                         </li>
@@ -139,7 +140,7 @@
                           ></textarea>
                         </li>
                       </ul>
-                      <div class="button plus-button" type="submit" id="submit-task-button">
+                      <div class="button plus-button" type="submit" title="Submit task" id="submit-task-button">
                         <p class="plus-text">+</p>
                       </div>
                     </form>
