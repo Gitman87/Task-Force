@@ -79,6 +79,12 @@ select {
 legend {
   padding: 0;
 }
+*::-webkit-scrollbar{
+  display:none;
+}
+*{
+  scrollbar-width: none;
+}
 @media  screen and  (max-width:  900px){
   :root{
     font-size:12px;
