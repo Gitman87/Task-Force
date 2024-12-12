@@ -1510,10 +1510,10 @@ class TaskBarManager {
                            
                     </div>
                       <ul class="task-item-control">
-                      <li class="description-btn button push-button"></li>
-                      <li class="edit button push-button"></li>
-                      <li class="delete-button button push-button"></li>
-                      <li class="done button push-button"></li>
+                      <li class="description-btn button push-button" title="See description"></li>
+                      <li class="edit button push-button" title="Edit task"></li>
+                      <li class="delete-button button push-button" title="Delete task"></li>
+                      <li class="done button push-button" title="Mark as completed"></li>
                     </ul>
            </li>`;
   }
@@ -2298,6 +2298,8 @@ darkModeBtn.addEventListener("click", () => {
   const body = document.body;
   body.classList.toggle("dark-mode");
 });
+
+
 
 
 /***/ }),
@@ -7166,4 +7168,4 @@ function toDate(argument, context) {
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=bundle664250e40f3e4aaaa297.js.map
+//# sourceMappingURL=bundle9eee16d8675ecedd5778.js.map
