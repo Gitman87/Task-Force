@@ -170,7 +170,7 @@ body {
 /* ------------MAIN SCAFFOLDING------------------*/
 #wrapper {
   /* background-color: orange; */
-  max-width: 1780px;
+  width:100%;
   height: 100vh;
 
   display: flex;
